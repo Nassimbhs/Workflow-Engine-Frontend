@@ -1,0 +1,141 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">Vue des Workflows</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main">
+                <i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Workflow</a>
+            </li>
+            <li class="breadcrumb-item active">View</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="responsive_table">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div class="col-8">
+                    <ul class="header-buttons-left ms-0">
+                      <li class="dropdown">
+                        <h2>
+                          <strong>Workflows</strong></h2>
+                      </li>
+                      <li class="dropdown m-l-20">
+                        <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                        <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                          aria-label="Search box">
+                      </li>
+                      <li>
+                        <div class="icon-button-demo m-l-10" [hidden]=!selection.hasValue()>
+                          <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
+                            <mat-icon class="col-white">delete</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-4">
+                    <ul class="header-buttons">
+                      <li>
+                        <div class="icon-button-demo">
+                          <button mat-mini-fab color="primary" (click)="addNew()">
+                            <mat-icon class="col-white">add</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="icon-button-demo">
+                          <button mat-mini-fab color="primary" (click)="refresh()">
+                            <mat-icon class="col-white">refresh</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+               <!-- #END# Bordered Table -->
+    <!-- Hover Rows -->
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2>
+              <strong>Hover</strong> Rows</h2>
+
+          </div>
+          <div class="body table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>NOM</th>
+                  <th>DATE DE CREATION</th>
+                  <th>DATE DE MODIFICATION</th>
+                  <th>ETAT</th>
+                  <th>MODIFIER</th>
+                  <th>SUPPRIMER</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let w of listWorkflow">
+                  <td></td>
+                  <td>{{w.name}}</td>
+                  <td>{{w.creationDate | date : 'dd/mm/yyyy -- HH:MM:SS'}}</td>
+                  <td>{{w.lastModifiedDate  | date : 'dd/mm/yyyy -- HH:MM:SS'}}</td>
+                  <td>{{w.etat}}</td>
+                  <td>
+                    <i class="fas fa-edit" style="font-size: 20px;"(click)="updateWorkflow(w.id)"></i>
+                  </td>
+                  <td>
+                    <i class="fas fa-trash" style="font-size: 20px;" (click)="Basicopen(content)"></i>
+                  </td>
+                     <!-- #Bootstrap Modal -->
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+      <ng-template #content let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">
+            Voulez-vous vraiment supprimer le workflow ?
+          </h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true"><i class="material-icons">close</i></span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="deleteWorkflow(w.id)">Supprimer</button>
+        </div>
+      </ng-template>     
+    </div> 
+    <!-- #END#Bootstrap Modal -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- #END# Hover Rows -->
+              <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>

@@ -1,0 +1,57 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">Workflow</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main">
+                <i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Workflow</a>
+            </li>
+            <li class="breadcrumb-item active">Ajouter un workflow</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>Ajouter un workflow</h2>
+
+          </div>
+          <div class="body">
+              <div class="card">
+                <div class="header">
+                  <h2>Outline Input Style</h2>
+                </div>
+                <div class="body">
+                  <div class="example-container">
+                    <div class="row">
+                        <mat-form-field class="example-full-width">
+                          <mat-label>Nom</mat-label>
+                          <input matInput [(ngModel)]="workflow.name" required>
+                          <mat-icon matSuffix>face</mat-icon>
+                        </mat-form-field>
+                        <mat-form-field class="example-full-width">
+                          <mat-label>Description</mat-label>
+                          <textarea matInput [(ngModel)]="workflow.description" required></textarea>
+                        </mat-form-field>
+                    </div>  
+                    <br>
+                    <button mat-raised-button color="primary" (click)="addWorkflow()">Ajouter</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>

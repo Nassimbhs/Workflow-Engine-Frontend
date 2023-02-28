@@ -1,0 +1,126 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">Edit Appointment</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main">
+                <i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Appointment</a>
+            </li>
+            <li class="breadcrumb-item active">Edit</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>Edit Appointment</h2>
+
+          </div>
+          <div class="body">
+            <div class="card">
+              <div class="header">
+                <h2>Outline Input Style</h2>
+              </div>
+              <div class="body">
+                <div class="example-container">
+                  <div class="row">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Nom</mat-label>
+                        <input matInput [(ngModel)]="workflow.name" required>
+                        <mat-icon matSuffix>face</mat-icon>
+                      </mat-form-field>
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput [(ngModel)]="workflow.description" required></textarea>
+                      </mat-form-field>
+                  </div>  
+                  <br>
+                  <button mat-raised-button color="primary" (click)="updateWorkflow()">Mettre à jour </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ngx-graph
+  class="chart-container"
+  [view]="[1000, 550]"
+  [links]="[
+  {
+    source: 'workflow 1',
+    target: 'test tache',
+    label: 'is parent of'
+  },
+  ]"
+  [nodes]="workflowNodes2"
+  [clusters]="[
+    {
+      id: 'third',
+      label: 'Cluster node',
+      childNodeIds: ['work', 'Booking']
+    }
+  ]"
+  layout="dagreCluster"
+>
+  <ng-template #defsTemplate>
+    <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
+      <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+    </svg:marker>
+  </ng-template>
+
+  <ng-template #clusterTemplate let-cluster>
+    <svg:g class="node cluster">
+      <svg:rect
+        rx="5"
+        ry="5"
+        [attr.width]="cluster.dimension.width"
+        [attr.height]="cluster.dimension.height"
+        [attr.fill]="cluster.data.color"
+      />
+    </svg:g>
+  </ng-template>
+
+  <ng-template #nodeTemplate let-node>
+    <svg:g class="node">
+      <svg:rect
+        [attr.width]="100"
+        [attr.height]="node.dimension.height"
+        [attr.fill]="node.data.color"
+      />
+      <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2" style="fill: white;">
+        {{node.label}}
+
+      </svg:text>
+    </svg:g>
+  </ng-template>
+
+  <ng-template #linkTemplate let-link>
+    <svg:g class="edge">
+      <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
+      <svg:text class="edge-label" text-anchor="middle">
+        <textPath
+          class="text-path"
+          [attr.href]="'#' + link.id"
+          [style.dominant-baseline]="link.dominantBaseline"
+          startOffset="50%"
+        >
+          {{link.label}}
+        </textPath>
+      </svg:text>
+    </svg:g>
+  </ng-template>
+</ngx-graph>
+
+</section>
