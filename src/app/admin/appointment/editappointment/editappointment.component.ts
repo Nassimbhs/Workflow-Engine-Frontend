@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Activite } from "src/app/model/Activite";
 import { Workflow } from "src/app/model/Workflow";
 import { ActiviteService } from "src/app/service/activite.service";
@@ -17,6 +17,7 @@ export class EditappointmentComponent implements OnInit {
   workflow: Workflow;
   id: any;
   activites: Activite;
+  modalRef: NgbModalRef;
 
   constructor(
     private ser:WorkflowService, 
@@ -99,6 +100,12 @@ export class EditappointmentComponent implements OnInit {
           this.lista.push(this.activites);
           console.log(res);
         });
+  }
+  updateActivity(){
+    this.serActivite.updateActivity(this.activites.id, this.activites)
+    .subscribe(() => {    
+  });
+  this.modalRef.close();
   }
   
     // Bootstrap Modal

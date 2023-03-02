@@ -20,4 +20,7 @@ export class ActiviteService {
     return this._http.get<Activite>(this.baseUrl + "/getActivite/" + id);
   }
   
+  updateActivity(id: any, value: any): Observable<Object> {
+    return this._http.put(this.baseUrl + "/update/" + id, value);
+  }
 }
