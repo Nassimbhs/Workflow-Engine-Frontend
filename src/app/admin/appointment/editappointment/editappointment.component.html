@@ -57,7 +57,7 @@
   <ngx-graph
   class="chart-container"
   [view]="[1000, 550]"
-  [links]="linksArray"
+  [links]=""
   [nodes]="nodesArray"
   [clusters]="[
     {
@@ -117,7 +117,7 @@
           <mat-icon matSuffix>verified_user</mat-icon>
         </mat-form-field>
       {{activites.creationDate}}
-        <button type="button" class="btn btn-danger" (click)="updateActivity()">Modifier</button>
+        <button type="button" class="btn btn-danger" (click)="updateActivity()" (click)="modal.dismiss('Cross click')">Modifier</button>
       </div>
     </ng-template>     
   </div> 

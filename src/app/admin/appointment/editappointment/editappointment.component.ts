@@ -5,6 +5,7 @@ import { Activite } from "src/app/model/Activite";
 import { Workflow } from "src/app/model/Workflow";
 import { ActiviteService } from "src/app/service/activite.service";
 import { WorkflowService } from "src/app/service/workflow.service";
+import Swal from "sweetalert2";
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
@@ -26,7 +27,6 @@ export class EditappointmentComponent implements OnInit {
     private ac: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
-    
     ) {
   }
   ngOnInit(): void {
@@ -101,11 +101,20 @@ export class EditappointmentComponent implements OnInit {
           console.log(res);
         });
   }
+
   updateActivity(){
     this.serActivite.updateActivity(this.activites.id, this.activites)
-    .subscribe(() => {    
-  });
-  this.modalRef.close();
+    .subscribe(
+      (response) => {
+        console.log('Update successful:', response);
+        this.router.navigateByUrl("admin/appointment/viewAppointment");
+        Swal.fire("Activité à jour !");
+      },
+      (error) => {
+        console.error('Update failed:', error);
+        Swal.fire("Activité n'est pas à jour !");
+      }
+    );
   }
   
     // Bootstrap Modal
