@@ -34,9 +34,5 @@ export class WorkflowService {
     return this._http.put(this.baseUrl + "/update", value);
   }
 
-  getActivitesByWorkflowId(id: any): Observable<Activite> {
-    const url = "http://localhost:8080/api/v1/Activite/activites/";
-    return this._http.get<Activite>(url + id);
-  }
-  
+ 
 }

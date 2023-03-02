@@ -1,9 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Activite } from "src/app/model/Activite";
 import { Workflow } from "src/app/model/Workflow";
+import { ActiviteService } from "src/app/service/activite.service";
 import { WorkflowService } from "src/app/service/workflow.service";
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: "app-editappointment",
@@ -18,8 +20,12 @@ export class EditappointmentComponent implements OnInit {
 
   constructor(
     private ser:WorkflowService, 
+    private serActivite:ActiviteService, 
+
     private ac: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal,
+    
     ) {
   }
   ngOnInit(): void {
@@ -53,18 +59,51 @@ export class EditappointmentComponent implements OnInit {
     this.ser.getWorkflowById(id).subscribe(
       res => {
         this.workflow = res;
-        this.workflowNodes2 = {id: this.workflow.id, label : this.workflow.name}
+        this.workflowNodes2 = {id: "workflow", label : this.workflow.name};
       });
   }
 
-  tachenode = {};
-  getActivitesByWorkflowId(id :any){
-    this.ser.getActivitesByWorkflowId(id).subscribe(
-      res => {
-        this.activites = res;
-        this.tachenode = {id: this.workflow.id, label : this.activites[0].name}
-        console.log(this.tachenode);
+  nodesArray: {id: String, label: String}[] = [];
+  linksArray = [];
+  ids = [];
+  getActivitesByWorkflowId(id: any) {
+    this.serActivite.getActivitesByWorkflowId(id).subscribe(
+      (res: any) => {
+        console.log(this.workflowNodes2);
+        if (Array.isArray(res)) {
+          this.nodesArray = res.map(activite => ({id: activite.id, label: activite.name}));
+          this.nodesArray.push({id: "workflow", label: this.workflow.name});
+          console.log(this.nodesArray);
+          this.linksArray = this.nodesArray
+          .filter(node => node.id !== 'workflow')
+          .map(activite => {
+            return {
+              id : `${"t"}-${uuidv4()}`,
+              source: "workflow",
+              target: `${activite.id}`
+            };
+          });          
+          console.log(this.linksArray);
+        } else {
+          console.error('res is not an array');
+        }
+      }
+    );
+  }  
 
-      });
+  lista = [];
+   act(id: any){
+      this.serActivite.getActivityById(id).subscribe(
+        res => {
+          this.activites = res;
+          this.lista.push(this.activites);
+          console.log(res);
+        });
   }
+  
+    // Bootstrap Modal
+    Basicopen(content) {
+      this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
+
+    }
 }

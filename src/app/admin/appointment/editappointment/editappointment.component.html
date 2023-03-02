@@ -57,19 +57,13 @@
   <ngx-graph
   class="chart-container"
   [view]="[1000, 550]"
-  [links]="[
-  {
-    source: 'workflow 1',
-    target: 'test tache',
-    label: 'is parent of'
-  },
-  ]"
-  [nodes]="workflowNodes2"
+  [links]="linksArray"
+  [nodes]="nodesArray"
   [clusters]="[
     {
       id: 'third',
       label: 'Cluster node',
-      childNodeIds: ['work', 'Booking']
+      childNodeIds: ['3', '4']
     }
   ]"
   layout="dagreCluster"
@@ -91,10 +85,46 @@
       />
     </svg:g>
   </ng-template>
+<!-- Add this to your HTML template -->
+  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <ng-template #content let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+          Activité : {{activites.name}}
+        </h4>
+
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true"><i class="material-icons">close</i></span>
+        </button>
+      </div>
+      <div class="modal-footer">
+      
+        <mat-form-field class="example-full-width">
+          <mat-label>Nom</mat-label>
+          <input matInput [(ngModel)]="activites.name" required>
+          <mat-icon matSuffix>face</mat-icon>
+        </mat-form-field>
+      
+        <mat-form-field class="example-full-width">
+          <mat-label>Description</mat-label>
+          <input matInput [(ngModel)]="activites.description" required>
+          <mat-icon matSuffix>description</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+          <mat-label>Type de sortie</mat-label>
+          <input matInput [(ngModel)]="activites.typeSortie" required>
+          <mat-icon matSuffix>verified_user</mat-icon>
+        </mat-form-field>
+      {{activites.creationDate}}
+        <button type="button" class="btn btn-danger">Modifier</button>
+      </div>
+    </ng-template>     
+  </div> 
 
   <ng-template #nodeTemplate let-node>
-    <svg:g class="node">
-      <svg:rect
+    <svg:g class="node" (click)="act(node.id)">
+      <svg:rect (click)="Basicopen(content)"
         [attr.width]="100"
         [attr.height]="node.dimension.height"
         [attr.fill]="node.data.color"
