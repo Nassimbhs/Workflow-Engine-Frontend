@@ -151,10 +151,12 @@
           <textarea matInput [(ngModel)]="activites.description" required></textarea>
           <mat-icon matSuffix>event_note</mat-icon>
         </mat-form-field>
-     
-          <select [(ngModel)]="lienActivite.target">
-            <option *ngFor="let l of nodesArray" [value]="l.id" selected>{{l.label}}</option>
+        <mat-form-field class="example-full-width">
+          <mat-label>Choisir le cible de l'activité {{activites.name}}</mat-label>
+          <select matNativeControl  [(ngModel)]="lienActivite.target" required>
+            <option *ngFor="let l of nodesArray" [value]="l.id">{{l.label}}</option>
           </select>
+        </mat-form-field>
         {{activites.creationDate | date: 'dd/MM/yyyy -- HH:mm:ss'}}
         <button type="button" class="btn btn-danger" (click)="addLinks()" (click)="modal.dismiss('Cross click')">Modifier</button>
       </div>
