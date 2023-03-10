@@ -23,4 +23,10 @@ export class ActiviteService {
   updateActivity(id: any, value: any): Observable<Object> {
     return this._http.put(this.baseUrl + "/update/" + id, value);
   }
+
+  
+  addActivite(activite: Activite) {
+    return this._http.post<Activite>(this.baseUrl + "/addActivite", activite);
+  }
+
 }

@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Activite } from '../model/Activite';
 import { Workflow } from '../model/Workflow';
 
 @Injectable({
@@ -30,9 +29,8 @@ export class WorkflowService {
     return this._http.get<Workflow>(this.baseUrl + "/getWorkflow/" + id);
   }
 
-  updateWorkflow(value: any): Observable<Object> {
-    return this._http.put(this.baseUrl + "/update", value);
+  updateWorkflow(id: any, value: any): Observable<Object> {
+    return this._http.put(this.baseUrl + "/update/" + id, value);
   }
-
  
 }

@@ -5,16 +5,16 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           <ul class="breadcrumb breadcrumb-style ">
             <li class="breadcrumb-item">
-              <h4 class="page-title">Edit Appointment</h4>
+              <h4 class="page-title">Modifier workflow</h4>
             </li>
             <li class="breadcrumb-item bcrumb-1">
               <a routerLink="/admin/dashboard/main">
                 <i class="fas fa-home"></i> Home</a>
             </li>
             <li class="breadcrumb-item bcrumb-2">
-              <a href="#" onClick="return false;">Appointment</a>
+              <a href="#" onClick="return false;">Workflow</a>
             </li>
-            <li class="breadcrumb-item active">Edit</li>
+            <li class="breadcrumb-item active">Modifier</li>
           </ul>
         </div>
       </div>
@@ -23,13 +23,13 @@
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
         <div class="card">
           <div class="header">
-            <h2>Edit Appointment</h2>
+            <h2>Modifier le workflow</h2>
 
           </div>
           <div class="body">
             <div class="card">
               <div class="header">
-                <h2>Outline Input Style</h2>
+                <h2>Modifier les données du workflow</h2>
               </div>
               <div class="body">
                 <div class="example-container">
@@ -42,6 +42,12 @@
                       <mat-form-field class="example-full-width">
                         <mat-label>Description</mat-label>
                         <textarea matInput [(ngModel)]="workflow.description" required></textarea>
+                        <mat-icon matSuffix>event_note</mat-icon>
+                      </mat-form-field>
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Etat</mat-label>
+                        <mat-icon matSuffix>lock_open</mat-icon>
+                        <input matInput [(ngModel)]="workflow.etat" required>
                       </mat-form-field>
                   </div>  
                   <br>
@@ -53,17 +59,54 @@
         </div>
       </div>
     </div>
+
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>Ajouter une activité</h2>
+          </div>
+          <div class="body">
+            <div class="card">
+              <div class="header">
+                <h2>Saisir les données de l'activité</h2>
+              </div>
+              <div class="body">
+                <div class="example-container">
+                  <div class="row">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Nom</mat-label>
+                        <input matInput [(ngModel)]="activite.name" required>
+                        <mat-icon matSuffix>face</mat-icon>
+                      </mat-form-field>
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput [(ngModel)]="activite.description" required></textarea>
+                        <mat-icon matSuffix>event_note</mat-icon>
+                      </mat-form-field>
+                      
+                  </div>  
+                  <br>
+                  <button mat-raised-button color="primary" (click)="addActivite()">Ajouter</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
   <ngx-graph
   class="chart-container"
   [view]="[1000, 550]"
-  [links]=""
+  [links]="listLinks"
   [nodes]="nodesArray"
   [clusters]="[
     {
       id: 'third',
       label: 'Cluster node',
-      childNodeIds: ['3', '4']
+      childNodeIds: ids
     }
   ]"
   layout="dagreCluster"
@@ -98,26 +141,22 @@
         </button>
       </div>
       <div class="modal-footer">
-      
         <mat-form-field class="example-full-width">
           <mat-label>Nom</mat-label>
           <input matInput [(ngModel)]="activites.name" required>
           <mat-icon matSuffix>face</mat-icon>
         </mat-form-field>
-      
         <mat-form-field class="example-full-width">
           <mat-label>Description</mat-label>
-          <input matInput [(ngModel)]="activites.description" required>
-          <mat-icon matSuffix>description</mat-icon>
+          <textarea matInput [(ngModel)]="activites.description" required></textarea>
+          <mat-icon matSuffix>event_note</mat-icon>
         </mat-form-field>
-
-        <mat-form-field class="example-full-width">
-          <mat-label>Type de sortie</mat-label>
-          <input matInput [(ngModel)]="activites.typeSortie" required>
-          <mat-icon matSuffix>verified_user</mat-icon>
-        </mat-form-field>
-      {{activites.creationDate}}
-        <button type="button" class="btn btn-danger" (click)="updateActivity()" (click)="modal.dismiss('Cross click')">Modifier</button>
+     
+          <select [(ngModel)]="lienActivite.target">
+            <option *ngFor="let l of nodesArray" [value]="l.id" selected>{{l.label}}</option>
+          </select>
+        {{activites.creationDate | date: 'dd/MM/yyyy -- HH:mm:ss'}}
+        <button type="button" class="btn btn-danger" (click)="addLinks()" (click)="modal.dismiss('Cross click')">Modifier</button>
       </div>
     </ng-template>     
   </div> 

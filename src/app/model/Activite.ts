@@ -3,5 +3,5 @@ export class Activite {
     name: String;
     description: String;
     creationDate: String;
-    typeSortie: String;
+    workflowActivite: any; 
 }

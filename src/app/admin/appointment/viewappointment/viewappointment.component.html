@@ -93,8 +93,8 @@
                 <tr *ngFor="let w of listWorkflow">
                   <td></td>
                   <td>{{w.name}}</td>
-                  <td>{{w.creationDate | date : 'dd/mm/yyyy -- HH:MM:SS'}}</td>
-                  <td>{{w.lastModifiedDate  | date : 'dd/mm/yyyy -- HH:MM:SS'}}</td>
+                  <td>{{w.creationDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}</td>
+                  <td>{{w.lastModifiedDate  | date : 'dd/MM/yyyy -- HH:mm:ss'}}</td>
                   <td>{{w.etat}}</td>
                   <td>
                     <i class="fas fa-edit" style="font-size: 20px;"(click)="updateWorkflow(w.id)"></i>
