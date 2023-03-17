@@ -20,10 +20,8 @@ export class BookappointmentComponent {
   }
 
   addWorkflow(){    
-    console.log(this.workflow)
     this.workflowservice.addWorkflow(this.workflow).subscribe(
       (res)=>{
-        console.log(res)
         this._router.navigateByUrl("admin/appointment/viewAppointment");
       }
       );

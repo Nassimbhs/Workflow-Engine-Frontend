@@ -12,7 +12,7 @@
                 <i class="fas fa-home"></i> Home</a>
             </li>
             <li class="breadcrumb-item bcrumb-2">
-              <a href="#" onClick="return false;">Workflow</a>
+              <a routerLink="/admin/appointment/viewAppointment">Workflow</a>
             </li>
             <li class="breadcrumb-item active">Modifier</li>
           </ul>
@@ -59,45 +59,88 @@
         </div>
       </div>
     </div>
-
+    
+    <ng-template #modal2 let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Ajouter une activité</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <mat-form-field class="example-full-width">
+            <mat-label>Nom</mat-label>
+            <input matInput [(ngModel)]="activite.name" required>
+            <mat-icon matSuffix>face</mat-icon>
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput [(ngModel)]="activite.description" required></textarea>
+            <mat-icon matSuffix>event_note</mat-icon>
+          </mat-form-field>
+      </div>  
+      <br>
+      <button mat-raised-button color="primary" (click)="addActivite()">Ajouter    </button>      </div>
+    </ng-template>
+    
     <div class="row clearfix">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
         <div class="card">
           <div class="header">
-            <h2>Ajouter une activité</h2>
-          </div>
-          <div class="body">
-            <div class="card">
-              <div class="header">
-                <h2>Saisir les données de l'activité</h2>
+                <h2>Liste des activités</h2>
+                    <div class="icon-button-demo">
+                      <button mat-mini-fab color="primary" (click)="openModal2(modal2)">
+                        <mat-icon class="col-white">add</mat-icon>
+                      </button>
               </div>
+            </div>
+          </div>
               <div class="body">
                 <div class="example-container">
                   <div class="row">
-                      <mat-form-field class="example-full-width">
-                        <mat-label>Nom</mat-label>
-                        <input matInput [(ngModel)]="activite.name" required>
-                        <mat-icon matSuffix>face</mat-icon>
-                      </mat-form-field>
-                      <mat-form-field class="example-full-width">
-                        <mat-label>Description</mat-label>
-                        <textarea matInput [(ngModel)]="activite.description" required></textarea>
-                        <mat-icon matSuffix>event_note</mat-icon>
-                      </mat-form-field>
-                      
+                    <div class="row clearfix">
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                          <div class="body table-responsive">
+                            <table class="table table-hover" style="text-align: center;">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>NOM</th>
+                                  <th>DESCRIPTION</th>
+                                  <th>DATE DE CREATION</th>
+                                  <th>VOIR LES DETAILS</th>
+                                  <th>SUPPRIMER UNE ACTIVITE</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let a of allactivites">
+                                  <td></td>
+                                  <td>{{a.name}}</td>
+                                  <td>{{a.description}}</td>
+                                  <td>{{a.creationDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}</td>
+                                  <td>
+                                    <i class="fas fa-edit" style="font-size: 20px;"></i>
+                                  </td>
+                                  <td>
+                                    <i class="fas fa-trash" style="font-size: 20px;" (click)="deleteActivite(a.id)"></i>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>  
-                  <br>
-                  <button mat-raised-button color="primary" (click)="addActivite()">Ajouter</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-  </div>
-  <ngx-graph
+<ngx-graph
   class="chart-container"
   [view]="[1000, 550]"
   [links]="listLinks"
@@ -149,17 +192,38 @@
         <mat-form-field class="example-full-width">
           <mat-label>Description</mat-label>
           <textarea matInput [(ngModel)]="activites.description" required></textarea>
-          <mat-icon matSuffix>event_note</mat-icon>
         </mat-form-field>
+        
         <mat-form-field class="example-full-width">
-          <mat-label>Choisir le cible de l'activité {{activites.name}}</mat-label>
-          <select matNativeControl  [(ngModel)]="lienActivite.target" required>
-            <option *ngFor="let l of nodesArray" [value]="l.id">{{l.label}}</option>
+          <mat-label>Choisir la cible de l'activité ({{activites.name}})</mat-label>
+          <select matNativeControl [(ngModel)]="selectedTarget" required>
+            <ng-container *ngFor="let l of nodesArray">
+              <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
+                {{l.label}}
+              </option>
+            </ng-container>
           </select>
         </mat-form-field>
+
+          <button class="btn btn-danger" (click)="showForm = !showForm">Supprimer une relation</button>
+          <div *ngIf="showForm" class="form-field-container">
+            <mat-form-field class="example-full-width">
+              <mat-label>Supprimer la cible de l'activité</mat-label>
+              <select matNativeControl [(ngModel)]="selectedTarget" required>
+                <ng-container *ngFor="let a of actLink">
+                  <option [value]="a.id" id="inputTarget">
+                    {{a.activiteTargetName}}
+                  </option>
+                </ng-container>
+              </select>
+            </mat-form-field>
+            <ng-container *ngFor="let a of actLink">
+              <button class="btn btn-danger" *ngIf="a.id == selectedTarget" (click)="deleteLink(a.id)">Supprimer</button>
+            </ng-container>          
+          </div>
+          </div>
         {{activites.creationDate | date: 'dd/MM/yyyy -- HH:mm:ss'}}
-        <button type="button" class="btn btn-danger" (click)="addLinks()" (click)="modal.dismiss('Cross click')">Modifier</button>
-      </div>
+        <button type="button" class="btn btn-warning" (click)="addLinks();updateActivity();" (click)="modal.dismiss('Cross click')">Modifier</button>
     </ng-template>     
   </div> 
 

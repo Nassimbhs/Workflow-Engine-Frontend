@@ -24,9 +24,13 @@ export class ActiviteService {
     return this._http.put(this.baseUrl + "/update/" + id, value);
   }
 
-  
   addActivite(activite: Activite) {
     return this._http.post<Activite>(this.baseUrl + "/addActivite", activite);
+  }
+
+  deleteActivite(id: any): Observable<Activite> {
+    const url = this.baseUrl + '/delete/' + id;
+    return this._http.delete<Activite>(url);
   }
 
 }

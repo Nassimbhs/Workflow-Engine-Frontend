@@ -19,5 +19,18 @@ export class LienActiviteService {
   getAllLinks(): Observable<string[]> {
     return this._http.get<string[]>(this.baseUrl + "/allLinks/");
   }
+  
+  findLienActiviteByWorkflowId(workflowId: any): Observable<LienActivite> {
+    return this._http.get<LienActivite>(this.baseUrl + "/lienactivites/" + workflowId);
+  }
+
+  deleteLink(id: any): Observable<LienActivite> {
+    const url = this.baseUrl + '/delete/' + id;
+    return this._http.delete<LienActivite>(url);
+  }
+
+  getLinkActivite(id: any) {
+    return this._http.get<LienActivite[]>(this.baseUrl+"/getLinkActivite/"+id);
+  }
 
 }

@@ -77,7 +77,7 @@
 
           </div>
           <div class="body table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover" style="text-align: center;">
               <thead>
                 <tr>
                   <th>#</th>
@@ -100,25 +100,8 @@
                     <i class="fas fa-edit" style="font-size: 20px;"(click)="updateWorkflow(w.id)"></i>
                   </td>
                   <td>
-                    <i class="fas fa-trash" style="font-size: 20px;" (click)="Basicopen(content)"></i>
+                    <i class="fas fa-trash" style="font-size: 20px;" (click)="deleteWorkflow(w.id)"></i>
                   </td>
-                     <!-- #Bootstrap Modal -->
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-      <ng-template #content let-modal>
-        <div class="modal-header">
-          <h4 class="modal-title" id="modal-basic-title">
-            Voulez-vous vraiment supprimer le workflow ?
-          </h4>
-          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true"><i class="material-icons">close</i></span>
-          </button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" (click)="deleteWorkflow(w.id)">Supprimer</button>
-        </div>
-      </ng-template>     
-    </div> 
-    <!-- #END#Bootstrap Modal -->
                 </tr>
               </tbody>
             </table>

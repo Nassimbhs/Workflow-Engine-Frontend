@@ -16,8 +16,8 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { UnsubscribeOnDestroyAdapter } from "src/app/shared/UnsubscribeOnDestroyAdapter";
 import { WorkflowService } from "src/app/service/workflow.service";
 import { Router } from "@angular/router";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Workflow } from "src/app/model/Workflow";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-viewappointment",
@@ -52,7 +52,6 @@ export class ViewappointmentComponent
     private snackBar: MatSnackBar,
     private workflowService:WorkflowService,
     private router: Router,
-    private modalService: NgbModal
     
   ) {
     super();
@@ -235,18 +234,34 @@ export class ViewappointmentComponent
   }
 
 deleteWorkflow(id: any) {
-  this.workflowService.deleteWorkflow(id).subscribe(res => {
-    this.getAllWorkflows();
+  Swal.fire({
+    title: 'Êtes-vous sûr(e) ?',
+    text: 'Voulez-vous vraiment supprimer ce workflow ?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Oui, supprimer',
+    cancelButtonText: 'Annuler',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.workflowService.deleteWorkflow(id).subscribe(
+        (response) => {
+          console.log('Delete successful:', response);
+          // Reload links after delete
+          this.getAllWorkflows();
+          Swal.fire('Workflow supprimé !', '', 'success');
+        },
+        (error) => {
+          console.error('Delete failed:', error);
+          Swal.fire('Erreur lors de la suppression du workflow !', '', 'error');
+        }
+      );
+    }
   });
 }
+
 updateWorkflow(id: number) {
   this.router.navigate(['admin/appointment/edit-appointment', id]);
 }
-  // Bootstrap Modal
-  Basicopen(content) {
-    this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
-  }
-  
 }
 export class ExampleDataSource extends DataSource<Appointment> {
   filterChange = new BehaviorSubject("");
