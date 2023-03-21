@@ -14,7 +14,7 @@
             <li class="breadcrumb-item bcrumb-2">
               <a href="#" onClick="return false;">Workflow</a>
             </li>
-            <li class="breadcrumb-item active">View</li>
+            <li class="breadcrumb-item active">Vue</li>
           </ul>
         </div>
       </div>
@@ -37,31 +37,6 @@
                         <input placeholder="Search" type="text" #filter class="browser-default search-field"
                           aria-label="Search box">
                       </li>
-                      <li>
-                        <div class="icon-button-demo m-l-10" [hidden]=!selection.hasValue()>
-                          <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
-                            <mat-icon class="col-white">delete</mat-icon>
-                          </button>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="col-4">
-                    <ul class="header-buttons">
-                      <li>
-                        <div class="icon-button-demo">
-                          <button mat-mini-fab color="primary" (click)="addNew()">
-                            <mat-icon class="col-white">add</mat-icon>
-                          </button>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="icon-button-demo">
-                          <button mat-mini-fab color="primary" (click)="refresh()">
-                            <mat-icon class="col-white">refresh</mat-icon>
-                          </button>
-                        </div>
-                      </li>
                     </ul>
                   </div>
                 </div>
@@ -73,7 +48,7 @@
         <div class="card">
           <div class="header">
             <h2>
-              <strong>Hover</strong> Rows</h2>
+              Liste <strong>des workflows</strong></h2>
 
           </div>
           <div class="body table-responsive">
@@ -84,7 +59,7 @@
                   <th>NOM</th>
                   <th>DATE DE CREATION</th>
                   <th>DATE DE MODIFICATION</th>
-                  <th>ETAT</th>
+                  <th>VOIR LES DETAILS</th>
                   <th>MODIFIER</th>
                   <th>SUPPRIMER</th>
                 </tr>
@@ -95,7 +70,9 @@
                   <td>{{w.name}}</td>
                   <td>{{w.creationDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}</td>
                   <td>{{w.lastModifiedDate  | date : 'dd/MM/yyyy -- HH:mm:ss'}}</td>
-                  <td>{{w.etat}}</td>
+                  <td>
+                    <i class="fas fas fa-info" style="font-size: 20px;" (click)="getWorkflowById(w.id)" (click)="Basicopen(modal)"></i>
+                  </td>
                   <td>
                     <i class="fas fa-edit" style="font-size: 20px;"(click)="updateWorkflow(w.id)"></i>
                   </td>
@@ -109,11 +86,7 @@
         </div>
       </div>
     </div>
- 
     <!-- #END# Hover Rows -->
-              <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
-                [pageSizeOptions]="[5, 10, 25, 100]">
-              </mat-paginator>
             </div>
           </div>
         </div>
@@ -122,3 +95,33 @@
   </div>
 
 </section>
+<ng-template #modal let-modal>
+  <div class="modal-header" *ngIf="workflow">
+    <h4 class="modal-title" id="modal-basic-title">{{workflow.name}} </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div *ngIf="workflow">
+        <div class="card">
+          <div class="header">
+           <strong class="notice-heading color-primary col-indigo">Crée le : </strong> {{ workflow.creationDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}
+          </div>
+        </div>
+        <div class="card">
+          <div class="header">
+            <strong class="notice-heading color-primary col-indigo">Dernière modification : </strong> {{ workflow.lastModifiedDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}
+            <br>
+          </div>
+        </div>
+        <div class="card">
+          <div class="header">
+            <strong class="notice-heading color-primary col-indigo">Description  </strong><br> {{workflow.description}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

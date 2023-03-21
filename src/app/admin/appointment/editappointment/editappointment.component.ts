@@ -8,7 +8,6 @@ import { Workflow } from "src/app/model/Workflow";
 import { ActiviteService } from "src/app/service/activite.service";
 import { LienActiviteService } from "src/app/service/lien-activite.service";
 import { WorkflowService } from "src/app/service/workflow.service";
-import { DialogformComponent } from "src/app/ui/modal/dialogform/dialogform.component";
 import { SimpleDialogComponent } from "src/app/ui/modal/simpleDialog.component";
 import Swal from "sweetalert2";
 
@@ -31,7 +30,6 @@ export class EditappointmentComponent implements OnInit {
     private ser:WorkflowService, 
     private serActivite:ActiviteService, 
     private serlien :LienActiviteService, 
-    private dialogModel: MatDialog,
 
     private ac: ActivatedRoute,
     private router: Router,
@@ -107,7 +105,6 @@ export class EditappointmentComponent implements OnInit {
     this.serActivite.getActivitesByWorkflowId(id).subscribe(
       (res: any) => {
         this.allactivites = res;
-        console.log("all activities : ",this.allactivites)
         if (Array.isArray(res)) {
           this.nodesArray = res
           .map(activite => ({id: activite.id.toString(), label: activite.name}));
@@ -130,6 +127,8 @@ export class EditappointmentComponent implements OnInit {
         this.serlien.getLinkActivite(id).subscribe((resl) => {
           // Utilisez les données récupérées ici
           this.actLink = resl;
+          console.log("get link by id : ",this.actLink)
+
         });
   }
 
@@ -252,6 +251,23 @@ Basicopen(content) {
 
 openModal2(content) {
   this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
+}
+
+openModalActivity(content) {
+  this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
+}
+
+// Fonction qui calcule la largeur du texte du noeud
+getTextWidth(text: string): number {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  const textNode = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  textNode.setAttribute('style', 'font-size: 12px; font-family: Arial');
+  textNode.textContent = text;
+  svg.appendChild(textNode);
+  document.body.appendChild(svg);
+  const width = textNode.getBBox().width;
+  document.body.removeChild(svg);
+  return width + 20; // Ajoute une marge de 20px à la largeur calculée
 }
 
 }
