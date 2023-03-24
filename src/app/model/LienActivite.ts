@@ -5,4 +5,5 @@ export class LienActivite{
     workflowId: String;
     activiteSourceName: String;
     activiteTargetName: String;
+    type : String;
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Activite } from "src/app/model/Activite";
 import { LienActivite } from "src/app/model/LienActivite";
 import { Workflow } from "src/app/model/Workflow";
@@ -25,6 +25,7 @@ export class EditappointmentComponent implements OnInit {
   lienActivite : LienActivite = new LienActivite();
   links: LienActivite[];
   simpleDialog: MatDialogRef<SimpleDialogComponent>;
+  private modalRef: NgbModalRef;
 
   constructor(
     private ser:WorkflowService, 
@@ -78,10 +79,11 @@ export class EditappointmentComponent implements OnInit {
       this.listLinks = res;
       this.lien =res;
       this.listLinks = this.listLinks.filter(link => link.workflowId === this.id)
-        .map(({ id , source , target, workflowId}) => ({
+        .map(({ id , source , target, type,workflowId}) => ({
           id : "w"+ Math.random().toString(36).substr(2, 8),
           source : source,
           target : target,
+          label : type,
           workflowId : workflowId
         }));
     });
@@ -138,8 +140,6 @@ updateActivity() {
       .subscribe(
         (response) => {
           console.log('Update successful:', response);
-          Swal.fire("Activité à jour !");
-          location.reload();
         },
         (error) => {
           console.error('Update failed:', error);
@@ -177,7 +177,7 @@ deleteActivite(id: any) {
       this.serActivite.deleteActivite(id).subscribe(
         (response) => {
           console.log('Delete successful:', response);
-          this.getActivitesByWorkflowId(this.id);
+          location.reload();
           Swal.fire('Activité supprimé !', '', 'success');
         },
         (error) => {
@@ -190,35 +190,73 @@ deleteActivite(id: any) {
 }
 
   selectedTarget: string;
-
-  addLinks(){    
+  selectedTargetOui: string;
+  selectedTargetNon: string;
+  addLinks() {
     this.lienActivite.source = this.activites.id.toString();
     this.lienActivite.id = this.activites.id;
-    this.lienActivite.id = this.lienActivite.id;
     this.lienActivite.workflowId = this.id;
     this.lienActivite.activiteSourceName = this.activites.name;
-    this.lienActivite.target = this.selectedTarget;
-    this.lienActivite.activiteTargetName = this.nodesArray.find(node => node.id === this.selectedTarget)?.label;
-    
-    const isLinkExists = this.listLinks.some(link => link.source === this.lienActivite.source && link.target === this.lienActivite.target);
-    
-    if (!this.lienActivite.source || !this.lienActivite.target) {
-      return;
-    } else if (isLinkExists) {
-      Swal.fire("Le lien existe déjà !");
-    } else {
-      this.serlien.addLink(this.lienActivite).subscribe((response) => {
-        console.log('Added successful:', response);
-        location.reload();
-        Swal.fire("Lien ajoutée avec succès !");
-      }, (error) => {
-        console.error('Add failed:', error);
-        Swal.fire("Lien n'est pas ajoutée !");
-      });
-    }
-    
-}
+  
+    if (this.selectedTarget === 'oui') {
+      const targets = [this.selectedTargetOui];
+      this.lienActivite.type = 'oui';
+      for (let target of targets) {
+        this.lienActivite.target = target;
+        this.lienActivite.activiteTargetName = this.nodesArray.find(node => node.id === target)?.label;
+  
+        const isLinkExists = this.listLinks.some(link => link.source === this.lienActivite.source && link.target === this.lienActivite.target);
+  
+        if (!this.lienActivite.source || !this.lienActivite.target) {
+          return;
+        } else if (isLinkExists) {
+          Swal.fire("Le lien existe déjà !");
+        } else {
+          this.serlien.addLink(this.lienActivite).subscribe((response) => {
+            console.log('Added successful:', response);
+            location.reload();
+            Swal.fire("Lien ajoutée avec succès !");
+          }, (error) => {
+            console.error('Add failed:', error);
+            Swal.fire("Lien n'est pas ajoutée !");
+          });
+        }
+      }
+    } else if (this.selectedTarget === 'oui-non') {
+      if (this.selectedTargetOui === this.selectedTargetNon) {
+        Swal.fire("Veuillez sélectionner des cibles différentes !");
+        return;
+      }
+      const targets = [this.selectedTargetOui, this.selectedTargetNon];
+      for (let target of targets) {
+        if (this.selectedTargetNon === target){
+          this.lienActivite.type = "non";
+        }else
+        {
+          this.lienActivite.type = "oui"
+        }
+        this.lienActivite.target = target;
+        this.lienActivite.activiteTargetName = this.nodesArray.find(node => node.id === target)?.label;
+        const isLinkExists = this.listLinks.some(link => link.source === this.lienActivite.source && link.target === this.lienActivite.target);
 
+        if (!this.lienActivite.source || !this.lienActivite.target) {
+          return;
+        } else if (isLinkExists) {
+          Swal.fire("Le lien existe déjà !");
+        } else {
+          this.serlien.addLink(this.lienActivite).subscribe((response) => {
+           
+            console.log('Added successful:', response);
+            Swal.fire("Lien ajoutée avec succès !");
+          }, (error) => {
+            console.error('Add failed:', error);
+            Swal.fire("Lien n'est pas ajoutée !");
+          });
+        }
+      }
+    }
+  }
+  
 deleteLink(id: any) {
   Swal.fire({
     title: 'Êtes-vous sûr(e) ?',
@@ -235,6 +273,7 @@ deleteLink(id: any) {
           // Reload links after delete
           this.getAllLinks();
           Swal.fire('Lien supprimé !', '', 'success');
+          this.modalRef.close();
         },
         (error) => {
           console.error('Delete failed:', error);
@@ -246,7 +285,7 @@ deleteLink(id: any) {
 }
 
 Basicopen(content) {
-  this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
+  this.modalRef = this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
 }
 
 openModal2(content) {

@@ -221,15 +221,52 @@
         <mat-form-field class="example-full-width">
           <mat-label>Choisir la cible de l'activité ({{activites.name}})</mat-label>
           <select matNativeControl [(ngModel)]="selectedTarget" required>
-            <ng-container *ngFor="let l of nodesArray">
-              <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
-                {{l.label}}
-              </option>
+            <ng-container>
+              <option value="oui">Oui</option>
+              <option value="oui-non">Oui Non</option>
             </ng-container>
           </select>
         </mat-form-field>
-
+        
+        <ng-container *ngIf="selectedTarget === 'oui'">
+          <mat-form-field class="example-full-width">
+            <mat-label>Donner l'activité si oui</mat-label>
+            <select matNativeControl [(ngModel)]="selectedTargetOui" required>
+              <ng-container *ngFor="let l of nodesArray">
+                <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
+                  {{l.label}}
+                </option>
+              </ng-container>
+            </select>
+          </mat-form-field>
+        </ng-container>
+        
+        <ng-container *ngIf="selectedTarget === 'oui-non'">
+          <mat-form-field class="example-full-width">
+            <mat-label>Donner l'activité si oui</mat-label>
+            <select matNativeControl [(ngModel)]="selectedTargetOui" required>
+              <ng-container *ngFor="let l of nodesArray">
+                <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
+                  {{l.label}}
+                </option>
+              </ng-container>
+            </select>
+          </mat-form-field>
+        
+          <mat-form-field class="example-full-width">
+            <mat-label>Donner l'activité si non</mat-label>
+            <select matNativeControl [(ngModel)]="selectedTargetNon" required>
+              <ng-container *ngFor="let l of nodesArray">
+                <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
+                  {{l.label}}
+                </option>
+              </ng-container>
+            </select>
+          </mat-form-field>
+        </ng-container>
+        
           <button class="btn btn-danger" (click)="showForm = !showForm">Supprimer une relation</button>
+
           <div *ngIf="showForm" class="form-field-container">
             <mat-form-field class="example-full-width">
               <mat-label>Supprimer la cible de l'activité</mat-label>
@@ -253,12 +290,12 @@
 
   <ng-template #nodeTemplate let-node>
     <svg:g class="node" (click)="act(node.id)">
-      <svg:rect (click)="Basicopen(modal1)"
+      <svg:rect (dblclick)="Basicopen(modal1)"
         [attr.width]="node.dimension.width"
         [attr.height]="node.dimension.height"
         [attr.fill]="node.data.color"
       />
-      <svg:text (click)="Basicopen(modal1)" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2" style="fill: white;">
+      <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2" style="fill: white;">
         {{node.label}}
 
       </svg:text>
