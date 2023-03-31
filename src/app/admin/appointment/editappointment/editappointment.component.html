@@ -65,9 +65,8 @@
           <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">
               Activité : {{activites.name}}
-              
             </h4>
-    
+            <mat-icon matSuffix (click)="deleteActivite(activites.id)">delete</mat-icon>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
               <span aria-hidden="true"><i class="material-icons">close</i></span>
             </button>
@@ -162,7 +161,6 @@
           />
           <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2" style="fill: white;">
             {{node.label}}
-    
           </svg:text>
         </svg:g>
       </ng-template>
@@ -221,6 +219,68 @@
               <button mat-raised-button color="primary" (click)="updateWorkflow()">Mettre à jour </button>
             </div>
           </mat-tab>
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="example-tab-icon msr-2">list</mat-icon>
+              Les tâches
+            </ng-template>
+            <div class="row clearfix">
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                <div class="card">
+                  <div class="header">
+                        <h2>Ajouter une activité</h2>
+                            <div class="icon-button-demo">
+                              <button mat-mini-fab color="primary" (click)="openModal2(modal2)">
+                                <mat-icon class="col-white">add</mat-icon>
+                              </button>
+                      </div>
+                    </div>
+                  </div>
+                      <div class="body">
+                        <div class="example-container">
+                          <div class="row">
+                            <div class="row clearfix">
+                              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                  <div class="body table-responsive">
+                                    <table class="table table-hover" style="text-align: center;">
+                                      <thead>
+                                        <tr>
+                                          <th>#</th>
+                                          <th>NOM</th>
+                                          <th>DESCRIPTION</th>
+                                          <th>DATE DE CREATION</th>
+                                          <th>VOIR LES DETAILS</th>
+                                          <th>SUPPRIMER UNE ACTIVITE</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let a of allactivites">
+                                          <td></td>
+                                          <td>{{a.name}}</td>
+                                          <td>{{a.description}}</td>
+                                          <td>{{a.creationDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}</td>
+                                          <td>
+                                            <i class="fas fas fa-info" style="font-size: 20px;" (click)="act(a.id)" (click)="openModalActivity(modalActivity)"></i>
+                                          </td>
+                                          <td>
+                                            <i class="fas fa-trash" style="font-size: 20px;" (click)="deleteActivite(a.id)"></i>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>  
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+          </mat-tab>
+
           <mat-tab>
             <ng-template mat-tab-label>
               <button mat-mini-fab color="primary" *ngIf="!isPlaying" (click)="isPlaying = true">
@@ -231,6 +291,7 @@
               </button>
             </ng-template>
           </mat-tab>
+      
         </mat-tab-group>
       </div>
     </div>
@@ -285,60 +346,5 @@
       <br>
       <button mat-raised-button color="primary" (click)="addActivite()">Ajouter    </button>      </div>
     </ng-template>
-    
-    <div class="row clearfix">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-        <div class="card">
-          <div class="header">
-                <h2>Liste des activités</h2>
-                    <div class="icon-button-demo">
-                      <button mat-mini-fab color="primary" (click)="openModal2(modal2)">
-                        <mat-icon class="col-white">add</mat-icon>
-                      </button>
-              </div>
-            </div>
-          </div>
-              <div class="body">
-                <div class="example-container">
-                  <div class="row">
-                    <div class="row clearfix">
-                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="card">
-                          <div class="body table-responsive">
-                            <table class="table table-hover" style="text-align: center;">
-                              <thead>
-                                <tr>
-                                  <th>#</th>
-                                  <th>NOM</th>
-                                  <th>DESCRIPTION</th>
-                                  <th>DATE DE CREATION</th>
-                                  <th>VOIR LES DETAILS</th>
-                                  <th>SUPPRIMER UNE ACTIVITE</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr *ngFor="let a of allactivites">
-                                  <td></td>
-                                  <td>{{a.name}}</td>
-                                  <td>{{a.description}}</td>
-                                  <td>{{a.creationDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}</td>
-                                  <td>
-                                    <i class="fas fas fa-info" style="font-size: 20px;" (click)="act(a.id)" (click)="openModalActivity(modalActivity)"></i>
-                                  </td>
-                                  <td>
-                                    <i class="fas fa-trash" style="font-size: 20px;" (click)="deleteActivite(a.id)"></i>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>  
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  </div>
 </section>
