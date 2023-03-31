@@ -19,40 +19,219 @@
         </div>
       </div>
     </div>
-    <div class="row clearfix">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-        <div class="card">
-          <div class="header">
-            <h2>Modifier le workflow</h2>
+    <div>
+      <div class="card">
+        <mat-tab-group>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="example-tab-icon msr-2">settings</mat-icon>
+              Vue d'exécution
+            </ng-template>
+  <ngx-graph
+      class="chart-container"
+      [view]="[1000, 550]"
+      [links]="listLinks"
+      [nodes]="nodesArray"
+      [clusters]="[
+        {
+          id: 'third',
+          label: 'Cluster node',
+          childNodeIds: ids
+        }
+      ]"
+      layout="dagreCluster"
+    >
+      <ng-template #defsTemplate>
+        <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
+          <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+        </svg:marker>
+      </ng-template>
+    
+      <ng-template #clusterTemplate let-cluster>
+        <svg:g class="node cluster">
+          <svg:rect
+            rx="5"
+            ry="5"
+            [attr.width]="cluster.dimension.width"
+            [attr.height]="cluster.dimension.height"
+            [attr.fill]="cluster.data.color"
+            style="width: 100%;height: 100%;"
+          />
+        </svg:g>
+      </ng-template>
 
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <ng-template #modal1 let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">
+              Activité : {{activites.name}}
+              
+            </h4>
+    
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true"><i class="material-icons">close</i></span>
+            </button>
           </div>
-          <div class="body">
-            <div class="card">
-              <div class="header">
-                <h2>Modifier les données du workflow</h2>
+          <div class="modal-footer">
+            <mat-form-field class="example-full-width">
+              <mat-label>Nom</mat-label>
+              <input matInput [(ngModel)]="activites.name" required>
+              <mat-icon matSuffix>face</mat-icon>
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <mat-label>Description</mat-label>
+              <textarea matInput [(ngModel)]="activites.description" required></textarea>
+            </mat-form-field>
+            
+            <mat-form-field class="example-full-width">
+              <mat-label>Choisir la cible de l'activité ({{activites.name}})</mat-label>
+              <select matNativeControl [(ngModel)]="selectedTarget" required>
+                <ng-container>
+                  <option value="oui">Oui</option>
+                  <option value="oui-non">Oui Non</option>
+                </ng-container>
+              </select>
+            </mat-form-field>
+            
+            <ng-container *ngIf="selectedTarget === 'oui'">
+              <mat-form-field class="example-full-width">
+                <mat-label>Donner l'activité si oui</mat-label>
+                <select matNativeControl [(ngModel)]="selectedTargetOui" required>
+                  <ng-container *ngFor="let l of nodesArray">
+                    <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
+                      {{l.label}}
+                    </option>
+                  </ng-container>
+                </select>
+              </mat-form-field>
+            </ng-container>
+            
+            <ng-container *ngIf="selectedTarget === 'oui-non'">
+              <mat-form-field class="example-full-width">
+                <mat-label>Donner l'activité si oui</mat-label>
+                <select matNativeControl [(ngModel)]="selectedTargetOui" required>
+                  <ng-container *ngFor="let l of nodesArray">
+                    <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
+                      {{l.label}}
+                    </option>
+                  </ng-container>
+                </select>
+              </mat-form-field>
+            
+              <mat-form-field class="example-full-width">
+                <mat-label>Donner l'activité si non</mat-label>
+                <select matNativeControl [(ngModel)]="selectedTargetNon" required>
+                  <ng-container *ngFor="let l of nodesArray">
+                    <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
+                      {{l.label}}
+                    </option>
+                  </ng-container>
+                </select>
+              </mat-form-field>
+            </ng-container>
+            
+              <button class="btn btn-danger" (click)="showForm = !showForm">Supprimer une relation</button>
+    
+              <div *ngIf="showForm" class="form-field-container">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Supprimer la cible de l'activité</mat-label>
+                  <select matNativeControl [(ngModel)]="selectedTarget" required>
+                    <ng-container *ngFor="let a of actLink">
+                      <option [value]="a.id" id="inputTarget">
+                        {{a.activiteTargetName}}
+                      </option>
+                    </ng-container>
+                  </select>
+                </mat-form-field>
+                <ng-container *ngFor="let a of actLink">
+                  <button class="btn btn-danger" *ngIf="a.id == selectedTarget" (click)="deleteLink(a.id)">Supprimer</button>
+                </ng-container>          
               </div>
-              <div class="body">
-                <div class="example-container">
-                  <div class="row">
-                      <mat-form-field class="example-full-width">
-                        <mat-label>Nom</mat-label>
-                        <input matInput [(ngModel)]="workflow.name" required>
-                        <mat-icon matSuffix>face</mat-icon>
-                      </mat-form-field>
-                      <mat-form-field class="example-full-width">
-                        <mat-label>Description</mat-label>
-                        <textarea matInput [(ngModel)]="workflow.description" required></textarea>
-                        <mat-icon matSuffix>event_note</mat-icon>
-                      </mat-form-field>
-
-                  </div>  
-                  <br>
-                  <button mat-raised-button color="primary" (click)="updateWorkflow()">Mettre à jour </button>
-                </div>
               </div>
+            {{activites.creationDate | date: 'dd/MM/yyyy -- HH:mm:ss'}}
+            <button type="submit" class="btn btn-warning" (click)="addLinks();updateActivity();" (click)="modal.dismiss('Cross click')">Modifier</button>
+        </ng-template>     
+      </div> 
+    
+      <ng-template #nodeTemplate let-node>
+        <svg:g class="node" (click)="act(node.id)">
+          <svg:rect (dblclick)="Basicopen(modal1)"
+            [attr.width]="node.dimension.width"
+            [attr.height]="node.dimension.height"
+            [attr.fill]="node.data.color"
+          />
+          <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2" style="fill: white;">
+            {{node.label}}
+    
+          </svg:text>
+        </svg:g>
+      </ng-template>
+    
+      <ng-template #linkTemplate let-link>
+        <svg:g class="edge">
+          <svg:path class="line" stroke-width="2" marker-end="url(#arrow)" 
+            drag
+            [dragEdges]="true"
+            [dragTarget]="'path'"
+            (dragStart)="onDragStart(link)"
+            (dragMove)="onDragMove(link, $event)"
+            (dragEnd)="onDragEnd(link)">
+          </svg:path>
+          <svg:text class="edge-label" text-anchor="middle">
+            <textPath
+              class="text-path"
+              [attr.href]="'#' + link.id"
+              [style.dominant-baseline]="link.dominantBaseline"
+              startOffset="50%"
+            >
+              {{link.label}}
+            </textPath>
+          </svg:text>
+        </svg:g>
+      </ng-template>
+      
+    </ngx-graph>
+          </mat-tab>
+    
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="example-tab-icon msr-2">update</mat-icon>
+              Modifier le worklfow
+            </ng-template>
+            <div class="header">
+              <h2>
+                <strong>Modifier</strong> Workflow</h2>
             </div>
-          </div>
-        </div>
+            <div class="body">
+              <div class="example-container">
+                <div class="row">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Nom</mat-label>
+                    <input matInput [(ngModel)]="workflow.name" required>
+                    <mat-icon matSuffix>face</mat-icon>
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput [(ngModel)]="workflow.description" required></textarea>
+                    <mat-icon matSuffix>event_note</mat-icon>
+                  </mat-form-field>
+              </div>  
+              <br>
+              </div>
+              <button mat-raised-button color="primary" (click)="updateWorkflow()">Mettre à jour </button>
+            </div>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <button mat-mini-fab color="primary" *ngIf="!isPlaying" (click)="isPlaying = true">
+                <mat-icon class="col-white">play_circle_outline</mat-icon>
+              </button>
+              <button mat-mini-fab color="primary" *ngIf="isPlaying" (click)="isPlaying = false">
+                <mat-icon class="col-white">pause_circle_outline</mat-icon>
+              </button>
+            </ng-template>
+          </mat-tab>
+        </mat-tab-group>
       </div>
     </div>
     <ng-template #modalActivity let-modal>
@@ -162,161 +341,4 @@
             </div>
           </div>
         </div>
-
-<ngx-graph
-  class="chart-container"
-  [view]="[1000, 550]"
-  [links]="listLinks"
-  [nodes]="nodesArray"
-  [clusters]="[
-    {
-      id: 'third',
-      label: 'Cluster node',
-      childNodeIds: ids
-    }
-  ]"
-  layout="dagreCluster"
->
-  <ng-template #defsTemplate>
-    <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
-      <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-    </svg:marker>
-  </ng-template>
-
-  <ng-template #clusterTemplate let-cluster>
-    <svg:g class="node cluster">
-      <svg:rect
-        rx="5"
-        ry="5"
-        [attr.width]="cluster.dimension.width"
-        [attr.height]="cluster.dimension.height"
-        [attr.fill]="cluster.data.color"
-        style="width: 100%;"
-      />
-    </svg:g>
-  </ng-template>
-<!-- Add this to your HTML template -->
-  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-    <ng-template #modal1 let-modal>
-      <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">
-          Activité : {{activites.name}}
-        </h4>
-
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-          <span aria-hidden="true"><i class="material-icons">close</i></span>
-        </button>
-      </div>
-      <div class="modal-footer">
-        <mat-form-field class="example-full-width">
-          <mat-label>Nom</mat-label>
-          <input matInput [(ngModel)]="activites.name" required>
-          <mat-icon matSuffix>face</mat-icon>
-        </mat-form-field>
-        <mat-form-field class="example-full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput [(ngModel)]="activites.description" required></textarea>
-        </mat-form-field>
-        
-        <mat-form-field class="example-full-width">
-          <mat-label>Choisir la cible de l'activité ({{activites.name}})</mat-label>
-          <select matNativeControl [(ngModel)]="selectedTarget" required>
-            <ng-container>
-              <option value="oui">Oui</option>
-              <option value="oui-non">Oui Non</option>
-            </ng-container>
-          </select>
-        </mat-form-field>
-        
-        <ng-container *ngIf="selectedTarget === 'oui'">
-          <mat-form-field class="example-full-width">
-            <mat-label>Donner l'activité si oui</mat-label>
-            <select matNativeControl [(ngModel)]="selectedTargetOui" required>
-              <ng-container *ngFor="let l of nodesArray">
-                <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
-                  {{l.label}}
-                </option>
-              </ng-container>
-            </select>
-          </mat-form-field>
-        </ng-container>
-        
-        <ng-container *ngIf="selectedTarget === 'oui-non'">
-          <mat-form-field class="example-full-width">
-            <mat-label>Donner l'activité si oui</mat-label>
-            <select matNativeControl [(ngModel)]="selectedTargetOui" required>
-              <ng-container *ngFor="let l of nodesArray">
-                <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
-                  {{l.label}}
-                </option>
-              </ng-container>
-            </select>
-          </mat-form-field>
-        
-          <mat-form-field class="example-full-width">
-            <mat-label>Donner l'activité si non</mat-label>
-            <select matNativeControl [(ngModel)]="selectedTargetNon" required>
-              <ng-container *ngFor="let l of nodesArray">
-                <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
-                  {{l.label}}
-                </option>
-              </ng-container>
-            </select>
-          </mat-form-field>
-        </ng-container>
-        
-          <button class="btn btn-danger" (click)="showForm = !showForm">Supprimer une relation</button>
-
-          <div *ngIf="showForm" class="form-field-container">
-            <mat-form-field class="example-full-width">
-              <mat-label>Supprimer la cible de l'activité</mat-label>
-              <select matNativeControl [(ngModel)]="selectedTarget" required>
-                <ng-container *ngFor="let a of actLink">
-                  <option [value]="a.id" id="inputTarget">
-                    {{a.activiteTargetName}}
-                  </option>
-                </ng-container>
-              </select>
-            </mat-form-field>
-            <ng-container *ngFor="let a of actLink">
-              <button class="btn btn-danger" *ngIf="a.id == selectedTarget" (click)="deleteLink(a.id)">Supprimer</button>
-            </ng-container>          
-          </div>
-          </div>
-        {{activites.creationDate | date: 'dd/MM/yyyy -- HH:mm:ss'}}
-        <button type="button" class="btn btn-warning" (click)="addLinks();updateActivity();" (click)="modal.dismiss('Cross click')">Modifier</button>
-    </ng-template>     
-  </div> 
-
-  <ng-template #nodeTemplate let-node>
-    <svg:g class="node" (click)="act(node.id)">
-      <svg:rect (dblclick)="Basicopen(modal1)"
-        [attr.width]="node.dimension.width"
-        [attr.height]="node.dimension.height"
-        [attr.fill]="node.data.color"
-      />
-      <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2" style="fill: white;">
-        {{node.label}}
-
-      </svg:text>
-    </svg:g>
-  </ng-template>
-
-  <ng-template #linkTemplate let-link>
-    <svg:g class="edge">
-      <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
-      <svg:text class="edge-label" text-anchor="middle">
-        <textPath
-          class="text-path"
-          [attr.href]="'#' + link.id"
-          [style.dominant-baseline]="link.dominantBaseline"
-          startOffset="50%"
-        >
-          {{link.label}}
-        </textPath>
-      </svg:text>
-    </svg:g>
-  </ng-template>
-</ngx-graph>
-
 </section>

@@ -25,6 +25,7 @@ import { DeleteDialogComponent } from "./viewappointment/dialogs/delete/delete.c
 import { FormDialogComponent } from "./viewappointment/dialogs/form-dialog/form-dialog.component";
 import { AppointmentService } from "./viewappointment/appointment.service";
 import { NgxGraphModule } from '@swimlane/ngx-graph';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { NgxGraphModule } from '@swimlane/ngx-graph';
   ],
   imports: [
     NgxGraphModule,
+    MatTabsModule,
     CommonModule,
     AppointmentRoutingModule,
     CommonModule,

@@ -26,6 +26,7 @@ export class EditappointmentComponent implements OnInit {
   links: LienActivite[];
   simpleDialog: MatDialogRef<SimpleDialogComponent>;
   private modalRef: NgbModalRef;
+  isPlaying = false;
 
   constructor(
     private ser:WorkflowService, 
@@ -51,7 +52,7 @@ export class EditappointmentComponent implements OnInit {
   updateWorkflow(){
     this.ser.updateWorkflow(this.workflow.id,this.workflow).subscribe( (response) => {
       console.log('Update successful:', response);
-      this.router.navigateByUrl("admin/appointment/viewAppointment");
+      location.reload();
       Swal.fire("Workflow à jour !");
     },
     (error) => {
@@ -134,7 +135,6 @@ export class EditappointmentComponent implements OnInit {
         });
   }
 
-// méthode pour mettre à jour l'activité
 updateActivity() {
     this.serActivite.updateActivity(this.activites.id, this.activites)
       .subscribe(
@@ -245,9 +245,9 @@ deleteActivite(id: any) {
           Swal.fire("Le lien existe déjà !");
         } else {
           this.serlien.addLink(this.lienActivite).subscribe((response) => {
-           
             console.log('Added successful:', response);
             Swal.fire("Lien ajoutée avec succès !");
+            location.reload();
           }, (error) => {
             console.error('Add failed:', error);
             Swal.fire("Lien n'est pas ajoutée !");

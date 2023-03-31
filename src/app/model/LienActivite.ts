@@ -6,4 +6,5 @@ export class LienActivite{
     activiteSourceName: String;
     activiteTargetName: String;
     type : String;
+    activiteLienActivite: any;
 }
