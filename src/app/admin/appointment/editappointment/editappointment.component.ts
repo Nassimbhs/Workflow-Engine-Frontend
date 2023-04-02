@@ -50,6 +50,11 @@ export class EditappointmentComponent implements OnInit {
   }
   
   updateWorkflow(){
+     if (this.isPlaying) {
+    this.workflow.etat = 'en cours';
+  } else {
+    this.workflow.etat = 'en pause';
+  }
     this.ser.updateWorkflow(this.workflow.id,this.workflow).subscribe( (response) => {
       console.log('Update successful:', response);
       location.reload();
@@ -60,6 +65,7 @@ export class EditappointmentComponent implements OnInit {
       Swal.fire("Workflow n'est pas à jour !");
     }
     );
+
   }
 
   workflowNodes = [];
@@ -100,19 +106,41 @@ export class EditappointmentComponent implements OnInit {
       });
   }
 
-  nodesArray: {id: String, label: String}[] = [];
+  formatDuration(duration: number): string {
+    const milliseconds = duration * 24 * 60 * 60 * 1000;
+    const seconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+  
+    const secondsText = seconds % 60 !== 0 ? `${seconds % 60} s` : '';
+    const minutesText = minutes % 60 !== 0 ? `${minutes % 60} min ` : '';
+    const hoursText = hours % 24 !== 0 ? `${hours % 24} h ` : '';
+    const daysText = days !== 0 ? `${days} jours ` : '';
+  
+    return `${daysText}${hoursText}${minutesText}${secondsText}`;
+  }
+  
+  nodesArray: {id: String, label: String, duration: string}[] = [];
   linksArray = [];
   ids = {};
-  allactivites = []
+  allactivites = [];
+  
   getActivitesByWorkflowId(id: any) {
     this.serActivite.getActivitesByWorkflowId(id).subscribe(
       (res: any) => {
         this.allactivites = res;
         if (Array.isArray(res)) {
-          this.nodesArray = res
-          .map(activite => ({id: activite.id.toString(), label: activite.name}));
+          this.nodesArray = res.map(activite => {
+            const startDate = new Date(activite.startDate);
+            const endDate = new Date(activite.endDate);
+            const duration = Math.abs(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+            const formattedDuration = this.formatDuration(duration);
+            return {id: activite.id.toString(), label: activite.name, duration: formattedDuration};
+          });
           this.ids = res.map(activite => activite.id.toString());
-        } else {
+        }
+         else {
           console.error('res is not an array');
         }
       }
@@ -307,6 +335,13 @@ getTextWidth(text: string): number {
   const width = textNode.getBBox().width;
   document.body.removeChild(svg);
   return width + 20; // Ajoute une marge de 20px à la largeur calculée
+}
+
+duration: number;
+calculateDuration() {
+  const start = this.activites.startDate.getTime();
+  const end = this.activites.endDate.getTime();
+  this.duration = end - start;
 }
 
 }

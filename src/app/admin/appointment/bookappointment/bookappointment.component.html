@@ -36,13 +36,14 @@
                     <div class="row">
                         <mat-form-field class="example-full-width">
                           <mat-label>Nom</mat-label>
-                          <input matInput [(ngModel)]="workflow.name" required>
+                          <input matInput [(ngModel)]="workflow.name" required/>
                           <mat-icon matSuffix>face</mat-icon>
                         </mat-form-field>
                         <mat-form-field class="example-full-width">
                           <mat-label>Description</mat-label>
                           <textarea matInput [(ngModel)]="workflow.description" required></textarea>
                         </mat-form-field>
+                        
                     </div>  
                     <br>
                     <button mat-raised-button color="primary" (click)="addWorkflow()">Ajouter</button>

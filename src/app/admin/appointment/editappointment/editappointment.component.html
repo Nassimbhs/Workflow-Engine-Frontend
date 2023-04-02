@@ -27,6 +27,13 @@
               <mat-icon class="example-tab-icon msr-2">settings</mat-icon>
               Vue d'exécution
             </ng-template>
+
+            <h2 class="alert alert-info" *ngIf="workflow.etat === 'en pause'" style="text-align: center ;">
+              Workflow est {{workflow.etat}}
+            </h2>
+            <h2 class="alert alert-warning" *ngIf="workflow.etat === 'en cours'" style="text-align: center ;">
+              Workflow est {{workflow.etat}}
+            </h2>
   <ngx-graph
       class="chart-container"
       [view]="[1000, 550]"
@@ -77,10 +84,20 @@
               <input matInput [(ngModel)]="activites.name" required>
               <mat-icon matSuffix>face</mat-icon>
             </mat-form-field>
+
             <mat-form-field class="example-full-width">
               <mat-label>Description</mat-label>
               <textarea matInput [(ngModel)]="activites.description" required></textarea>
             </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Date de début :</mat-label>
+              <input matInput type="datetime-local" [(ngModel)]="activites.startDate">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <mat-label>Date de fin :</mat-label>
+              <input matInput type="datetime-local"  [(ngModel)]="activites.endDate">
+            </mat-form-field> 
             
             <mat-form-field class="example-full-width">
               <mat-label>Choisir la cible de l'activité ({{activites.name}})</mat-label>
@@ -159,8 +176,12 @@
             [attr.height]="node.dimension.height"
             [attr.fill]="node.data.color"
           />
-          <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2" style="fill: white;">
-            {{node.label}}
+          <svg:text 
+          (dblclick)="Basicopen(modal1)" alignment-baseline="central" 
+          [attr.x]="1" [attr.y]="20" style="fill: white;"
+          >
+          <tspan style="font-weight:bolder;font-size: 15px;">{{node.label}}</tspan>
+          <tspan x = "50" dy="1em" style="fill: black;font-weight: bolder;">{{node.duration}}</tspan>
           </svg:text>
         </svg:g>
       </ng-template>
@@ -212,6 +233,15 @@
                     <mat-label>Description</mat-label>
                     <textarea matInput [(ngModel)]="workflow.description" required></textarea>
                     <mat-icon matSuffix>event_note</mat-icon>
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Choisir l'état du workflow</mat-label>
+                    <select matNativeControl>
+                      <ng-container>
+                        <option value="pause">En Pause</option>
+                        <option value="play">En cours d'exécution</option>
+                      </ng-container>
+                    </select>
                   </mat-form-field>
               </div>  
               <br>
@@ -283,14 +313,18 @@
 
           <mat-tab>
             <ng-template mat-tab-label>
-              <button mat-mini-fab color="primary" *ngIf="!isPlaying" (click)="isPlaying = true">
+              <button mat-mini-fab color="primary" *ngIf="workflow.etat === 'en cours'" (click)="isPlaying = false; updateWorkflow()">
                 <mat-icon class="col-white">play_circle_outline</mat-icon>
               </button>
-              <button mat-mini-fab color="primary" *ngIf="isPlaying" (click)="isPlaying = false">
+              <button mat-mini-fab color="primary" *ngIf="workflow.etat === 'en pause'" (click)="isPlaying = true; updateWorkflow()">
                 <mat-icon class="col-white">pause_circle_outline</mat-icon>
+              </button>
+              <button mat-mini-fab color="primary" *ngIf="workflow.etat === null" (click)="isPlaying = true; updateWorkflow()">
+                <mat-icon class="col-white">play_circle_outline</mat-icon>
               </button>
             </ng-template>
           </mat-tab>
+          
       
         </mat-tab-group>
       </div>

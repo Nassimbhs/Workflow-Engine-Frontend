@@ -26,7 +26,9 @@ import { FormDialogComponent } from "./viewappointment/dialogs/form-dialog/form-
 import { AppointmentService } from "./viewappointment/appointment.service";
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { MatTabsModule } from '@angular/material/tabs';
-
+import { MatSliderModule } from '@angular/material/slider';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 @NgModule({
   declarations: [
     BookappointmentComponent,
@@ -38,6 +40,9 @@ import { MatTabsModule } from '@angular/material/tabs';
   imports: [
     NgxGraphModule,
     MatTabsModule,
+    MatSliderModule,
+    MatButtonToggleModule,
+    MatProgressBarModule,
     CommonModule,
     AppointmentRoutingModule,
     CommonModule,
