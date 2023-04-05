@@ -70,7 +70,8 @@
         <!-- #END# Notifications-->
         <li class="nav-item user_profile" ngbDropdown>
           <a href="#" onClick="return false;" ngbDropdownToggle role="button" class="nav-notification-icons pt-0">
-            <img src={{userImg}} class="rounded-circle" width="32" height="32" alt="User">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTas9ZerN0eVpHSiZomHonwW3s8kjfrQy2aajkQRNWU&s" class="rounded-circle" width="32" height="32" alt="User">
+            <strong>{{ currentUser.username }}</strong>
           </a>
           <div ngbDropdownMenu class="notification-dropdown pullDown">
             <div class="noti-list" style="position: relative; max-width: 600px; max-height: 300px;" [perfectScrollbar]>

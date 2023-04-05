@@ -10,8 +10,9 @@ import {
   OnDestroy,
 } from "@angular/core";
 import { ROUTES } from "./sidebar-items";
-import { AuthService } from "src/app/core/service/auth.service";
-import { Role } from "src/app/core/models/role";
+import { TokenStorageService } from "src/app/service/token-storage.service";
+import { AuthenticationService } from "src/app/service/authentication.service";
+import { ERole } from "src/app/model/ERole";
 @Component({
   selector: "app-sidebar",
   templateUrl: "./sidebar.component.html",
@@ -36,14 +37,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
     public elementRef: ElementRef,
-    private authService: AuthService,
-    private router: Router
+    private authService: AuthenticationService,
+    private router: Router,
+    private tokenStorageService: TokenStorageService
+
   ) {
     const body = this.elementRef.nativeElement.closest("body");
     this.routerObj = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         // logic for select active menu in dropdown
-        const role = ["admin", "doctor", "patient"];
+        const role = ["ROLE_USER", "ROLE_MODERATOR", "ROLE_ADMIN"];
         const currenturl = event.url.split("?")[0];
         const firstString = currenturl.split("/").slice(1)[0];
 
@@ -101,24 +104,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.authService.currentUserValue) {
       const userRole = this.authService.currentUserValue.role;
-      this.userFullName =
-        this.authService.currentUserValue.firstName +
-        " " +
-        this.authService.currentUserValue.lastName;
-      this.userImg = this.authService.currentUserValue.img;
-
-      this.sidebarItems = ROUTES.filter(
-        (x) => x.role.indexOf(userRole) !== -1 || x.role.indexOf("All") !== -1
-      );
-      if (userRole === Role.Admin) {
-        this.userType = Role.Admin;
-      } else if (userRole === Role.Patient) {
-        this.userType = Role.Patient;
-      } else if (userRole === Role.Doctor) {
-        this.userType = Role.Doctor;
-      } else {
-        this.userType = Role.Admin;
-      }
+      this.userFullName = this.authService.currentUserValue.username;
+      this.sidebarItems = ROUTES;
     }
 
     // this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
@@ -165,10 +152,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
   }
   logout() {
-    this.authService.logout().subscribe((res) => {
-      if (!res.success) {
-        this.router.navigate(["/authentication/signin"]);
-      }
-    });
+    this.tokenStorageService.signOut();
+    this.router.navigate(["/authentication/signin"]);
+      
   }
 }

@@ -13,6 +13,7 @@ import { AuthService } from "src/app/core/service/auth.service";
 import { RightSidebarService } from "src/app/core/service/rightsidebar.service";
 import { LanguageService } from "src/app/core/service/language.service";
 import { UnsubscribeOnDestroyAdapter } from "src/app/shared/UnsubscribeOnDestroyAdapter";
+import { TokenStorageService } from "src/app/service/token-storage.service";
 const document: any = window.document;
 
 @Component({
@@ -24,6 +25,7 @@ export class HeaderComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit, AfterViewInit
 {
+  currentUser: any;
   public config: any = {};
   userImg: string;
   homePage: string;
@@ -41,7 +43,9 @@ export class HeaderComponent
     private configService: ConfigService,
     private authService: AuthService,
     private router: Router,
-    public languageService: LanguageService
+    public languageService: LanguageService,
+    private token: TokenStorageService
+
   ) {
     super();
   }
@@ -95,11 +99,12 @@ export class HeaderComponent
     },
   ];
   ngOnInit() {
+    this.currentUser = this.token.getUser();
     this.config = this.configService.configData;
     const userRole = this.authService.currentUserValue.role;
     this.userImg = this.authService.currentUserValue.img;
 
-    if (userRole === "Admin") {
+    if (userRole === "ROLE_ADMIN") {
       this.homePage = "admin/dashboard/main";
     } else if (userRole === "Patient") {
       this.homePage = "patient/dashboard";

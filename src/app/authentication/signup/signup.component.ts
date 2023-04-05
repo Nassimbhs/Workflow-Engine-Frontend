@@ -1,24 +1,34 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AuthenticationService } from "src/app/service/authentication.service";
+import { SignupRequest } from "src/app/model/SignupRequest";
+import Swal from "sweetalert2";
+import { HttpErrorResponse } from "@angular/common/http";
+
 @Component({
   selector: "app-signup",
   templateUrl: "./signup.component.html",
   styleUrls: ["./signup.component.scss"],
 })
 export class SignupComponent implements OnInit {
-  authForm: FormGroup;
+  
+  signupForm: FormGroup;
   submitted = false;
   returnUrl: string;
   hide = true;
   chide = true;
+  errorMessage = '';
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthenticationService
   ) {}
+  
   ngOnInit() {
-    this.authForm = this.formBuilder.group({
+    this.signupForm = this.formBuilder.group({
       username: ["", Validators.required],
       email: [
         "",
@@ -30,16 +40,43 @@ export class SignupComponent implements OnInit {
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
   }
+  
   get f() {
-    return this.authForm.controls;
+    return this.signupForm.controls;
   }
+
   onSubmit() {
-    this.submitted = true;
-    // stop here if form is invalid
-    if (this.authForm.invalid) {
-      return;
-    } else {
-      this.router.navigate(["/admin/dashboard/main"]);
-    }
+    const signupRequest: SignupRequest = {
+      username: this.signupForm.value.username,
+      email: this.signupForm.value.email,
+      role: ["admin"],
+      password: this.signupForm.value.password
+    };
+    this.authService.signup(signupRequest).subscribe(
+      data => {
+        this.router.navigate(['/authentication/signin']);
+        if (data && data.message) {
+          Swal.fire({
+            title: 'Success',
+            text: data.message,
+            icon: 'success'
+          });
+        }
+      },
+      (error: HttpErrorResponse) => {
+        let errorMessage: string;
+        if (error.status === 400 && error.error && error.error.message) {
+          errorMessage = error.error.message;
+        } else {
+          errorMessage = error.message;
+        }
+        Swal.fire({
+          title: 'Error',
+          text: 'Username or email already in use ! ',
+          icon: 'error'
+        });
+      }
+    );
   }
-}
+
+} 

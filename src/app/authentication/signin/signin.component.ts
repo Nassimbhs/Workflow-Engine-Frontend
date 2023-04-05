@@ -4,6 +4,10 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "src/app/core/service/auth.service";
 import { Role } from "src/app/core/models/role";
 import { UnsubscribeOnDestroyAdapter } from "src/app/shared/UnsubscribeOnDestroyAdapter";
+import { AuthenticationService } from "src/app/service/authentication.service";
+import { TokenStorageService } from "src/app/service/token-storage.service";
+import { SignupRequest } from "src/app/model/SignupRequest";
+import { BehaviorSubject, Observable } from "rxjs";
 @Component({
   selector: "app-signin",
   templateUrl: "./signin.component.html",
@@ -18,20 +22,40 @@ export class SigninComponent
   loading = false;
   error = "";
   hide = true;
+  errorMessage = '';
+  roles: string[] = [];
+  isLoggedIn = false;
+  isLoginFailed = false;
+  form: any = {};
+
+  private currentUserSubject: BehaviorSubject<SignupRequest>;
+  public currentUser: Observable<SignupRequest>;
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private authenticationService: AuthenticationService,
+    private tokenStorage: TokenStorageService,
+    private tokenStorageService: TokenStorageService
+
   ) {
     super();
   }
 
   ngOnInit() {
+/*
     this.authForm = this.formBuilder.group({
       username: ["admin@hospital.org", Validators.required],
       password: ["admin@123", Validators.required],
     });
+  */  
+    if (this.tokenStorage.getToken()) {
+      this.isLoggedIn = true;
+      this.roles = this.tokenStorage.getUser().roles;
+    }
+
   }
   get f() {
     return this.authForm.controls;
@@ -48,6 +72,7 @@ export class SigninComponent
     this.authForm.get("username").setValue("patient@hospital.org");
     this.authForm.get("password").setValue("patient@123");
   }
+  /*
   onSubmit() {
     this.submitted = true;
     this.loading = true;
@@ -55,7 +80,8 @@ export class SigninComponent
     if (this.authForm.invalid) {
       this.error = "Username and Password not valid !";
       return;
-    } else {
+    }
+    else {
       this.subs.sink = this.authService
         .login(this.f.username.value, this.f.password.value)
         .subscribe(
@@ -65,6 +91,7 @@ export class SigninComponent
                 const role = this.authService.currentUserValue.role;
                 if (role === Role.All || role === Role.Admin) {
                   this.router.navigate(["/admin/dashboard/main"]);
+                  
                 } else if (role === Role.Doctor) {
                   this.router.navigate(["/doctor/dashboard"]);
                 } else if (role === Role.Patient) {
@@ -86,4 +113,31 @@ export class SigninComponent
         );
     }
   }
+  */
+
+  onSubmit(): void {
+    this.subs.sink =this.authenticationService.login(this.form).subscribe(
+      data => {
+        this.tokenStorage.saveToken(data.accessToken);
+        this.tokenStorage.saveUser(data);
+
+        this.isLoginFailed = false;
+        this.isLoggedIn = true;
+        this.roles = this.tokenStorage.getUser().roles;
+        if (this.roles.includes("ROLE_ADMIN")){
+          this.router.navigate(["/admin/appointment/viewAppointment"]);
+        }
+        },
+      err => {
+        this.errorMessage = err.error.message;
+        this.isLoginFailed = true;
+      }
+    );
+  }
+
+  logout(): void {
+    this.tokenStorageService.signOut();
+    window.location.reload();
+  }
+
 }

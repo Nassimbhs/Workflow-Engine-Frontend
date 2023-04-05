@@ -5,6 +5,7 @@ import { Router } from "@angular/router";
 import { Workflow } from "src/app/model/Workflow";
 import Swal from "sweetalert2";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { TokenStorageService } from "src/app/service/token-storage.service";
 
 @Component({
   selector: "app-viewappointment",
@@ -15,11 +16,12 @@ export class ViewappointmentComponent
 {
   listWorkflow: any[];
   workflow : Workflow;
+
   constructor(
     public httpClient: HttpClient,
     private workflowService:WorkflowService,
     private router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
   ) {
   }
   ngOnInit() {
