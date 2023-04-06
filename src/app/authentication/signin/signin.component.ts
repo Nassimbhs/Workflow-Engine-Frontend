@@ -1,13 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { AuthService } from "src/app/core/service/auth.service";
-import { Role } from "src/app/core/models/role";
+import { Router } from "@angular/router";
 import { UnsubscribeOnDestroyAdapter } from "src/app/shared/UnsubscribeOnDestroyAdapter";
 import { AuthenticationService } from "src/app/service/authentication.service";
 import { TokenStorageService } from "src/app/service/token-storage.service";
-import { SignupRequest } from "src/app/model/SignupRequest";
-import { BehaviorSubject, Observable } from "rxjs";
+import { User } from "src/app/model/User";
+import { Observable } from "rxjs";
 @Component({
   selector: "app-signin",
   templateUrl: "./signin.component.html",
@@ -15,108 +12,41 @@ import { BehaviorSubject, Observable } from "rxjs";
 })
 export class SigninComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
-  authForm: FormGroup;
-  submitted = false;
-  loading = false;
-  error = "";
+  implements OnInit {
   hide = true;
   errorMessage = '';
   roles: string[] = [];
   isLoggedIn = false;
   isLoginFailed = false;
-  form: any = {};
+  form: any = {
+    username: '',
+    password: ''
+  };
 
-  private currentUserSubject: BehaviorSubject<SignupRequest>;
-  public currentUser: Observable<SignupRequest>;
+  public currentUser: Observable<User>;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService,
     private authenticationService: AuthenticationService,
     private tokenStorage: TokenStorageService,
-    private tokenStorageService: TokenStorageService
-
   ) {
     super();
   }
 
   ngOnInit() {
-/*
-    this.authForm = this.formBuilder.group({
-      username: ["admin@hospital.org", Validators.required],
-      password: ["admin@123", Validators.required],
-    });
-  */  
+
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
       this.roles = this.tokenStorage.getUser().roles;
     }
+    if (this.isLoggedIn) {
+      this.router.navigate(["/admin/appointment/viewAppointment"]);
+    }
 
   }
-  get f() {
-    return this.authForm.controls;
-  }
-  adminSet() {
-    this.authForm.get("username").setValue("admin@hospital.org");
-    this.authForm.get("password").setValue("admin@123");
-  }
-  doctorSet() {
-    this.authForm.get("username").setValue("doctor@hospital.org");
-    this.authForm.get("password").setValue("doctor@123");
-  }
-  patientSet() {
-    this.authForm.get("username").setValue("patient@hospital.org");
-    this.authForm.get("password").setValue("patient@123");
-  }
-  /*
-  onSubmit() {
-    this.submitted = true;
-    this.loading = true;
-    this.error = "";
-    if (this.authForm.invalid) {
-      this.error = "Username and Password not valid !";
-      return;
-    }
-    else {
-      this.subs.sink = this.authService
-        .login(this.f.username.value, this.f.password.value)
-        .subscribe(
-          (res) => {
-            if (res) {
-              setTimeout(() => {
-                const role = this.authService.currentUserValue.role;
-                if (role === Role.All || role === Role.Admin) {
-                  this.router.navigate(["/admin/dashboard/main"]);
-                  
-                } else if (role === Role.Doctor) {
-                  this.router.navigate(["/doctor/dashboard"]);
-                } else if (role === Role.Patient) {
-                  this.router.navigate(["/patient/dashboard"]);
-                } else {
-                  this.router.navigate(["/authentication/signin"]);
-                }
-                this.loading = false;
-              }, 1000);
-            } else {
-              this.error = "Invalid Login";
-            }
-          },
-          (error) => {
-            this.error = error;
-            this.submitted = false;
-            this.loading = false;
-          }
-        );
-    }
-  }
-  */
 
   onSubmit(): void {
-    this.subs.sink =this.authenticationService.login(this.form).subscribe(
+    this.subs.sink = this.authenticationService.login(this.form).subscribe(
       data => {
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(data);
@@ -124,20 +54,15 @@ export class SigninComponent
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
-        if (this.roles.includes("ROLE_ADMIN")){
+        if (this.roles.includes("ROLE_ADMIN")) {
           this.router.navigate(["/admin/appointment/viewAppointment"]);
         }
-        },
+      },
       err => {
-        this.errorMessage = err.error.message;
         this.isLoginFailed = true;
-      }
+        this.errorMessage = err.error.message;
+        }
     );
-  }
-
-  logout(): void {
-    this.tokenStorageService.signOut();
-    window.location.reload();
   }
 
 }

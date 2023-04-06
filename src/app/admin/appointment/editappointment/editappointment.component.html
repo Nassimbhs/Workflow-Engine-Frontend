@@ -34,184 +34,163 @@
             <h2 class="alert alert-warning" *ngIf="workflow.etat === 'en cours'" style="text-align: center ;">
               Workflow est {{workflow.etat}}
             </h2>
-  <ngx-graph
-      class="chart-container"
-      [view]="[1000, 550]"
-      [links]="listLinks"
-      [nodes]="nodesArray"
-      [clusters]="[
+
+            <ngx-graph class="chart-container" [view]="[1000, 550]" [links]="listLinks" [nodes]="nodesArray" [clusters]="[
         {
           id: 'third',
           label: 'Cluster node',
           childNodeIds: ids
         }
-      ]"
-      layout="dagreCluster"
-    >
-      <ng-template #defsTemplate>
-        <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
-          <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-        </svg:marker>
-      </ng-template>
-    
-      <ng-template #clusterTemplate let-cluster>
-        <svg:g class="node cluster">
-          <svg:rect
-            rx="5"
-            ry="5"
-            [attr.width]="cluster.dimension.width"
-            [attr.height]="cluster.dimension.height"
-            [attr.fill]="cluster.data.color"
-            style="width: 100%;height: 100%;"
-          />
-        </svg:g>
-      </ng-template>
+      ]" layout="dagreCluster">
+              <ng-template #defsTemplate>
+                <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4"
+                  orient="auto">
+                  <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+                </svg:marker>
+              </ng-template>
 
-      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-        <ng-template #modal1 let-modal>
-          <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">
-              Activité : {{activites.name}}
-            </h4>
-            <mat-icon matSuffix (click)="deleteActivite(activites.id)">delete</mat-icon>
-            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-              <span aria-hidden="true"><i class="material-icons">close</i></span>
-            </button>
-          </div>
-          <div class="modal-footer">
-            <mat-form-field class="example-full-width">
-              <mat-label>Nom</mat-label>
-              <input matInput [(ngModel)]="activites.name" required>
-              <mat-icon matSuffix>face</mat-icon>
-            </mat-form-field>
+              <ng-template #clusterTemplate let-cluster>
+                <svg:g class="node cluster">
+                  <svg:rect rx="5" ry="5" [attr.width]="cluster.dimension.width"
+                    [attr.height]="cluster.dimension.height" [attr.fill]="cluster.data.color"
+                    style="width: 100%;height: 100%;" />
+                </svg:g>
+              </ng-template>
 
-            <mat-form-field class="example-full-width">
-              <mat-label>Description</mat-label>
-              <textarea matInput [(ngModel)]="activites.description" required></textarea>
-            </mat-form-field>
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <ng-template #modal1 let-modal>
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">
+                      Tache : {{taches.name}}
+                    </h4>
+                    <mat-icon matSuffix (click)="deleteTache(taches.id)">delete</mat-icon>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                      <span aria-hidden="true"><i class="material-icons">close</i></span>
+                    </button>
+                  </div>
+                  <div class="modal-footer">
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Nom</mat-label>
+                      <input matInput [(ngModel)]="taches.name" required>
+                      <mat-icon matSuffix>face</mat-icon>
+                    </mat-form-field>
 
-            <mat-form-field class="example-full-width">
-              <mat-label>Date de début :</mat-label>
-              <input matInput type="datetime-local" [(ngModel)]="activites.startDate">
-            </mat-form-field>
-            <mat-form-field class="example-full-width">
-              <mat-label>Date de fin :</mat-label>
-              <input matInput type="datetime-local"  [(ngModel)]="activites.endDate">
-            </mat-form-field> 
-            
-            <mat-form-field class="example-full-width">
-              <mat-label>Choisir la cible de l'activité ({{activites.name}})</mat-label>
-              <select matNativeControl [(ngModel)]="selectedTarget" required>
-                <ng-container>
-                  <option value="oui">Oui</option>
-                  <option value="oui-non">Oui Non</option>
-                </ng-container>
-              </select>
-            </mat-form-field>
-            
-            <ng-container *ngIf="selectedTarget === 'oui'">
-              <mat-form-field class="example-full-width">
-                <mat-label>Donner l'activité si oui</mat-label>
-                <select matNativeControl [(ngModel)]="selectedTargetOui" required>
-                  <ng-container *ngFor="let l of nodesArray">
-                    <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
-                      {{l.label}}
-                    </option>
-                  </ng-container>
-                </select>
-              </mat-form-field>
-            </ng-container>
-            
-            <ng-container *ngIf="selectedTarget === 'oui-non'">
-              <mat-form-field class="example-full-width">
-                <mat-label>Donner l'activité si oui</mat-label>
-                <select matNativeControl [(ngModel)]="selectedTargetOui" required>
-                  <ng-container *ngFor="let l of nodesArray">
-                    <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
-                      {{l.label}}
-                    </option>
-                  </ng-container>
-                </select>
-              </mat-form-field>
-            
-              <mat-form-field class="example-full-width">
-                <mat-label>Donner l'activité si non</mat-label>
-                <select matNativeControl [(ngModel)]="selectedTargetNon" required>
-                  <ng-container *ngFor="let l of nodesArray">
-                    <option *ngIf="activites.id.toString() !== l.id" [value]="l.id" id="inputTarget">
-                      {{l.label}}
-                    </option>
-                  </ng-container>
-                </select>
-              </mat-form-field>
-            </ng-container>
-            
-              <button class="btn btn-danger" (click)="showForm = !showForm">Supprimer une relation</button>
-    
-              <div *ngIf="showForm" class="form-field-container">
-                <mat-form-field class="example-full-width">
-                  <mat-label>Supprimer la cible de l'activité</mat-label>
-                  <select matNativeControl [(ngModel)]="selectedTarget" required>
-                    <ng-container *ngFor="let a of actLink">
-                      <option [value]="a.id" id="inputTarget">
-                        {{a.activiteTargetName}}
-                      </option>
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Description</mat-label>
+                      <textarea matInput [(ngModel)]="taches.description" required></textarea>
+                    </mat-form-field>
+
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Date de début :</mat-label>
+                      <input matInput type="datetime-local" [(ngModel)]="taches.startDate">
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Date de fin :</mat-label>
+                      <input matInput type="datetime-local" [(ngModel)]="taches.endDate">
+                    </mat-form-field>
+
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Choisir la cible d'une tâche ({{taches.name}})</mat-label>
+                      <select matNativeControl [(ngModel)]="selectedTarget" required>
+                        <ng-container>
+                          <option value="oui">Oui</option>
+                          <option value="oui-non">Oui Non</option>
+                        </ng-container>
+                      </select>
+                    </mat-form-field>
+
+                    <ng-container *ngIf="selectedTarget === 'oui'">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Donner l'activité si oui</mat-label>
+                        <select matNativeControl [(ngModel)]="selectedTargetOui" required>
+                          <ng-container *ngFor="let l of nodesArray">
+                            <option *ngIf="taches.id.toString() !== l.id" [value]="l.id" id="inputTarget">
+                              {{l.label}}
+                            </option>
+                          </ng-container>
+                        </select>
+                      </mat-form-field>
                     </ng-container>
-                  </select>
-                </mat-form-field>
-                <ng-container *ngFor="let a of actLink">
-                  <button class="btn btn-danger" *ngIf="a.id == selectedTarget" (click)="deleteLink(a.id)">Supprimer</button>
-                </ng-container>          
+
+                    <ng-container *ngIf="selectedTarget === 'oui-non'">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Donner l'activité si oui</mat-label>
+                        <select matNativeControl [(ngModel)]="selectedTargetOui" required>
+                          <ng-container *ngFor="let l of nodesArray">
+                            <option *ngIf="taches.id.toString() !== l.id" [value]="l.id" id="inputTarget">
+                              {{l.label}}
+                            </option>
+                          </ng-container>
+                        </select>
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Donner l'activité si non</mat-label>
+                        <select matNativeControl [(ngModel)]="selectedTargetNon" required>
+                          <ng-container *ngFor="let l of nodesArray">
+                            <option *ngIf="taches.id.toString() !== l.id" [value]="l.id" id="inputTarget">
+                              {{l.label}}
+                            </option>
+                          </ng-container>
+                        </select>
+                      </mat-form-field>
+                    </ng-container>
+
+                    <button class="btn btn-danger" (click)="showForm = !showForm">Supprimer une relation</button>
+
+                    <div *ngIf="showForm" class="form-field-container">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Supprimer la cible de l'activité</mat-label>
+                        <select matNativeControl [(ngModel)]="selectedTarget" required>
+                          <ng-container *ngFor="let a of actLink">
+                            <option [value]="a.id" id="inputTarget">
+                              {{a.tacheTargetName}}
+                            </option>
+                          </ng-container>
+                        </select>
+                      </mat-form-field>
+                      <ng-container *ngFor="let a of actLink">
+                        <button class="btn btn-danger" *ngIf="a.id == selectedTarget"
+                          (click)="deleteLink(a.id)">Supprimer</button>
+                      </ng-container>
+                    </div>
+                  </div>
+                  {{taches.creationDate | date: 'dd/MM/yyyy -- HH:mm:ss'}}
+                  <button type="submit" class="btn btn-warning" (click)="addLinks();updateTache();"
+                    (click)="modal.dismiss('Cross click')">Modifier</button>
+                </ng-template>
               </div>
-              </div>
-            {{activites.creationDate | date: 'dd/MM/yyyy -- HH:mm:ss'}}
-            <button type="submit" class="btn btn-warning" (click)="addLinks();updateActivity();" (click)="modal.dismiss('Cross click')">Modifier</button>
-        </ng-template>     
-      </div> 
-    
-      <ng-template #nodeTemplate let-node>
-        <svg:g class="node" (click)="act(node.id)">
-          <svg:rect (dblclick)="Basicopen(modal1)"
-            [attr.width]="node.dimension.width"
-            [attr.height]="node.dimension.height"
-            [attr.fill]="node.data.color"
-          />
-          <svg:text 
-          (dblclick)="Basicopen(modal1)" alignment-baseline="central" 
-          [attr.x]="1" [attr.y]="20" style="fill: white;"
-          >
-          <tspan style="font-weight:bolder;font-size: 15px;">{{node.label}}</tspan>
-          <tspan x = "50" dy="1em" style="fill: black;font-weight: bolder;">{{node.duration}}</tspan>
-          </svg:text>
-        </svg:g>
-      </ng-template>
-    
-      <ng-template #linkTemplate let-link>
-        <svg:g class="edge">
-          <svg:path class="line" stroke-width="2" marker-end="url(#arrow)" 
-            drag
-            [dragEdges]="true"
-            [dragTarget]="'path'"
-            (dragStart)="onDragStart(link)"
-            (dragMove)="onDragMove(link, $event)"
-            (dragEnd)="onDragEnd(link)">
-          </svg:path>
-          <svg:text class="edge-label" text-anchor="middle">
-            <textPath
-              class="text-path"
-              [attr.href]="'#' + link.id"
-              [style.dominant-baseline]="link.dominantBaseline"
-              startOffset="50%"
-            >
-              {{link.label}}
-            </textPath>
-          </svg:text>
-        </svg:g>
-      </ng-template>
-      
-    </ngx-graph>
+
+              <ng-template #nodeTemplate let-node>
+                <svg:g class="node" (click)="act(node.id)">
+                  <svg:rect (dblclick)="Basicopen(modal1)" [attr.width]="node.dimension.width"
+                    [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
+                  <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central" [attr.x]="1" [attr.y]="20"
+                    style="fill: white;">
+                    <tspan style="font-weight:bolder;font-size: 15px;">({{node.label}})</tspan>
+                    <tspan x="50" dy="1em" style="fill: black;font-weight: bolder;">{{node.duration}}</tspan>
+                  </svg:text>
+                </svg:g>
+              </ng-template>
+
+              <ng-template #linkTemplate let-link>
+                <svg:g class="edge">
+                  <svg:path class="line" stroke-width="2" marker-end="url(#arrow)" drag [dragEdges]="true"
+                    [dragTarget]="'path'" (dragStart)="onDragStart(link)" (dragMove)="onDragMove(link, $event)"
+                    (dragEnd)="onDragEnd(link)">
+                  </svg:path>
+                  <svg:text class="edge-label" text-anchor="middle">
+                    <textPath class="text-path" [attr.href]="'#' + link.id"
+                      [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
+                      {{link.label}}
+                    </textPath>
+                  </svg:text>
+                </svg:g>
+              </ng-template>
+
+            </ngx-graph>
           </mat-tab>
-    
+
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon class="example-tab-icon msr-2">update</mat-icon>
@@ -219,7 +198,8 @@
             </ng-template>
             <div class="header">
               <h2>
-                <strong>Modifier</strong> Workflow</h2>
+                <strong>Modifier</strong> Workflow
+              </h2>
             </div>
             <div class="body">
               <div class="example-container">
@@ -235,16 +215,16 @@
                     <mat-icon matSuffix>event_note</mat-icon>
                   </mat-form-field>
                   <mat-form-field class="example-full-width">
-                    <mat-label>Choisir l'état du workflow</mat-label>
-                    <select matNativeControl>
+                    <mat-label>Choisir le déclencheur du workflow</mat-label>
+                    <select matNativeControl [(ngModel)]="workflow.declencheur">
                       <ng-container>
-                        <option value="pause">En Pause</option>
-                        <option value="play">En cours d'exécution</option>
+                        <option value="BD">Base de donnée</option>
+                        <option value="Webhook">Webhook</option>
                       </ng-container>
                     </select>
                   </mat-form-field>
-              </div>  
-              <br>
+                </div>
+                <br>
               </div>
               <button mat-raised-button color="primary" (click)="updateWorkflow()">Mettre à jour </button>
             </div>
@@ -259,107 +239,114 @@
               <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
                   <div class="header">
-                        <h2>Ajouter une activité</h2>
-                            <div class="icon-button-demo">
-                              <button mat-mini-fab color="primary" (click)="openModal2(modal2)">
-                                <mat-icon class="col-white">add</mat-icon>
-                              </button>
-                      </div>
+                    <h2>Ajouter une tâche</h2>
+                    <div class="icon-button-demo">
+                      <button mat-mini-fab color="primary" (click)="openModal2(modal2)">
+                        <mat-icon class="col-white">add</mat-icon>
+                      </button>
                     </div>
                   </div>
-                      <div class="body">
-                        <div class="example-container">
-                          <div class="row">
-                            <div class="row clearfix">
-                              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="card">
-                                  <div class="body table-responsive">
-                                    <table class="table table-hover" style="text-align: center;">
-                                      <thead>
-                                        <tr>
-                                          <th>#</th>
-                                          <th>NOM</th>
-                                          <th>DESCRIPTION</th>
-                                          <th>DATE DE CREATION</th>
-                                          <th>VOIR LES DETAILS</th>
-                                          <th>SUPPRIMER UNE ACTIVITE</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr *ngFor="let a of allactivites">
-                                          <td></td>
-                                          <td>{{a.name}}</td>
-                                          <td>{{a.description}}</td>
-                                          <td>{{a.creationDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}</td>
-                                          <td>
-                                            <i class="fas fas fa-info" style="font-size: 20px;" (click)="act(a.id)" (click)="openModalActivity(modalActivity)"></i>
-                                          </td>
-                                          <td>
-                                            <i class="fas fa-trash" style="font-size: 20px;" (click)="deleteActivite(a.id)"></i>
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                </div>
-                              </div>
+                </div>
+                <div class="body">
+                  <div class="example-container">
+                    <div class="row">
+                      <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <div class="card">
+                            <div class="body table-responsive">
+                              <table class="table table-hover" style="text-align: center;">
+                                <thead>
+                                  <tr>
+                                    <th>#</th>
+                                    <th>NOM</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>DATE DE CREATION</th>
+                                    <th>VOIR LES DETAILS</th>
+                                    <th>SUPPRIMER UNE TACHE</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let a of alltaches">
+                                    <td></td>
+                                    <td>{{a.name}}</td>
+                                    <td>{{a.description}}</td>
+                                    <td>{{a.creationDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}</td>
+                                    <td>
+                                      <i class="fas fas fa-info" style="font-size: 20px;" (click)="act(a.id)"
+                                        (click)="openModalTache(modalTache)"></i>
+                                    </td>
+                                    <td>
+                                      <i class="fas fa-trash" style="font-size: 20px;"
+                                        (click)="deleteTache(a.id)"></i>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
                             </div>
-                          </div>  
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
           </mat-tab>
 
           <mat-tab>
             <ng-template mat-tab-label>
-              <button mat-mini-fab color="primary" *ngIf="workflow.etat === 'en cours'" (click)="isPlaying = false; updateWorkflow()">
+              <button mat-mini-fab color="primary" *ngIf="workflow.etat === 'en cours'"
+                (click)="isPlaying = false; updateWorkflow()">
                 <mat-icon class="col-white">play_circle_outline</mat-icon>
               </button>
-              <button mat-mini-fab color="primary" *ngIf="workflow.etat === 'en pause'" (click)="isPlaying = true; updateWorkflow()">
+              <button mat-mini-fab color="primary" *ngIf="workflow.etat === 'en pause'"
+                (click)="isPlaying = true; updateWorkflow()">
                 <mat-icon class="col-white">pause_circle_outline</mat-icon>
               </button>
-              <button mat-mini-fab color="primary" *ngIf="workflow.etat === null" (click)="isPlaying = true; updateWorkflow()">
+              <button mat-mini-fab color="primary" *ngIf="workflow.etat === null"
+                (click)="isPlaying = true; updateWorkflow()">
                 <mat-icon class="col-white">play_circle_outline</mat-icon>
               </button>
             </ng-template>
           </mat-tab>
-          
-      
+
+
         </mat-tab-group>
       </div>
     </div>
-    <ng-template #modalActivity let-modal>
-      <div class="modal-header" *ngIf="activites">
-        <h4 class="modal-title" id="modal-basic-title">{{activites.name}} </h4>
+    <ng-template #modalTache let-modal>
+      <div class="modal-header" *ngIf="taches">
+        <h4 class="modal-title" id="modal-basic-title">{{taches.name}} </h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="row">
-          <div *ngIf="activites">
+          <div *ngIf="taches">
             <div class="card">
               <div class="header">
-               <strong class="notice-heading color-primary col-indigo">Crée le : </strong> {{ activites.creationDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}
+                <strong class="notice-heading color-primary col-indigo">Crée le : </strong> {{ taches.creationDate |
+                date : 'dd/MM/yyyy -- HH:mm:ss'}}
               </div>
             </div>
             <div class="card">
               <div class="header">
-                <strong class="notice-heading color-primary col-indigo">Description  </strong><br> {{activites.description}}
+                <strong class="notice-heading color-primary col-indigo">Description </strong><br>
+                {{taches.description}}
               </div>
             </div>
           </div>
           <div>
-          
+
           </div>
         </div>
       </div>
     </ng-template>
-    
+
     <ng-template #modal2 let-modal>
       <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Ajouter une activité</h4>
+        <h4 class="modal-title" id="modal-basic-title">Ajouter une tache</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -368,17 +355,18 @@
         <div class="row">
           <mat-form-field class="example-full-width">
             <mat-label>Nom</mat-label>
-            <input matInput [(ngModel)]="activite.name" required>
+            <input matInput [(ngModel)]="tache.name" required>
             <mat-icon matSuffix>face</mat-icon>
           </mat-form-field>
           <mat-form-field class="example-full-width">
             <mat-label>Description</mat-label>
-            <textarea matInput [(ngModel)]="activite.description" required></textarea>
+            <textarea matInput [(ngModel)]="tache.description" required></textarea>
             <mat-icon matSuffix>event_note</mat-icon>
           </mat-form-field>
-      </div>  
-      <br>
-      <button mat-raised-button color="primary" (click)="addActivite()">Ajouter    </button>      </div>
+        </div>
+        <br>
+        <button mat-raised-button color="primary" (click)="addTache()">Ajouter </button>
+      </div>
     </ng-template>
   </div>
 </section>

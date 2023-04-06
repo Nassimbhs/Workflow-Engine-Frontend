@@ -5,4 +5,5 @@ export class Workflow {
     creationDate: String;
     lastModifiedDate: String;
     etat: String;
+    declencheur: String;
 }

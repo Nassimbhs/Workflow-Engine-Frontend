@@ -14,6 +14,7 @@ import { RightSidebarService } from "src/app/core/service/rightsidebar.service";
 import { LanguageService } from "src/app/core/service/language.service";
 import { UnsubscribeOnDestroyAdapter } from "src/app/shared/UnsubscribeOnDestroyAdapter";
 import { TokenStorageService } from "src/app/service/token-storage.service";
+
 const document: any = window.document;
 
 @Component({
@@ -238,10 +239,7 @@ export class HeaderComponent
     );
   }
   logout() {
-    this.subs.sink = this.authService.logout().subscribe((res) => {
-      if (!res.success) {
-        this.router.navigate(["/authentication/signin"]);
-      }
-    });
+    this.token.signOut();
+    this.router.navigate(["/authentication/signin"]);
   }
 }

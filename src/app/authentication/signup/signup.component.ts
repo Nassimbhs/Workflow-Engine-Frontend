@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AuthenticationService } from "src/app/service/authentication.service";
-import { SignupRequest } from "src/app/model/SignupRequest";
+import { User } from "src/app/model/User";
 import Swal from "sweetalert2";
 import { HttpErrorResponse } from "@angular/common/http";
 
@@ -46,13 +46,13 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit() {
-    const signupRequest: SignupRequest = {
+    const user: User = {
       username: this.signupForm.value.username,
       email: this.signupForm.value.email,
       role: ["admin"],
       password: this.signupForm.value.password
     };
-    this.authService.signup(signupRequest).subscribe(
+    this.authService.signup(user).subscribe(
       data => {
         this.router.navigate(['/authentication/signin']);
         if (data && data.message) {

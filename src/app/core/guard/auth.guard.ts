@@ -2,29 +2,22 @@ import { Injectable } from "@angular/core";
 import {
   Router,
   CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
 } from "@angular/router";
-
-import { AuthService } from "../service/auth.service";
+import { TokenStorageService } from "src/app/service/token-storage.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
-
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (this.authService.currentUserValue) {
-      const userRole = this.authService.currentUserValue.role;
-      if (route.data.role && route.data.role.indexOf(userRole) === -1) {
-        this.router.navigate(["/authentication/signin"]);
-        return false;
-      }
-      return true;
+  constructor(private router: Router, private tokenStorage: TokenStorageService) { }
+  canActivate(): boolean {
+    // Check if user is logged in
+    if (!this.tokenStorage.getToken()) {
+      // If not logged in, redirect to login page
+      this.router.navigate(["/authentication/signin"]);
+      return false;
     }
-
-    this.router.navigate(["/authentication/signin"]);
-    return false;
+    return true;
   }
+
 }
