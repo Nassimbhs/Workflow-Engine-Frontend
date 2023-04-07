@@ -10,6 +10,7 @@ import { LienTacheService } from "src/app/service/lien-tache.service";
 import { WorkflowService } from "src/app/service/workflow.service";
 import { SimpleDialogComponent } from "src/app/ui/modal/simpleDialog.component";
 import Swal from "sweetalert2";
+import { UserService } from "src/app/service/user.service";
 
 @Component({
   selector: "app-editappointment",
@@ -32,7 +33,7 @@ export class EditappointmentComponent implements OnInit {
     private ser: WorkflowService,
     private serTache: TacheService,
     private serlien: LienTacheService,
-
+    private serUser: UserService,
     private ac: ActivatedRoute,
     private modalService: NgbModal,
   ) {
@@ -46,6 +47,7 @@ export class EditappointmentComponent implements OnInit {
     this.getAllWorkflows();
     this.getTachesByWorkflowId(this.id);
     this.getAllLinks();
+    this.getAllUsers();
   }
 
   updateWorkflow() {
@@ -340,6 +342,14 @@ export class EditappointmentComponent implements OnInit {
     const start = this.taches.startDate.getTime();
     const end = this.taches.endDate.getTime();
     this.duration = end - start;
+  }
+
+  listUser: any[];
+  getAllUsers() {
+    this.serUser.getAllUsers().subscribe((res) => {
+      this.listUser = res;
+      console.log(this.listUser);
+    });
   }
 
 }
