@@ -37,5 +37,9 @@ export class TacheService {
     const url = `${this.baseUrl}/${tacheId}/assigner-utilisateurs`;
     return this._http.post(url, userIds);
   }
-  
+ 
+  getUtilisateursDeTache(tacheId: any): Observable<any> {
+    return this._http.get(`${this.baseUrl}/${tacheId}/utilisateurs`);
+  }
+
 }

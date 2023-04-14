@@ -155,11 +155,17 @@
                       </ng-container>
                     </div>
                   </div>
-                 
+
                   <select [(ngModel)]="selectedUserIds" multiple>
                     <option *ngFor="let u of listUser" [ngValue]="u.id">{{ u.username }}</option>
                   </select>
-
+                  <br>
+                  <div class="row">
+                    <h6>Les responsables sont : </h6>
+                    <div class="col-md-4" *ngFor="let user of utilisateursParTache[taches.id]">
+                      <input type="checkbox" checked disabled/> {{ user.username }}
+                    </div>
+                  </div>
                   {{taches.creationDate | date: 'dd/MM/yyyy -- HH:mm:ss'}}
                   <button type="submit" class="btn btn-warning" (click)="addLinks();updateTache();assignUsersToTask();"
                     (click)="modal.dismiss('Cross click')">Modifier</button>

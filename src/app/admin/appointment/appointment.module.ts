@@ -29,6 +29,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 @NgModule({
   declarations: [
     BookappointmentComponent,
@@ -38,6 +40,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     FormDialogComponent,
   ],
   imports: [
+    MatTooltipModule,
     NgxGraphModule,
     MatTabsModule,
     MatSliderModule,

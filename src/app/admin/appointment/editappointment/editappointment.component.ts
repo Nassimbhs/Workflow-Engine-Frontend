@@ -137,7 +137,11 @@ export class EditappointmentComponent implements OnInit {
             const endDate = new Date(tache.endDate);
             const duration = Math.abs(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
             const formattedDuration = this.formatDuration(duration);
-            return { id: tache.id.toString(), label: tache.name, duration: formattedDuration };
+            return {
+              id: tache.id.toString(),
+              label: tache.name,
+              duration: formattedDuration
+            };
           });
           this.ids = res.map(tache => tache.id.toString());
         }
@@ -149,20 +153,23 @@ export class EditappointmentComponent implements OnInit {
   }
 
   lista = [];
-  actLink = [];
+  actLink = {};
+  utilisateursParTache = {};
+  
   act(id: any) {
-    this.serTache.getTacheById(id).subscribe(
-      res => {
-        this.taches = res;
-        this.lista.push(this.taches);
-      });
-    this.serlien.getLinkTache(id).subscribe((resl) => {
-      // Utilisez les données récupérées ici
-      this.actLink = resl;
-      console.log("get link by id : ", this.actLink)
-
+    this.serTache.getTacheById(id).subscribe(res => {
+      this.taches = res;
+      this.lista.push(this.taches);
+    });
+  
+    this.serlien.getLinkTache(id).subscribe(resl => {
+      this.actLink[id] = resl;
+      console.log("get link by id : ", this.actLink);
     });
 
+    this.serTache.getUtilisateursDeTache(id).subscribe(res => {
+      this.utilisateursParTache[id] = res;
+    });
   }
 
   updateTache() {
@@ -184,6 +191,7 @@ export class EditappointmentComponent implements OnInit {
     this.serTache.assignerTache(this.taches.id,this.selectedUserIds).subscribe(
       res => {
         console.log(this.selectedUserIds);
+        location.reload();
       },
       err => {
         console.log(this.selectedUserIds, err);
