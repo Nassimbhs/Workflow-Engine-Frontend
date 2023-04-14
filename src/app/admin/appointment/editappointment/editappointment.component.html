@@ -144,7 +144,7 @@
                         <select matNativeControl [(ngModel)]="selectedTarget" required>
                           <ng-container *ngFor="let a of actLink">
                             <option [value]="a.id" id="inputTarget">
-                              {{a.tacheTargetName}}
+                              {{a.tacheSourceName}}
                             </option>
                           </ng-container>
                         </select>
@@ -155,8 +155,13 @@
                       </ng-container>
                     </div>
                   </div>
+                 
+                  <select [(ngModel)]="selectedUserIds" multiple>
+                    <option *ngFor="let u of listUser" [ngValue]="u.id">{{ u.username }}</option>
+                  </select>
+
                   {{taches.creationDate | date: 'dd/MM/yyyy -- HH:mm:ss'}}
-                  <button type="submit" class="btn btn-warning" (click)="addLinks();updateTache();"
+                  <button type="submit" class="btn btn-warning" (click)="addLinks();updateTache();assignUsersToTask();"
                     (click)="modal.dismiss('Cross click')">Modifier</button>
                 </ng-template>
               </div>

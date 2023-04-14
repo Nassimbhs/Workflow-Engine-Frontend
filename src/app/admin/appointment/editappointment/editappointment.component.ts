@@ -162,6 +162,7 @@ export class EditappointmentComponent implements OnInit {
       console.log("get link by id : ", this.actLink)
 
     });
+
   }
 
   updateTache() {
@@ -175,6 +176,19 @@ export class EditappointmentComponent implements OnInit {
           Swal.fire("Tache n'est pas à jour !");
         }
       );
+  }
+
+  selectedUserIds: any[]= [];
+  assignUsersToTask() {
+
+    this.serTache.assignerTache(this.taches.id,this.selectedUserIds).subscribe(
+      res => {
+        console.log(this.selectedUserIds);
+      },
+      err => {
+        console.log(this.selectedUserIds, err);
+      }
+    );
   }
 
   addTache() {
