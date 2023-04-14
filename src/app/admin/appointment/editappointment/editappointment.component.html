@@ -156,16 +156,22 @@
                     </div>
                   </div>
 
+                  <h6>Assigner des responsables : </h6>
                   <select [(ngModel)]="selectedUserIds" multiple>
                     <option *ngFor="let u of listUser" [ngValue]="u.id">{{ u.username }}</option>
                   </select>
                   <br>
+                
                   <div class="row">
-                    <h6>Les responsables sont : </h6>
+                    <h6>Les responsables sont :</h6>
                     <div class="col-md-4" *ngFor="let user of utilisateursParTache[taches.id]">
-                      <input type="checkbox" checked disabled/> {{ user.username }}
+                      <input type="checkbox" checked (change)="onCheckboxChange(taches.id, user.id, $event.target.checked)"/> {{ user.username }}
                     </div>
                   </div>
+                  <div class="alert alert-danger" *ngIf="!utilisateursParTache[taches.id] || utilisateursParTache[taches.id].length == 0">
+                    Aucun responsable pour cette tâche.
+                  </div>
+
                   {{taches.creationDate | date: 'dd/MM/yyyy -- HH:mm:ss'}}
                   <button type="submit" class="btn btn-warning" (click)="addLinks();updateTache();assignUsersToTask();"
                     (click)="modal.dismiss('Cross click')">Modifier</button>

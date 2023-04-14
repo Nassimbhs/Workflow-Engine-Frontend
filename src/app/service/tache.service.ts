@@ -42,4 +42,9 @@ export class TacheService {
     return this._http.get(`${this.baseUrl}/${tacheId}/utilisateurs`);
   }
 
+  desassignerTacheAUtilisateur(tacheId: any, userId: any): Observable<void> {
+    const url = `${this.baseUrl}/${tacheId}/utilisateurs/${userId}`;
+    return this._http.delete<void>(url);
+  }
+  
 }

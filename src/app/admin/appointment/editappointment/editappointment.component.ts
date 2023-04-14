@@ -191,12 +191,24 @@ export class EditappointmentComponent implements OnInit {
     this.serTache.assignerTache(this.taches.id,this.selectedUserIds).subscribe(
       res => {
         console.log(this.selectedUserIds);
-        location.reload();
       },
       err => {
         console.log(this.selectedUserIds, err);
       }
     );
+  }
+  onCheckboxChange(tacheId: any, userId: any, isChecked: boolean) {
+    if (!isChecked) {
+      this.serTache.desassignerTacheAUtilisateur(tacheId, userId)
+        .subscribe(() => {
+          console.log('Tâche désassignée avec succès');
+          this.serTache.getUtilisateursDeTache(tacheId).subscribe(res => {
+            this.utilisateursParTache[tacheId] = res;
+          });
+        }, (error) => {
+          console.error('Erreur lors de la désassignation de la tâche', error);
+        });
+    }
   }
 
   addTache() {
