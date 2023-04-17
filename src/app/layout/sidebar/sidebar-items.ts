@@ -94,7 +94,7 @@ export const ROUTES: RouteInfo[] = [
     role: ["Admin"],
     submenu: [
       {
-        path: "/admin/appointment/viewAppointment",
+        path: "/admin/workflow/viewAppointment",
         title: "Voir les workflows",
         moduleName: "appointment",
         iconType: "",
@@ -107,7 +107,7 @@ export const ROUTES: RouteInfo[] = [
         submenu: [],
       },
       {
-        path: "/admin/appointment/bookAppointment",
+        path: "/admin/workflow/bookAppointment",
         title: "Ajouter un workflow",
         moduleName: "appointment",
         iconType: "",

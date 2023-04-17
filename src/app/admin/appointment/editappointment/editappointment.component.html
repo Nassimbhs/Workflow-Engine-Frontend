@@ -12,7 +12,7 @@
                 <i class="fas fa-home"></i> Home</a>
             </li>
             <li class="breadcrumb-item bcrumb-2">
-              <a routerLink="/admin/appointment/viewAppointment">Workflow</a>
+              <a routerLink="/admin/workflow/viewAppointment">Workflow</a>
             </li>
             <li class="breadcrumb-item active">Modifier</li>
           </ul>
@@ -82,11 +82,11 @@
 
                     <mat-form-field class="example-full-width">
                       <mat-label>Date de début :</mat-label>
-                      <input matInput type="datetime-local" [(ngModel)]="taches.startDate">
+                      <input matInput type="datetime-local" [(ngModel)]="taches.startDate" [min]="getCurrentDate()">
                     </mat-form-field>
                     <mat-form-field class="example-full-width">
                       <mat-label>Date de fin :</mat-label>
-                      <input matInput type="datetime-local" [(ngModel)]="taches.endDate">
+                      <input matInput type="datetime-local" [(ngModel)]="taches.endDate" [min]="getCurrentDate()">
                     </mat-form-field>
 
                     <mat-form-field class="example-full-width">

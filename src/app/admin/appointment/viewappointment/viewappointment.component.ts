@@ -5,7 +5,6 @@ import { Router } from "@angular/router";
 import { Workflow } from "src/app/model/Workflow";
 import Swal from "sweetalert2";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { TokenStorageService } from "src/app/service/token-storage.service";
 
 @Component({
   selector: "app-viewappointment",
@@ -65,7 +64,7 @@ deleteWorkflow(id: any) {
 }
 
 updateWorkflow(id: number) {
-  this.router.navigate(['admin/appointment/edit-appointment', id]);
+  this.router.navigate(['admin/workflow/edit-workflow', id]);
 }
 
 getWorkflowById(id :any) {

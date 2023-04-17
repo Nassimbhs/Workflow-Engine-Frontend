@@ -122,12 +122,24 @@ export class EditappointmentComponent implements OnInit {
     return `${daysText}${hoursText}${minutesText}${secondsText}`;
   }
 
+  getCurrentDate(): string {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + currentDate.getDate()).slice(-2);
+    const hours = ('0' + currentDate.getHours()).slice(-2);
+    const minutes = ('0' + currentDate.getMinutes()).slice(-2);
+    const seconds = '00';
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+  
   nodesArray: { id: String, label: String, duration: string }[] = [];
   linksArray = [];
   ids = {};
   alltaches = [];
-
   getTachesByWorkflowId(id: any) {
+    const currentDate = new Date();
+    console.log("current date : ",currentDate);
     this.serTache.getTachesByWorkflowId(id).subscribe(
       (res: any) => {
         this.alltaches = res;
