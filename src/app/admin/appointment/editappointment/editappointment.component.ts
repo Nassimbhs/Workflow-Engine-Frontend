@@ -163,7 +163,7 @@ export class EditappointmentComponent implements OnInit {
     });
   
     this.serlien.getLinkTache(id).subscribe(resl => {
-      this.actLink[id] = resl;
+      this.actLink = resl;
       console.log("get link by id : ", this.actLink);
     });
 
