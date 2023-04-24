@@ -50,7 +50,8 @@ export class SignupComponent implements OnInit {
       username: this.signupForm.value.username,
       email: this.signupForm.value.email,
       role: ["admin"],
-      password: this.signupForm.value.password
+      password: this.signupForm.value.password,
+      id: 0
     };
     this.authService.signup(user).subscribe(
       data => {

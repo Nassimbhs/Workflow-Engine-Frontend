@@ -4,11 +4,11 @@ import { Workflow } from "src/app/model/Workflow";
 import { WorkflowService } from "src/app/service/workflow.service";
 
 @Component({
-  selector: "app-bookappointment",
-  templateUrl: "./bookappointment.component.html",
-  styleUrls: ["./bookappointment.component.sass"],
+  selector: "app-addworkflow",
+  templateUrl: "./addworkflow.component.html",
+  styleUrls: ["./addworkflow.component.sass"],
 })
-export class BookappointmentComponent {
+export class AddworkflowComponent {
  
   workflow : Workflow = new Workflow();
 
@@ -22,7 +22,7 @@ export class BookappointmentComponent {
   addWorkflow(){    
     this.workflowservice.addWorkflow(this.workflow).subscribe(
       (res)=>{
-        this._router.navigateByUrl("admin/appointment/viewAppointment");
+        this._router.navigateByUrl("admin/appointment/viewWorkflow");
       }
       );
   }

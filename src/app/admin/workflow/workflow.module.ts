@@ -16,26 +16,25 @@ import { MatSortModule } from "@angular/material/sort";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MaterialFileInputModule } from "ngx-material-file-input";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-
-import { AppointmentRoutingModule } from "./appointment-routing.module";
-import { BookappointmentComponent } from "./bookappointment/bookappointment.component";
-import { EditappointmentComponent } from "./editappointment/editappointment.component";
-import { ViewappointmentComponent } from "./viewappointment/viewappointment.component";
-import { DeleteDialogComponent } from "./viewappointment/dialogs/delete/delete.component";
-import { FormDialogComponent } from "./viewappointment/dialogs/form-dialog/form-dialog.component";
-import { AppointmentService } from "./viewappointment/appointment.service";
 import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AddworkflowComponent } from "./addworkflow/addworkflow.component";
+import { EditworkflowComponent } from "./editworkflow/editworkflow.component";
+import { AppointmentService } from "./viewworkflow/appointment.service";
+import { DeleteDialogComponent } from "./viewworkflow/dialogs/delete/delete.component";
+import { FormDialogComponent } from "./viewworkflow/dialogs/form-dialog/form-dialog.component";
+import { ViewworkflowComponent } from "./viewworkflow/viewworkflow.component";
+import { AppointmentRoutingModule } from "./workflow-routing.module";
 
 @NgModule({
   declarations: [
-    BookappointmentComponent,
-    EditappointmentComponent,
-    ViewappointmentComponent,
+    AddworkflowComponent,
+    EditworkflowComponent,
+    ViewworkflowComponent,
     DeleteDialogComponent,
     FormDialogComponent,
   ],

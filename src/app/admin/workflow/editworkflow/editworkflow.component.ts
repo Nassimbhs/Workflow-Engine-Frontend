@@ -13,11 +13,11 @@ import Swal from "sweetalert2";
 import { UserService } from "src/app/service/user.service";
 
 @Component({
-  selector: "app-editappointment",
-  templateUrl: "./editappointment.component.html",
-  styleUrls: ["./editappointment.component.sass"],
+  selector: "app-editworkflow",
+  templateUrl: "./editworkflow.component.html",
+  styleUrls: ["./editworkflow.component.sass"],
 })
-export class EditappointmentComponent implements OnInit {
+export class EditworkflowComponent implements OnInit {
 
   workflow: Workflow;
   id: any;

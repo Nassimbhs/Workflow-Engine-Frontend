@@ -37,4 +37,19 @@ export class TokenStorageService {
     return {};
   }
   
+  private getUserFromToken(): any {
+    const token = this.getToken();
+    if (token) {
+      const userPayload = atob(token.split('.')[1]);
+      return JSON.parse(userPayload);
+    }
+    return null;
+  }
+  public getCurrentUser(): any {
+    const user = this.getUserFromToken();
+    return {
+      username: user.username,
+      email: user.email
+    };
+  }
 }

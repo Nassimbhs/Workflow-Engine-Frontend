@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     path: "workflow",
     loadChildren: () =>
-      import("./appointment/appointment.module").then(
+      import("./workflow/workflow.module").then(
         (m) => m.AppointmentModule
       ),
   },

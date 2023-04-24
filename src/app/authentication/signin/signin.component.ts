@@ -40,7 +40,7 @@ export class SigninComponent
       this.roles = this.tokenStorage.getUser().roles;
     }
     if (this.isLoggedIn) {
-      this.router.navigate(["/admin/appointment/viewAppointment"]);
+      this.router.navigate(["/admin/workflow/viewAppointment"]);
     }
 
   }
@@ -55,7 +55,7 @@ export class SigninComponent
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
         if (this.roles.includes("ROLE_ADMIN")) {
-          this.router.navigate(["/admin/appointment/viewAppointment"]);
+          this.router.navigate(["/admin/workflow/viewAppointment"]);
         }
       },
       err => {

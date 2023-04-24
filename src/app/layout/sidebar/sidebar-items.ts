@@ -84,7 +84,7 @@ export const ROUTES: RouteInfo[] = [
   {
     path: "",
     title: "Workflows",
-    moduleName: "appointment",
+    moduleName: "workflow",
     iconType: "material-icons-two-tone",
     icon: "assignment",
     class: "menu-toggle",
@@ -94,9 +94,9 @@ export const ROUTES: RouteInfo[] = [
     role: ["Admin"],
     submenu: [
       {
-        path: "/admin/workflow/viewAppointment",
+        path: "/admin/workflow/viewWorkflow",
         title: "Voir les workflows",
-        moduleName: "appointment",
+        moduleName: "workflow",
         iconType: "",
         icon: "",
         class: "ml-menu",
@@ -107,9 +107,9 @@ export const ROUTES: RouteInfo[] = [
         submenu: [],
       },
       {
-        path: "/admin/workflow/bookAppointment",
+        path: "/admin/workflow/addWorkflow",
         title: "Ajouter un workflow",
-        moduleName: "appointment",
+        moduleName: "workflow",
         iconType: "",
         icon: "",
         class: "ml-menu",

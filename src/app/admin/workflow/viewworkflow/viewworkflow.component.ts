@@ -7,11 +7,11 @@ import Swal from "sweetalert2";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-  selector: "app-viewappointment",
-  templateUrl: "./viewappointment.component.html",
-  styleUrls: ["./viewappointment.component.sass"],
+  selector: "app-viewworkflow",
+  templateUrl: "./viewworkflow.component.html",
+  styleUrls: ["./viewworkflow.component.sass"],
 })
-export class ViewappointmentComponent
+export class ViewworkflowComponent
 {
   listWorkflow: any[];
   workflow : Workflow;
