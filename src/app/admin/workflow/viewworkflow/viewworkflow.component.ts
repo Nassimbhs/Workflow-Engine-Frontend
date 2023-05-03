@@ -1,10 +1,11 @@
 import { Component } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { WorkflowService } from "src/app/service/workflow.service";
-import { Router } from "@angular/router";
 import { Workflow } from "src/app/model/Workflow";
 import Swal from "sweetalert2";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { TokenStorageService } from "src/app/service/token-storage.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-viewworkflow",
@@ -15,15 +16,17 @@ export class ViewworkflowComponent
 {
   listWorkflow: any[];
   workflow : Workflow;
-
+  currentUser: any;
   constructor(
     public httpClient: HttpClient,
     private workflowService:WorkflowService,
     private router: Router,
     private modalService: NgbModal,
+    private tokenStorage: TokenStorageService,
   ) {
   }
   ngOnInit() {
+    this.currentUser = this.tokenStorage.getUser();
     this.getAllWorkflows();
   }
 

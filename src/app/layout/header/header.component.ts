@@ -14,6 +14,8 @@ import { RightSidebarService } from "src/app/core/service/rightsidebar.service";
 import { LanguageService } from "src/app/core/service/language.service";
 import { UnsubscribeOnDestroyAdapter } from "src/app/shared/UnsubscribeOnDestroyAdapter";
 import { TokenStorageService } from "src/app/service/token-storage.service";
+import { BehaviorSubject } from "rxjs";
+import { User } from "src/app/model/User";
 
 const document: any = window.document;
 
@@ -27,6 +29,7 @@ export class HeaderComponent
   implements OnInit, AfterViewInit
 {
   currentUser: any;
+  user: User = new User();
   public config: any = {};
   userImg: string;
   homePage: string;
@@ -36,6 +39,8 @@ export class HeaderComponent
   langStoreValue: string;
   defaultFlag: string;
   isOpenSidebar: boolean;
+  currentUser$: BehaviorSubject<any> = new BehaviorSubject(null);
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
@@ -101,6 +106,7 @@ export class HeaderComponent
   ];
   ngOnInit() {
     this.currentUser = this.token.getUser();
+
     this.config = this.configService.configData;
     const userRole = this.authService.currentUserValue.role;
     this.userImg = this.authService.currentUserValue.img;

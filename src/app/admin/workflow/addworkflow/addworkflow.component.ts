@@ -22,7 +22,7 @@ export class AddworkflowComponent {
   addWorkflow(){    
     this.workflowservice.addWorkflow(this.workflow).subscribe(
       (res)=>{
-        this._router.navigateByUrl("admin/appointment/viewWorkflow");
+        this._router.navigateByUrl("admin/workflow/viewWorkflow");
       }
       );
   }

@@ -49,7 +49,7 @@ export class EditworkflowComponent implements OnInit {
     this.getAllLinks();
     this.getAllUsers();
   }
-
+  
   updateWorkflow() {
     if (this.isPlaying) {
       this.workflow.etat = 'en cours';
@@ -59,7 +59,6 @@ export class EditworkflowComponent implements OnInit {
     this.ser.updateWorkflow(this.workflow.id, this.workflow).subscribe((response) => {
       console.log('Update successful:', response);
       location.reload();
-      Swal.fire("Workflow à jour !");
     },
       (error) => {
         console.error('Update failed:', error);

@@ -12,7 +12,7 @@ import {
 import { ROUTES } from "./sidebar-items";
 import { TokenStorageService } from "src/app/service/token-storage.service";
 import { AuthenticationService } from "src/app/service/authentication.service";
-import { ERole } from "src/app/model/ERole";
+
 @Component({
   selector: "app-sidebar",
   templateUrl: "./sidebar.component.html",
@@ -103,11 +103,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     if (this.authService.currentUserValue) {
-      const userRole = this.authService.currentUserValue.role;
       this.userFullName = this.authService.currentUserValue.username;
       this.sidebarItems = ROUTES;
     }
-
     // this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
     this.initLeftSidebar();
     this.bodyTag = this.document.body;
