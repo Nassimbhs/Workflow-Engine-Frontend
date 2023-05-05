@@ -184,7 +184,7 @@
                     [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
                   <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central" [attr.x]="1" [attr.y]="20"
                     style="fill: white;">
-                    <tspan style="font-weight:bolder;font-size: 15px;">({{node.label}})</tspan>
+                    <tspan style="font-weight:bolder;font-size: 15px;">{{node.label}}</tspan>
                     <tspan x="50" dy="1em" style="fill: black;font-weight: bolder;">{{node.duration}}</tspan>
                   </svg:text>
                 </svg:g>

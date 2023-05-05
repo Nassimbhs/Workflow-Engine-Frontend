@@ -1,5 +1,6 @@
 import { Router, NavigationEnd } from "@angular/router";
 import { DOCUMENT } from "@angular/common";
+
 import {
   Component,
   Inject,
@@ -12,6 +13,7 @@ import {
 import { ROUTES } from "./sidebar-items";
 import { TokenStorageService } from "src/app/service/token-storage.service";
 import { AuthenticationService } from "src/app/service/authentication.service";
+import { UserService } from "src/app/service/user.service";
 
 @Component({
   selector: "app-sidebar",
@@ -19,6 +21,7 @@ import { AuthenticationService } from "src/app/service/authentication.service";
   styleUrls: ["./sidebar.component.sass"],
 })
 export class SidebarComponent implements OnInit, OnDestroy {
+  currentUser: any;
   public sidebarItems: any[];
   level1Menu = "";
   level2Menu = "";
@@ -39,14 +42,15 @@ export class SidebarComponent implements OnInit, OnDestroy {
     public elementRef: ElementRef,
     private authService: AuthenticationService,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private userService : UserService
 
   ) {
     const body = this.elementRef.nativeElement.closest("body");
     this.routerObj = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         // logic for select active menu in dropdown
-        const role = ["ROLE_USER", "ROLE_MODERATOR", "ROLE_ADMIN"];
+        const role = ["ROLE_USER", "ROLE_ADMIN"];
         const currenturl = event.url.split("?")[0];
         const firstString = currenturl.split("/").slice(1)[0];
 
@@ -101,15 +105,28 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.level3Menu = element;
     }
   }
+  
+
   ngOnInit() {
-    if (this.authService.currentUserValue) {
-      this.userFullName = this.authService.currentUserValue.username;
-      this.sidebarItems = ROUTES;
-    }
-    // this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
-    this.initLeftSidebar();
-    this.bodyTag = this.document.body;
-  }
+    this.currentUser = this.tokenStorageService.getUser();
+    this.userService.getUserRoles(this.currentUser.id).subscribe(roleNames => {
+      console.log("Roles de l'utilisateur : ", roleNames);
+      if (this.authService.currentUserValue && roleNames.toString().includes("ROLE_ADMIN")) {
+        this.userFullName = this.authService.currentUserValue.username;
+        this.sidebarItems = ROUTES.filter((sidebarItem) =>
+          sidebarItem.role.includes("ROLE_ADMIN"));
+      }  else if (this.authService.currentUserValue && roleNames.toString().includes("ROLE_USER")) {
+        this.userFullName = this.authService.currentUserValue.username;
+        this.sidebarItems = ROUTES.filter((sidebarItem) =>
+          sidebarItem.role.includes("ROLE_USER"));
+      }
+      else {
+        this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
+      }
+      this.initLeftSidebar();
+      this.bodyTag = this.document.body;
+    });
+}
   ngOnDestroy() {
     this.routerObj.unsubscribe();
   }

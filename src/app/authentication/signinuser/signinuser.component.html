@@ -1,0 +1,90 @@
+<div class="auth-container">
+    <div class="row auth-main">
+      <div class="col-sm-6 px-0 d-none d-sm-block">
+        <div class="left-img"
+          style="background-image: url(https://www.frevvo.com/blog/wp-content/uploads/2022/03/image4-1000x572.png);">
+        </div>
+      </div>
+      <div class="col-sm-6 auth-form-section">
+        <div class="form-section">
+          <div class="auth-wrapper">
+            <h2 class="welcome-msg"> Welcome to Cliniva </h2>
+            <p class="auth-signup-text text-muted">Need an account?<a routerLink="/user/signupuser"
+                class="sign-up-link">Sign Up
+              </a></p>
+            <div class="d-flex justify-content-between lbl-alert mb-3">
+              <div>
+                <button mat-raised-button color="primary" type="button">Admin</button>
+              </div>
+              <div>
+                <button mat-raised-button color="accent" type="button">Doctor</button>
+              </div>
+              <div>
+                <button mat-raised-button color="warn" type="button">Patient</button>
+              </div>
+            </div>
+            <h2 class="login-title">Sign in</h2>
+            <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" [(ngModel)]="form.username" required
+                  #username="ngModel" />
+                <div class="alert alert-danger" role="alert" *ngIf="username.errors && f.submitted">
+                  Username is required!
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" [(ngModel)]="form.password" required
+                  #password="ngModel" />
+                <div class="alert alert-danger" role="alert" *ngIf="password.errors && f.submitted">
+                  <div *ngIf="password.errors.required">Password is required</div>
+                  <div *ngIf="password.errors.minlength">
+                    Password must be at least 6 characters
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-5">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value=""> Remember me
+                    <span class="form-check-sign">
+                      <span class="check"></span>
+                    </span>
+                  </label>
+                </div>
+                <a class="txt1" routerLink="/authentication/forgot-password">Forgot Password?</a>
+              </div>
+  
+              <div class="form-group">
+                <button class="btn btn-primary btn-block" type="submit">
+                  Login
+                </button>
+              </div>
+              <div class="form-group">
+                <div class="alert alert-danger" role="alert" *ngIf="f.submitted && isLoginFailed">
+                L’adresse e-mail ou le mot de passe que vous avez saisi(e) n’est pas associé(e) à un compte !"
+                </div>
+              </div>
+            </form>
+            <h6 class="social-login-title">OR</h6>
+            <ul class="list-unstyled social-icon mb-0 mt-3">
+              <li class="list-inline-item"><a href="javascript:void(0)" class="rounded">
+                  <i class="fab fa-google"></i>
+                </a></li>
+              <li class="list-inline-item"><a href="javascript:void(0)" class="rounded flex-c-m">
+                  <i class="fab fa-facebook-f"></i>
+                </a></li>
+              <li class="list-inline-item"><a href="javascript:void(0)" class="rounded">
+                  <i class="fab fa-twitter"></i>
+                </a></li>
+              <li class="list-inline-item"><a href="javascript:void(0)" class="rounded">
+                  <i class="fab fa-linkedin-in"></i>
+                </a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>

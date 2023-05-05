@@ -4,6 +4,7 @@ import { Page404Component } from "./authentication/page404/page404.component";
 import { AuthGuard } from "./core/guard/auth.guard";
 import { AuthLayoutComponent } from "./layout/app-layout/auth-layout/auth-layout.component";
 import { MainLayoutComponent } from "./layout/app-layout/main-layout/main-layout.component";
+import { AuthGuarduser } from "./core/guard/auth.guarduser";
 const routes: Routes = [
   {
     path: "",
@@ -118,6 +119,7 @@ const routes: Routes = [
       },
     ],
   },
+ 
   {
     path: "authentication",
     component: AuthLayoutComponent,

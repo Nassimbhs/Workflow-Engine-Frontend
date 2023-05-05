@@ -6,6 +6,7 @@ import { ForgotPasswordComponent } from "./forgot-password/forgot-password.compo
 import { LockedComponent } from "./locked/locked.component";
 import { Page404Component } from "./page404/page404.component";
 import { Page500Component } from "./page500/page500.component";
+import { SigninuserComponent } from "./signinuser/signinuser.component";
 const routes: Routes = [
   {
     path: "",
@@ -18,6 +19,14 @@ const routes: Routes = [
   },
   {
     path: "signup",
+    component: SignupComponent,
+  },
+  {
+    path: "signinuser",
+    component: SigninuserComponent,
+  },
+  {
+    path: "signupuser",
     component: SignupComponent,
   },
   {

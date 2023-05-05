@@ -1,18 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { AuthenticationService } from "src/app/service/authentication.service";
-import { User } from "src/app/model/User";
-import Swal from "sweetalert2";
-import { HttpErrorResponse } from "@angular/common/http";
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { User } from 'src/app/model/User';
+import { AuthenticationService } from 'src/app/service/authentication.service';
+import Swal from 'sweetalert2';
 
 @Component({
-  selector: "app-signup",
-  templateUrl: "./signup.component.html",
-  styleUrls: ["./signup.component.scss"],
+  selector: 'app-signupuser',
+  templateUrl: './signupuser.component.html',
+  styleUrls: ['./signupuser.component.sass']
 })
-export class SignupComponent implements OnInit {
-  
+export class SignupuserComponent implements OnInit {
+
   signupForm: FormGroup;
   submitted = false;
   returnUrl: string;
@@ -55,7 +55,7 @@ export class SignupComponent implements OnInit {
     };
     this.authService.signup(user).subscribe(
       data => {
-        this.router.navigate(['/authentication/signin']);
+        this.router.navigate(['/authentication/signinuser']);
         if (data && data.message) {
           Swal.fire({
             title: 'Success',
@@ -80,4 +80,4 @@ export class SignupComponent implements OnInit {
     );
   }
 
-} 
+}

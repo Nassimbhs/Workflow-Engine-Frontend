@@ -1,6 +1,6 @@
 export enum ERole {
-  Admin = "ROLE_ADMIN",
-  User = "ROLE_USER",
-   Mod = "ROLE_MODERATOR",
+  All = "All",
+  ROLE_USER = "ROLE_USER",
+  ROLE_ADMIN = "ROLE_ADMIN"
 }
   

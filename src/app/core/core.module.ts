@@ -5,13 +5,16 @@ import { AuthGuard } from "./guard/auth.guard";
 import { AuthService } from "./service/auth.service";
 import { DynamicScriptLoaderService } from "./service/dynamic-script-loader.service";
 import { throwIfAlreadyLoaded } from "./guard/module-import.guard";
+import { AuthGuarduser } from "./guard/auth.guarduser";
 
 @NgModule({
-  declarations: [],
+  declarations: [
+  ],
   imports: [CommonModule],
   providers: [
     RightSidebarService,
     AuthGuard,
+    AuthGuarduser,
     AuthService,
     DynamicScriptLoaderService,
   ],

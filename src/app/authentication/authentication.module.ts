@@ -13,6 +13,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
+import { SigninuserComponent } from './signinuser/signinuser.component';
+import { SignupuserComponent } from './signupuser/signupuser.component';
 @NgModule({
   declarations: [
     Page500Component,
@@ -21,6 +23,8 @@ import { MatButtonModule } from "@angular/material/button";
     SignupComponent,
     LockedComponent,
     ForgotPasswordComponent,
+    SigninuserComponent,
+    SignupuserComponent,
   ],
   imports: [
     CommonModule,

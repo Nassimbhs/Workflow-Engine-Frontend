@@ -10,7 +10,7 @@
         <div class="auth-wrapper">
           <h2 class="welcome-msg"> Welcome to Cliniva </h2>
           <p class="auth-signup-text text-muted">Need an account?<a routerLink="/authentication/signup"
-              class="sign-up-link">Sign Up
+              class="sign-up-link">Crée nouveau compte
             </a></p>
           <div class="d-flex justify-content-between lbl-alert mb-3">
             <div>
@@ -23,18 +23,18 @@
               <button mat-raised-button color="warn" type="button">Patient</button>
             </div>
           </div>
-          <h2 class="login-title">Sign in</h2>
+          <h2 class="login-title">Se connecter</h2>
           <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
             <div class="form-group">
-              <label for="username">Username</label>
+              <label for="username">Nom d'utilisateur</label>
               <input type="text" class="form-control" name="username" [(ngModel)]="form.username" required
                 #username="ngModel" />
               <div class="alert alert-danger" role="alert" *ngIf="username.errors && f.submitted">
-                Username is required!
+                Nom d'utilisateur est obligatoire!
               </div>
             </div>
             <div class="form-group">
-              <label for="password">Password</label>
+              <label for="password">Mot de passe</label>
               <input type="password" class="form-control" name="password" [(ngModel)]="form.password" required
                 #password="ngModel" />
               <div class="alert alert-danger" role="alert" *ngIf="password.errors && f.submitted">
@@ -53,12 +53,12 @@
                   </span>
                 </label>
               </div>
-              <a class="txt1" routerLink="/authentication/forgot-password">Forgot Password?</a>
+              <a class="txt1" routerLink="/authentication/forgot-password">Mot de passe oublié ?</a>
             </div>
 
             <div class="form-group">
               <button class="btn btn-primary btn-block" type="submit">
-                Login
+                Se connecter
               </button>
             </div>
             <div class="form-group">
