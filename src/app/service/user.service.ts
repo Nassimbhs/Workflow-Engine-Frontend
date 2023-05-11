@@ -29,4 +29,11 @@ export class UserService {
     return this._http.get<Role[]>(this.baseUrl +userId+"/roles");
   }
   
+  getUsersByGroupId(groupId: any): Observable<any> {
+    return this._http.get(`${this.baseUrl}groups/${groupId}`);
+  }
+  getUsersByRoleUser(): Observable<User[]> {
+    return this._http.get<User[]>(this.baseUrl+"usersByRole");
+  }
+
 }

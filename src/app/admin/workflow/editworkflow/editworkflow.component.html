@@ -57,7 +57,7 @@
                 </svg:g>
               </ng-template>
 
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+              <div class="modal-dialog modal-lg">
                 <ng-template #modal1 let-modal>
                   <div class="modal-header">
                     <h4 class="modal-title" id="modal-basic-title">
@@ -155,20 +155,41 @@
                       </ng-container>
                     </div>
                   </div>
-
-                  <h6>Assigner des responsables : </h6>
-                  <select [(ngModel)]="selectedUserIds" multiple>
-                    <option *ngFor="let u of listUser" [ngValue]="u.id">{{ u.username }}</option>
-                  </select>
+                  <div class="row">
+                    <h6>Ajouter un groupe ou un utilisateur :</h6>
+                    <select [(ngModel)]="selectedOption">
+                      <option value="group">Groupe</option>
+                      <option value="user">Utilisateur</option>
+                    </select>
+                  </div>
                   <br>
-                
+                  <div *ngIf="selectedOption === 'user'">
+                    <div class="row">
+                      <h6>Assigner des utilisateurs :</h6>
+                      <select [(ngModel)]="selectedUserIds" multiple>
+                        <option *ngFor="let u of listUser" [ngValue]="u.id">{{ u.username }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <br>
+                  <div *ngIf="selectedOption === 'group'">
+                    <div class="row">
+                      <h6>Assigner des groupes :</h6>
+                      <select [(ngModel)]="selectedGroupIds" multiple>
+                        <option *ngFor="let g of listGroupe" [ngValue]="g.id">{{ g.nom }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <br>
                   <div class="row">
                     <h6>Les responsables sont :</h6>
                     <div class="col-md-4" *ngFor="let user of utilisateursParTache[taches.id]">
-                      <input type="checkbox" checked (change)="onCheckboxChange(taches.id, user.id, $event.target.checked)"/> {{ user.username }}
+                      <input type="checkbox" checked
+                        (change)="onCheckboxChange(taches.id, user.id, $event.target.checked)" /> {{ user.username }}
                     </div>
                   </div>
-                  <div class="alert alert-danger" *ngIf="!utilisateursParTache[taches.id] || utilisateursParTache[taches.id].length == 0">
+                  <div class="alert alert-danger"
+                    *ngIf="!utilisateursParTache[taches.id] || utilisateursParTache[taches.id].length == 0">
                     Aucun responsable pour cette tâche.
                   </div>
 
@@ -293,8 +314,7 @@
                                         (click)="openModalTache(modalTache)"></i>
                                     </td>
                                     <td>
-                                      <i class="fas fa-trash" style="font-size: 20px;"
-                                        (click)="deleteTache(a.id)"></i>
+                                      <i class="fas fa-trash" style="font-size: 20px;" (click)="deleteTache(a.id)"></i>
                                     </td>
                                   </tr>
                                 </tbody>

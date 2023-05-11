@@ -13,29 +13,30 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatSortModule } from "@angular/material/sort";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatDatepickerModule } from "@angular/material/datepicker";
-import { StaffRoutingModule } from "./staff-routing.module";
-import { AllstaffComponent } from "./allstaff/allstaff.component";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { FormDialogComponent } from "./allstaff/dialog/form-dialog/form-dialog.component";
-import { DeleteDialogComponent } from "./allstaff/dialog/delete/delete.component";
-import { AddStaffComponent } from "./add-staff/add-staff.component";
-import { EditStaffComponent } from "./edit-staff/edit-staff.component";
-import { StaffProfileComponent } from "./staff-profile/staff-profile.component";
 import { MaterialFileInputModule } from "ngx-material-file-input";
 import { MatTabsModule } from "@angular/material/tabs";
-import { StaffService } from "./allstaff/staff.service";
+import { AddgroupComponent } from "./add-group/add-group.component";
+import { AllgroupComponent } from "./allgroup/allgroup.component";
+import { AddDialogComponent } from "./allgroup/dialog/add/add.component";
+import { UpdateDialogComponent } from "./allgroup/dialog/update/update.component";
+import { groupRoutingModule } from "./group-routing.module";
+import { EditgroupComponent } from "./edit-group/edit-group.component";
+import { groupProfileComponent } from "./group-profile/staff-profile.component";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 
 @NgModule({
   declarations: [
-    AllstaffComponent,
-    FormDialogComponent,
-    DeleteDialogComponent,
-    AddStaffComponent,
-    EditStaffComponent,
-    StaffProfileComponent,
+    AllgroupComponent,
+    UpdateDialogComponent,
+    AddDialogComponent,
+    AddgroupComponent,
+    EditgroupComponent,
+    groupProfileComponent,
   ],
   imports: [
+    MatAutocompleteModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -55,8 +56,8 @@ import { StaffService } from "./allstaff/staff.service";
     MaterialFileInputModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    StaffRoutingModule,
+    groupRoutingModule,
   ],
-  providers: [StaffService],
+  providers: [],
 })
-export class StaffModule {}
+export class groupModule {}

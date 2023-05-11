@@ -20,9 +20,9 @@ const routes: Routes = [
       import("./doctors/doctors.module").then((m) => m.DoctorsModule),
   },
   {
-    path: "staff",
+    path: "group",
     loadChildren: () =>
-      import("./staff/staff.module").then((m) => m.StaffModule),
+      import("./group/group.module").then((m) => m.groupModule),
   },
   {
     path: "patients",

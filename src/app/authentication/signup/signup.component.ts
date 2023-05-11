@@ -49,7 +49,7 @@ export class SignupComponent implements OnInit {
     const user: User = {
       username: this.signupForm.value.username,
       email: this.signupForm.value.email,
-      role: ["user"],
+      role: ["admin"],
       password: this.signupForm.value.password,
       id: 0
     };

@@ -11,6 +11,7 @@ import { WorkflowService } from "src/app/service/workflow.service";
 import { SimpleDialogComponent } from "src/app/ui/modal/simpleDialog.component";
 import Swal from "sweetalert2";
 import { UserService } from "src/app/service/user.service";
+import { GroupeUserService } from "src/app/service/groupe-user.service";
 
 @Component({
   selector: "app-editworkflow",
@@ -36,6 +37,7 @@ export class EditworkflowComponent implements OnInit {
     private serUser: UserService,
     private ac: ActivatedRoute,
     private modalService: NgbModal,
+    private groupService: GroupeUserService
   ) {
   }
   liens = [];
@@ -47,9 +49,10 @@ export class EditworkflowComponent implements OnInit {
     this.getAllWorkflows();
     this.getTachesByWorkflowId(this.id);
     this.getAllLinks();
-    this.getAllUsers();
+    this.getUsersByRoleUser();
+    this.getAllGroups();
   }
-  
+
   updateWorkflow() {
     if (this.isPlaying) {
       this.workflow.etat = 'en cours';
@@ -131,14 +134,14 @@ export class EditworkflowComponent implements OnInit {
     const seconds = '00';
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   }
-  
+
   nodesArray: { id: String, label: String, duration: string }[] = [];
   linksArray = [];
   ids = {};
   alltaches = [];
   getTachesByWorkflowId(id: any) {
     const currentDate = new Date();
-    console.log("current date : ",currentDate);
+    console.log("current date : ", currentDate);
     this.serTache.getTachesByWorkflowId(id).subscribe(
       (res: any) => {
         this.alltaches = res;
@@ -166,13 +169,13 @@ export class EditworkflowComponent implements OnInit {
   lista = [];
   actLink = {};
   utilisateursParTache = {};
-  
+
   act(id: any) {
     this.serTache.getTacheById(id).subscribe(res => {
       this.taches = res;
       this.lista.push(this.taches);
     });
-  
+
     this.serlien.getLinkTache(id).subscribe(resl => {
       this.actLink = resl;
       console.log("get link by id : ", this.actLink);
@@ -196,10 +199,10 @@ export class EditworkflowComponent implements OnInit {
       );
   }
 
-  selectedUserIds: any[]= [];
+  selectedUserIds: any[] = [];
   assignUsersToTask() {
 
-    this.serTache.assignerTache(this.taches.id,this.selectedUserIds).subscribe(
+    this.serTache.assignerTache(this.taches.id, this.selectedUserIds).subscribe(
       res => {
         console.log(this.selectedUserIds);
       },
@@ -390,10 +393,16 @@ export class EditworkflowComponent implements OnInit {
   }
 
   listUser: any[];
-  getAllUsers() {
-    this.serUser.getAllUsers().subscribe((res) => {
+  getUsersByRoleUser() {
+    this.serUser.getUsersByRoleUser().subscribe((res) => {
       this.listUser = res;
-      console.log(this.listUser);
+    });
+  }
+
+  listGroupe: any[];
+  getAllGroups() {
+    this.groupService.getAllGroups().subscribe((res) => {
+      this.listGroupe = res;
     });
   }
 

@@ -36,7 +36,7 @@ export class SigninuserComponent implements OnInit {
       this.roles = this.tokenStorage.getUser().roles;
     }
     if (this.isLoggedIn) {
-      this.router.navigate(["/admin/workflow/viewWorkflow"]);
+      this.router.navigate(["/doctor/dashboard"]);
     }
 
   }
@@ -51,7 +51,7 @@ export class SigninuserComponent implements OnInit {
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
         if (this.roles.includes("ROLE_USER")) {
-          this.router.navigate(["/patient/appointments/today"]);
+          this.router.navigate(["/doctor/dashboard"]);
         }
       },
       err => {

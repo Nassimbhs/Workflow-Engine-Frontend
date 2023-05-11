@@ -189,8 +189,8 @@ export const ROUTES: RouteInfo[] = [
   },
   {
     path: "",
-    title: "MENUITEMS.STAFF.TEXT",
-    moduleName: "staff",
+    title: "Groupes",
+    moduleName: "group",
     iconType: "material-icons-two-tone",
     icon: "people_alt",
     class: "menu-toggle",
@@ -200,9 +200,9 @@ export const ROUTES: RouteInfo[] = [
     role: ["ROLE_ADMIN"],
     submenu: [
       {
-        path: "/admin/staff/all-staff",
-        title: "MENUITEMS.STAFF.LIST.ALL-STAFF",
-        moduleName: "staff",
+        path: "/admin/group/all-group",
+        title: "Voir les groupes",
+        moduleName: "group",
         iconType: "",
         icon: "",
         class: "ml-menu",
@@ -213,9 +213,9 @@ export const ROUTES: RouteInfo[] = [
         submenu: [],
       },
       {
-        path: "/admin/staff/add-staff",
-        title: "MENUITEMS.STAFF.LIST.ADD-STAFF",
-        moduleName: "staff",
+        path: "/admin/group/add-group",
+        title: "ajouter un groupe",
+        moduleName: "group",
         iconType: "",
         icon: "",
         class: "ml-menu",
@@ -226,9 +226,9 @@ export const ROUTES: RouteInfo[] = [
         submenu: [],
       },
       {
-        path: "/admin/staff/edit-staff",
-        title: "MENUITEMS.STAFF.LIST.EDIT-STAFF",
-        moduleName: "staff",
+        path: "/admin/group/edit-group",
+        title: "Modifier un groupe",
+        moduleName: "group",
         iconType: "",
         icon: "",
         class: "ml-menu",
@@ -239,9 +239,9 @@ export const ROUTES: RouteInfo[] = [
         submenu: [],
       },
       {
-        path: "/admin/staff/staff-profile",
-        title: "MENUITEMS.STAFF.LIST.PROFILE",
-        moduleName: "staff",
+        path: "/admin/group/group-profile",
+        title: "Afficher les détail d'un groupe",
+        moduleName: "group",
         iconType: "",
         icon: "",
         class: "ml-menu",
@@ -428,7 +428,7 @@ export const ROUTES: RouteInfo[] = [
 
   // Doctor Modules
   {
-    path: "/doctor/azerty",
+    path: "/doctor/dashboard",
     title: "MENUITEMS.DOCTOR.DASHBOARD",
     moduleName: "dashboard",
     iconType: "material-icons-two-tone",
@@ -437,7 +437,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: "",
     badgeClass: "",
-    role: ["ROLE_ADMIN"],
+    role: ["ROLE_ADMIN","ROLE_USER"],
     submenu: [],
   },
   {
@@ -450,7 +450,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: "",
     badgeClass: "",
-    role: ["Doctor"],
+    role: ["ROLE_ADMIN"],
     submenu: [],
   },
   {

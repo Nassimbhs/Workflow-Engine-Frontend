@@ -4,7 +4,7 @@ import { Component, OnInit } from "@angular/core";
   templateUrl: "./staff-profile.component.html",
   styleUrls: ["./staff-profile.component.sass"],
 })
-export class StaffProfileComponent implements OnInit {
+export class groupProfileComponent implements OnInit {
   constructor() {}
   ngOnInit(): void {}
 }

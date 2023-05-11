@@ -5,16 +5,16 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           <ul class="breadcrumb breadcrumb-style ">
             <li class="breadcrumb-item">
-              <h4 class="page-title">Edit Staff</h4>
+              <h4 class="page-title">Ajouter un groupe</h4>
             </li>
             <li class="breadcrumb-item bcrumb-1">
               <a routerLink="/admin/dashboard/main">
                 <i class="fas fa-home"></i> Home</a>
             </li>
             <li class="breadcrumb-item bcrumb-2">
-              <a href="#" onClick="return false;">Staff</a>
+              <a href="#" onClick="return false;">groupes</a>
             </li>
-            <li class="breadcrumb-item active">Edit</li>
+            <li class="breadcrumb-item active">Ajouter</li>
           </ul>
         </div>
       </div>
@@ -23,7 +23,7 @@
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
         <div class="card">
           <div class="header">
-            <h2>Edit Staff</h2>
+            <h2><strong> Staff Information</strong></h2>
 
           </div>
           <div class="body">
@@ -146,6 +146,16 @@
                     <mat-error *ngIf="staffForm.get('dob').hasError('required')">
                       Please select date
                     </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="fill">
+                    <mat-label>Upload Image</mat-label>
+                    <ngx-mat-file-input formControlName="uploadImg">
+                    </ngx-mat-file-input>
+                    <mat-icon matSuffix>face</mat-icon>
                   </mat-form-field>
                 </div>
               </div>

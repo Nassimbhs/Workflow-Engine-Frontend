@@ -1,0 +1,77 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="page-title">Modifier un groupe</h4>
+            </li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/admin/dashboard/main">
+                <i class="fas fa-home"></i> Accueil</a>
+            </li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a href="#" onClick="return false;">Groupe</a>
+            </li>
+            <li class="breadcrumb-item active">Modifier</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>Modifier un groupe</h2>
+
+          </div>
+          <div class="body">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="fill">
+                    <mat-label>First name</mat-label>
+                    <input matInput [(ngModel)]="groups.nom" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="fill">
+                    <mat-label>Last name</mat-label>
+                    <input matInput [(ngModel)]="groups.description">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field appearance="fill" class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    <mat-label>Assigner des utilisateurs</mat-label>
+                    <input matInput placeholder="Search users" [(ngModel)]="searchText">
+                    <mat-select [(ngModel)]="selectedUserIds" multiple style="margin-top: 20px;">
+                      <mat-option *ngFor="let u of filteredUserList" [value]="u.id">{{ u.username }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4" *ngFor="let user of utilisateursParGroupe[groups.id]">
+                  <input type="checkbox" checked (change)="onCheckboxChange(groups.id, user.id, $event.target.checked)">
+                   {{user.username}}
+                </div>
+              </div>
+              <div class="alert alert-danger" *ngIf="!utilisateursParGroupe[groups.id] || utilisateursParGroupe[groups.id].length == 0">
+                Aucun utilisateur assigné au groupe {{groups.nom}}
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <button class="btn-space" mat-raised-button
+                    color="primary" (click)="updateGroupUser();addUserToGroup()">sauvegarder</button>
+                  <button type="button" mat-button>Cancel</button>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

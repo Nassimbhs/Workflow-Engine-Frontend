@@ -46,5 +46,10 @@ export class TacheService {
     const url = `${this.baseUrl}/${tacheId}/utilisateurs/${userId}`;
     return this._http.delete<void>(url);
   }
+
+  getTasksByUser(userId: number): Observable<Tache[]> {
+    const url = `${this.baseUrl}/users/${userId}/tasks`;
+    return this._http.get<Tache[]>(url);
+  }
   
 }

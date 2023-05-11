@@ -1,11 +1,12 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+
 @Component({
-  selector: "app-add-staff",
-  templateUrl: "./add-staff.component.html",
-  styleUrls: ["./add-staff.component.sass"],
+  selector: "app-add-group",
+  templateUrl: "./add-group.component.html",
+  styleUrls: ["./add-group.component.sass"],
 })
-export class AddStaffComponent {
+export class AddgroupComponent {
   staffForm: FormGroup;
   hide3 = true;
   agree3 = false;
@@ -32,4 +33,5 @@ export class AddStaffComponent {
   onSubmit() {
     console.log("Form Value", this.staffForm.value);
   }
+
 }
