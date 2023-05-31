@@ -53,6 +53,7 @@ export class SignupuserComponent implements OnInit {
       password: this.signupForm.value.password,
       id: 0
     };
+    console.log(user);
     this.authService.signup(user).subscribe(
       data => {
         this.router.navigate(['/authentication/signinuser']);

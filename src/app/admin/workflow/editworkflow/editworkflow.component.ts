@@ -39,6 +39,7 @@ export class EditworkflowComponent implements OnInit {
     private modalService: NgbModal,
     private groupService: GroupeUserService
   ) {
+  
   }
   liens = [];
   ngOnInit(): void {
@@ -135,26 +136,28 @@ export class EditworkflowComponent implements OnInit {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   }
 
-  nodesArray: { id: String, label: String, duration: string }[] = [];
+  nodesArray: { id: String, label: String, endDate: string }[] = [];
   linksArray = [];
   ids = {};
   alltaches = [];
   getTachesByWorkflowId(id: any) {
-    const currentDate = new Date();
-    console.log("current date : ", currentDate);
     this.serTache.getTachesByWorkflowId(id).subscribe(
       (res: any) => {
         this.alltaches = res;
         if (Array.isArray(res)) {
           this.nodesArray = res.map(tache => {
-            const startDate = new Date(tache.startDate);
+            const startDate = new Date(this.getCurrentDate());
             const endDate = new Date(tache.endDate);
+            endDate.setHours(endDate.getHours() - 1);
+            console.log("start date :",startDate);
+            console.log("end date :",endDate);
+
             const duration = Math.abs(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
             const formattedDuration = this.formatDuration(duration);
             return {
               id: tache.id.toString(),
               label: tache.name,
-              duration: formattedDuration
+              endDate: tache.endDate
             };
           });
           this.ids = res.map(tache => tache.id.toString());
@@ -211,6 +214,21 @@ export class EditworkflowComponent implements OnInit {
       }
     );
   }
+
+  selectedGroupIds: any[] =[];
+  assignUsersToGroup() {
+
+    this.serTache.assignGroupToTask(this.taches.id, this.selectedGroupIds).subscribe(
+      res => {
+        console.log("this.selectedGroupIds: ",this.selectedGroupIds);
+        console.log("this.taches.id : ",this.taches.id);
+      },
+      err => {
+        console.log(this.selectedGroupIds, err);
+      }
+    );
+  }
+
   onCheckboxChange(tacheId: any, userId: any, isChecked: boolean) {
     if (!isChecked) {
       this.serTache.desassignerTacheAUtilisateur(tacheId, userId)
@@ -385,12 +403,6 @@ export class EditworkflowComponent implements OnInit {
     return width + 20; // Ajoute une marge de 20px à la largeur calculée
   }
 
-  duration: number;
-  calculateDuration() {
-    const start = this.taches.startDate.getTime();
-    const end = this.taches.endDate.getTime();
-    this.duration = end - start;
-  }
 
   listUser: any[];
   getUsersByRoleUser() {
@@ -404,6 +416,16 @@ export class EditworkflowComponent implements OnInit {
     this.groupService.getAllGroups().subscribe((res) => {
       this.listGroupe = res;
     });
+  }
+
+  searchText : any = '';
+  get filteredUserList() {
+    return this.listUser.filter(u => u.username.toLowerCase().includes(this.searchText.toLowerCase()));
+  }
+
+  searchTextGroup : any = '';
+  get filteredGroupList() {
+    return this.listGroupe.filter(u => u.nom.toLowerCase().includes(this.searchTextGroup.toLowerCase()));
   }
 
 }

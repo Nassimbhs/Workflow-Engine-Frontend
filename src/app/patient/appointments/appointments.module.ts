@@ -31,6 +31,7 @@ import { TodayAppointmentComponent } from "./today-appointment/today-appointment
 import { DeleteComponent } from "./today-appointment/dialogs/delete/delete.component";
 import { UpcomingAppointmentService } from "./upcoming-appointment/upcoming-appointment.service";
 import { PastAppointmentService } from "./past-appointment/past-appointment.service";
+import { MatTabsModule } from "@angular/material/tabs";
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { PastAppointmentService } from "./past-appointment/past-appointment.serv
     DeleteComponent,
   ],
   imports: [
+    MatTabsModule,
     CommonModule,
     AppointmentsRoutingModule,
     FormsModule,

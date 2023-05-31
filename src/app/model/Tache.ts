@@ -3,7 +3,10 @@ export class Tache {
     name: String;
     description: String;
     creationDate: String;
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
+    statut: String;
+    ordre: number;
+    triggerType: string;
     workflowTache: any; 
 }

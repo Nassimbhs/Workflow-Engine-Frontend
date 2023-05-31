@@ -1,4 +1,4 @@
-<section class="content">
+<section class="content" style="overflow-x: scroll;white-space: nowrap;">
   <div class="container-fluid">
     <div class="block-header">
       <div class="row">
@@ -35,7 +35,7 @@
               Workflow est {{workflow.etat}}
             </h2>
 
-            <ngx-graph class="chart-container" [view]="[1000, 550]" [links]="listLinks" [nodes]="nodesArray" [clusters]="[
+            <ngx-graph class="chart-container" [view]="[1200, 500]" [links]="listLinks" [nodes]="nodesArray" [clusters]="[
         {
           id: 'third',
           label: 'Cluster node',
@@ -51,9 +51,7 @@
 
               <ng-template #clusterTemplate let-cluster>
                 <svg:g class="node cluster">
-                  <svg:rect rx="5" ry="5" [attr.width]="cluster.dimension.width"
-                    [attr.height]="cluster.dimension.height" [attr.fill]="cluster.data.color"
-                    style="width: 100%;height: 100%;" />
+                  <svg:rect rx="5" ry="5" [attr.fill]="cluster.data.color" style="width: 100%;height: 100%;" />
                 </svg:g>
               </ng-template>
 
@@ -81,11 +79,7 @@
                     </mat-form-field>
 
                     <mat-form-field class="example-full-width">
-                      <mat-label>Date de début :</mat-label>
-                      <input matInput type="datetime-local" [(ngModel)]="taches.startDate" [min]="getCurrentDate()">
-                    </mat-form-field>
-                    <mat-form-field class="example-full-width">
-                      <mat-label>Date de fin :</mat-label>
+                      <mat-label>Date limite :</mat-label>
                       <input matInput type="datetime-local" [(ngModel)]="taches.endDate" [min]="getCurrentDate()">
                     </mat-form-field>
 
@@ -155,34 +149,42 @@
                       </ng-container>
                     </div>
                   </div>
-                  <div class="row">
+                  <div class="example-full-width">
                     <h6>Ajouter un groupe ou un utilisateur :</h6>
-                    <select [(ngModel)]="selectedOption">
-                      <option value="group">Groupe</option>
-                      <option value="user">Utilisateur</option>
-                    </select>
+                    <div class="row">
+                      <select [(ngModel)]="selectedOption">
+                        <option value="group">Groupe</option>
+                        <option value="user">Utilisateur</option>
+                      </select>
+                    </div>
                   </div>
                   <br>
                   <div *ngIf="selectedOption === 'user'">
-                    <div class="row">
+                    <div class="example-full-width">
                       <h6>Assigner des utilisateurs :</h6>
-                      <select [(ngModel)]="selectedUserIds" multiple>
-                        <option *ngFor="let u of listUser" [ngValue]="u.id">{{ u.username }}</option>
-                      </select>
+                      <div class="row">
+                        <input matInput placeholder="Chercher des utilisateurs" [(ngModel)]="searchText">
+                        <select [(ngModel)]="selectedUserIds" multiple>
+                          <option *ngFor="let u of filteredUserList" [ngValue]="u.id">{{ u.username }}</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                   <br>
                   <div *ngIf="selectedOption === 'group'">
-                    <div class="row">
+                    <div class="example-full-width">
                       <h6>Assigner des groupes :</h6>
-                      <select [(ngModel)]="selectedGroupIds" multiple>
-                        <option *ngFor="let g of listGroupe" [ngValue]="g.id">{{ g.nom }}</option>
-                      </select>
+                      <div class="row">
+                        <input matInput placeholder="Chercher des groupes" [(ngModel)]="searchTextGroup">
+                        <select [(ngModel)]="selectedGroupIds" multiple>
+                          <option *ngFor="let g of filteredGroupList" [ngValue]="g.id">{{ g.nom }}</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                   <br>
-                  <div class="row">
-                    <h6>Les responsables sont :</h6>
+                  <div class="example-full-width">
+                    <h6>Les utilisateurs responsables sont :</h6>
                     <div class="col-md-4" *ngFor="let user of utilisateursParTache[taches.id]">
                       <input type="checkbox" checked
                         (change)="onCheckboxChange(taches.id, user.id, $event.target.checked)" /> {{ user.username }}
@@ -194,7 +196,8 @@
                   </div>
 
                   {{taches.creationDate | date: 'dd/MM/yyyy -- HH:mm:ss'}}
-                  <button type="submit" class="btn btn-warning" (click)="addLinks();updateTache();assignUsersToTask();"
+                  <button type="submit" class="btn btn-warning"
+                    (click)="addLinks();updateTache();assignUsersToTask();assignUsersToGroup();"
                     (click)="modal.dismiss('Cross click')">Modifier</button>
                 </ng-template>
               </div>
@@ -203,13 +206,25 @@
                 <svg:g class="node" (click)="act(node.id)">
                   <svg:rect (dblclick)="Basicopen(modal1)" [attr.width]="node.dimension.width"
                     [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
-                  <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central" [attr.x]="1" [attr.y]="20"
-                    style="fill: white;">
-                    <tspan style="font-weight:bolder;font-size: 15px;">{{node.label}}</tspan>
-                    <tspan x="50" dy="1em" style="fill: black;font-weight: bolder;">{{node.duration}}</tspan>
-                  </svg:text>
+                  <svg:g>
+                    <svg:image href="https://cdn-icons-png.flaticon.com/512/3238/3238024.png" x="0" y="5" width="20"
+                      height="20" />
+                    <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central"
+                      [attr.x]="node.dimension.width" [attr.y]="node.dimension.height / 2" style="fill: white">
+                      <tspan style="font-size: 15px;" x="20" y="25">{{node.label}}</tspan>
+                    </svg:text>
+                    <svg:image *ngIf="node.endDate"
+                      href="https://www.freepnglogos.com/uploads/watch/wall-watch-vector-graphic-clock-time-hour-minute-2.png"
+                      x="0" y="30" width="20" height="20" />
+                    <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central"
+                      [attr.x]="node.dimension.width" [attr.y]="node.dimension.height / 2" style="fill: white">
+                      <tspan x="20" dy="1.5em" style="fill: black;">{{node.endDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}
+                      </tspan>
+                    </svg:text>
+                  </svg:g>
                 </svg:g>
               </ng-template>
+
 
               <ng-template #linkTemplate let-link>
                 <svg:g class="edge">

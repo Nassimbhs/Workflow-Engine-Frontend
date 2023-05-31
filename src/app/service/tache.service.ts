@@ -51,5 +51,19 @@ export class TacheService {
     const url = `${this.baseUrl}/users/${userId}/tasks`;
     return this._http.get<Tache[]>(url);
   }
-  
+
+  getTasksByUsertraite(userId: number): Observable<Tache[]> {
+    const url = `${this.baseUrl}/users/${userId}/tachetraite`;
+    return this._http.get<Tache[]>(url);
+  }
+
+  getAlltaches(): Observable<string[]> {
+    return this._http.get<string[]>(this.baseUrl + "/allTache/");
+  }
+
+  assignGroupToTask(taskId: any,groupId: any): Observable<any> {
+    const url = `${this.baseUrl}/tasks/${taskId}/assign/group/${groupId}`;
+    return this._http.post<any>(url,taskId,groupId);
+  }
+
 }

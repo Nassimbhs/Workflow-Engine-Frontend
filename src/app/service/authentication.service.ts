@@ -45,5 +45,4 @@ export class AuthenticationService {
     return this.http.post(`${AUTH_API}signup`, user,httpOptions);
   }
 
-
 }
