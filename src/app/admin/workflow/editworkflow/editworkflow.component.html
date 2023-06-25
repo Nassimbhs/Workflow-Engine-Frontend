@@ -5,7 +5,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           <ul class="breadcrumb breadcrumb-style ">
             <li class="breadcrumb-item">
-              <h4 class="page-title">Modifier workflow</h4>
+              <h4 class="page-title" *ngIf="workflow.name">{{workflow.name}}</h4>
             </li>
             <li class="breadcrumb-item bcrumb-1">
               <a routerLink="/admin/dashboard/main">
@@ -61,26 +61,39 @@
                     <h4 class="modal-title" id="modal-basic-title">
                       Tache : {{taches.name}}
                     </h4>
-                    <mat-icon matSuffix (click)="deleteTache(taches.id)">delete</mat-icon>
+                    <mat-icon *ngIf="taches.name != 'Début' && taches.name != 'Fin'" matSuffix
+                      (click)="deleteTache(taches.id)">delete</mat-icon>
                     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                       <span aria-hidden="true"><i class="material-icons">close</i></span>
                     </button>
                   </div>
                   <div class="modal-footer">
-                    <mat-form-field class="example-full-width">
+                    <mat-form-field class="example-full-width" *ngIf="taches.name != 'Début' && taches.name != 'Fin'">
                       <mat-label>Nom</mat-label>
-                      <input matInput [(ngModel)]="taches.name" required>
+                      <input matInput [(ngModel)]="taches.name" *ngIf="taches.name != 'Début' && taches.name != 'Fin'"
+                        required>
                       <mat-icon matSuffix>face</mat-icon>
                     </mat-form-field>
 
-                    <mat-form-field class="example-full-width">
+                    <mat-form-field class="example-full-width" *ngIf="taches.name != 'Début' && taches.name != 'Fin'">
                       <mat-label>Description</mat-label>
                       <textarea matInput [(ngModel)]="taches.description" required></textarea>
                     </mat-form-field>
 
-                    <mat-form-field class="example-full-width">
+                    <mat-form-field class="example-full-width" *ngIf="taches.name != 'Début' && taches.name != 'Fin'">
                       <mat-label>Date limite :</mat-label>
                       <input matInput type="datetime-local" [(ngModel)]="taches.endDate" [min]="getCurrentDate()">
+                    </mat-form-field>
+
+                    <mat-form-field class="example-full-width" *ngIf="taches.name != 'Début' && taches.name != 'Fin'">
+                      <mat-label>Action </mat-label>
+                      <select matNativeControl [(ngModel)]="taches.action" required>
+                        <ng-container>
+                          <option value="demande">Demande congé</option>
+                          <option value="approbation">Approbation</option>
+                          <option value="email">Email</option>
+                        </ng-container>
+                      </select>
                     </mat-form-field>
 
                     <mat-form-field class="example-full-width">
@@ -149,7 +162,7 @@
                       </ng-container>
                     </div>
                   </div>
-                  <div class="example-full-width">
+                  <div class="example-full-width" *ngIf="taches.name != 'Début' && taches.name != 'Fin'">
                     <h6>Ajouter un groupe ou un utilisateur :</h6>
                     <div class="row">
                       <select [(ngModel)]="selectedOption">
@@ -183,7 +196,7 @@
                     </div>
                   </div>
                   <br>
-                  <div class="example-full-width">
+                  <div class="example-full-width" *ngIf="taches.name != 'Début' && taches.name != 'Fin'">
                     <h6>Les utilisateurs responsables sont :</h6>
                     <div class="col-md-4" *ngFor="let user of utilisateursParTache[taches.id]">
                       <input type="checkbox" checked
@@ -191,7 +204,7 @@
                     </div>
                   </div>
                   <div class="alert alert-danger"
-                    *ngIf="!utilisateursParTache[taches.id] || utilisateursParTache[taches.id].length == 0">
+                    *ngIf="!utilisateursParTache[taches.id] || utilisateursParTache[taches.id].length == 0 && taches.name != 'Début' && taches.name != 'Fin'">
                     Aucun responsable pour cette tâche.
                   </div>
 
@@ -204,21 +217,37 @@
 
               <ng-template #nodeTemplate let-node>
                 <svg:g class="node" (click)="act(node.id)">
-                  <svg:rect (dblclick)="Basicopen(modal1)" [attr.width]="node.dimension.width"
-                    [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
+                  <svg:rect (dblclick)="Basicopen(modal1)" [attr.width]="node.dimension.width+2"
+                    [attr.height]="node.dimension.height+2" [attr.fill]="node.data.color" />
                   <svg:g>
-                    <svg:image href="https://cdn-icons-png.flaticon.com/512/3238/3238024.png" x="0" y="5" width="20"
-                      height="20" />
+                    <svg:image
+                      *ngIf="node.statut =='traité' && node.approbation=='accepter' && node.label !='Début' && node.label !='Fin'"
+                      href="https://upload.wikimedia.org/wikipedia/commons/b/be/Allow.png" x="1" y="6" width="15"
+                      height="15" />
+                    <svg:image
+                      *ngIf="node.statut =='traité' && node.approbation=='rejeter' && node.label !='Début' && node.label !='Fin'"
+                      href="https://upload.wikimedia.org/wikipedia/commons/1/13/Forbid.png" x="1" y="6" width="15"
+                      height="15" />
+                    <svg:image *ngIf="node.statut =='non traité'"
+                      href="https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/OOjs_UI_icon_pause.svg/1024px-OOjs_UI_icon_pause.svg.png"
+                      x="1" y="6" width="15" height="15" />
+                    <svg:image *ngIf="node.label =='Début'"
+                      href="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Running_icon_-_Noun_Project_17825.svg/1024px-Running_icon_-_Noun_Project_17825.svg.png"
+                      x="1" y="6" width="20" height="20" />
+                    <svg:image *ngIf="node.label =='Fin'"
+                      href="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Running_icon_-_Noun_Project_17825.svg/1024px-Running_icon_-_Noun_Project_17825.svg.png"
+                      x="1" y="6" width="20" height="20" />
                     <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central"
                       [attr.x]="node.dimension.width" [attr.y]="node.dimension.height / 2" style="fill: white">
-                      <tspan style="font-size: 15px;" x="20" y="25">{{node.label}}</tspan>
+                      <tspan style="font-size: 15px;" x="20" y="20">{{node.label}}</tspan>
                     </svg:text>
+
                     <svg:image *ngIf="node.endDate"
                       href="https://www.freepnglogos.com/uploads/watch/wall-watch-vector-graphic-clock-time-hour-minute-2.png"
                       x="0" y="30" width="20" height="20" />
                     <svg:text (dblclick)="Basicopen(modal1)" alignment-baseline="central"
                       [attr.x]="node.dimension.width" [attr.y]="node.dimension.height / 2" style="fill: white">
-                      <tspan x="20" dy="1.5em" style="fill: black;">{{node.endDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}
+                      <tspan x="20" dy="1.25em" style="fill: black;">{{node.endDate | date : 'dd/MM/yyyy -- HH:mm:ss'}}
                       </tspan>
                     </svg:text>
                   </svg:g>
@@ -257,30 +286,71 @@
             <div class="body">
               <div class="example-container">
                 <div class="row">
-                  <mat-form-field class="example-full-width">
+                  <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>Nom</mat-label>
                     <input matInput [(ngModel)]="workflow.name" required>
                     <mat-icon matSuffix>face</mat-icon>
                   </mat-form-field>
-                  <mat-form-field class="example-full-width">
+                  <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>Description</mat-label>
                     <textarea matInput [(ngModel)]="workflow.description" required></textarea>
                     <mat-icon matSuffix>event_note</mat-icon>
                   </mat-form-field>
-                  <mat-form-field class="example-full-width">
+                  <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>Choisir le déclencheur du workflow</mat-label>
-                    <select matNativeControl [(ngModel)]="workflow.declencheur">
-                      <ng-container>
-                        <option value="BD">Base de donnée</option>
-                        <option value="Webhook">Webhook</option>
-                      </ng-container>
-                    </select>
+                    <mat-select matNativeControl [(ngModel)]="workflow.declencheur">
+                      <mat-option value="BD">Base de donnée</mat-option>
+                      <mat-option value="Webhook">Webhook</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div *ngIf="workflow.declencheur === 'BD'" class="row">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>JDBC URL</mat-label>
+                    <mat-icon matSuffix>link</mat-icon>
+                    <input matInput [(ngModel)]="workflow.jdbcUrl" required placeholder="jdbc:mysql://localhost:3306/exempledb">
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Utilisateur</mat-label>
+                    <mat-icon matSuffix>account_circle</mat-icon>
+                    <input matInput [(ngModel)]="workflow.username " required>
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Mot de passe</mat-label>
+                    <mat-icon matSuffix (click)="hidePassword = !hidePassword">
+                      {{ hidePassword ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                    <input matInput [(ngModel)]="workflow.password" required [type]="hidePassword ? 'password' : 'text'">
+                  </mat-form-field>                  
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>SGBD</mat-label>
+                    <mat-select matNativeControl [(ngModel)]="workflow.sgbd">
+                      <mat-option value="mysql">MySQL</mat-option>
+                      <mat-option value="postgres">PostgreSQL</mat-option>
+                      <mat-option value="oracle">Oracle</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Table à écouter</mat-label>
+                    <mat-select matNativeControl [(ngModel)]="workflow.tacheAecouter">
+                      <mat-option *ngFor="let table of listTables" [value]="table">{{ table }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Evénement</mat-label>
+                    <mat-select matNativeControl [(ngModel)]="workflow.evenement">
+                      <mat-option value="Ajout">Ajout</mat-option>
+                      <mat-option value="Modification">Modification</mat-option>
+                      <mat-option value="Suppression">Suppression</mat-option>
+                    </mat-select>
                   </mat-form-field>
                 </div>
                 <br>
               </div>
-              <button mat-raised-button color="primary" (click)="updateWorkflow()">Mettre à jour </button>
+              <button mat-raised-button color="primary" (click)="updateWorkflow()">Mettre à jour</button>
             </div>
+
           </mat-tab>
 
           <mat-tab>
@@ -357,7 +427,7 @@
               </button>
               <button mat-mini-fab color="primary" *ngIf="workflow.etat === null"
                 (click)="isPlaying = true; updateWorkflow()">
-                <mat-icon class="col-white">play_circle_outline</mat-icon>
+                <mat-icon class="col-white">pause_circle_outline</mat-icon>
               </button>
             </ng-template>
             <div class="header">

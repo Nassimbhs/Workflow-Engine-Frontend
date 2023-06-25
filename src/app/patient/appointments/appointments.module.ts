@@ -32,6 +32,7 @@ import { DeleteComponent } from "./today-appointment/dialogs/delete/delete.compo
 import { UpcomingAppointmentService } from "./upcoming-appointment/upcoming-appointment.service";
 import { PastAppointmentService } from "./past-appointment/past-appointment.service";
 import { MatTabsModule } from "@angular/material/tabs";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { MatTabsModule } from "@angular/material/tabs";
     DeleteComponent,
   ],
   imports: [
+    MatTooltipModule,
     MatTabsModule,
     CommonModule,
     AppointmentsRoutingModule,

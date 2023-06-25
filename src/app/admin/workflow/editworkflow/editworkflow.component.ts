@@ -12,6 +12,7 @@ import { SimpleDialogComponent } from "src/app/ui/modal/simpleDialog.component";
 import Swal from "sweetalert2";
 import { UserService } from "src/app/service/user.service";
 import { GroupeUserService } from "src/app/service/groupe-user.service";
+import { TableService } from "src/app/service/table.service";
 
 @Component({
   selector: "app-editworkflow",
@@ -37,9 +38,9 @@ export class EditworkflowComponent implements OnInit {
     private serUser: UserService,
     private ac: ActivatedRoute,
     private modalService: NgbModal,
-    private groupService: GroupeUserService
-  ) {
-  
+    private groupService: GroupeUserService,
+    private tableService: TableService
+  ) {  
   }
   liens = [];
   ngOnInit(): void {
@@ -52,6 +53,7 @@ export class EditworkflowComponent implements OnInit {
     this.getAllLinks();
     this.getUsersByRoleUser();
     this.getAllGroups();
+    this.getWorkflowTables();
   }
 
   updateWorkflow() {
@@ -136,7 +138,7 @@ export class EditworkflowComponent implements OnInit {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   }
 
-  nodesArray: { id: String, label: String, endDate: string }[] = [];
+  nodesArray: { id: String, label: String, endDate: string,statut: string, approbation: string }[] = [];
   linksArray = [];
   ids = {};
   alltaches = [];
@@ -157,7 +159,9 @@ export class EditworkflowComponent implements OnInit {
             return {
               id: tache.id.toString(),
               label: tache.name,
-              endDate: tache.endDate
+              endDate: tache.endDate,
+              statut: tache.statut,
+              approbation: tache.approbation
             };
           });
           this.ids = res.map(tache => tache.id.toString());
@@ -428,4 +432,12 @@ export class EditworkflowComponent implements OnInit {
     return this.listGroupe.filter(u => u.nom.toLowerCase().includes(this.searchTextGroup.toLowerCase()));
   }
 
+  listTables = [];
+  getWorkflowTables(): void {
+    this.ser.getWorkflowTables(this.id).subscribe((res) => {
+      this.listTables = res;
+      console.log("this.listTables: ",this.listTables);
+    });
+  }
+  
 }

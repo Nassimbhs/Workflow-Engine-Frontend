@@ -6,4 +6,11 @@ export class Workflow {
     lastModifiedDate: String;
     etat: String;
     declencheur: String;
+    sgbd: string;
+    jdbcUrl: string;
+    username: string;
+    password: string;
+    tacheAecouter: string;
+    evenement: string;
+
 }

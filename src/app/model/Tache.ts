@@ -7,6 +7,7 @@ export class Tache {
     endDate: string;
     statut: String;
     ordre: number;
-    triggerType: string;
+    action: string;
+    approbation: string;
     workflowTache: any; 
 }

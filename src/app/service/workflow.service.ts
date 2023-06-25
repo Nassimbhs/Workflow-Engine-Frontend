@@ -32,5 +32,9 @@ export class WorkflowService {
   updateWorkflow(id: any, value: any): Observable<Object> {
     return this._http.put(this.baseUrl + "/update/" + id, value);
   }
- 
+
+  getWorkflowTables(workflowId: number): Observable<string[]> {
+    const url = `${this.baseUrl}/${workflowId}/tables`;
+    return this._http.get<string[]>(url);
+  }
 }

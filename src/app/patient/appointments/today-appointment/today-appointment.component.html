@@ -48,19 +48,97 @@
                         <div class="media-title text-muted mb-0">Statut</div>
                         <div class="col-red">{{task.statut}}</div>
                       </div>
-             
+
                       <div class="media-cta">
                         <td>
-                          <button mat-icon-button class="btn-tbl-confirm" (click)="marquerTacheCommeTraitee(task.id)">
+                          <button mat-icon-button class="btn btn-primary" (click)="marquerTacheCommeTraitee(task.id)" matTooltip="Accepter">
                             <mat-icon>done</mat-icon>
                           </button>
-                          <button mat-icon-button class="btn-tbl-reject">
+                        </td>
+                        <td>
+                          <button mat-icon-button class="btn btn-warning" (click)="RefuserTache(task.id)" matTooltip="Rejeter">
                             <mat-icon>close</mat-icon>
                           </button>
                         </td>
+                        <td *ngIf="task.action ==='demande'">
+                          <button mat-icon-button class="btn btn-danger" (click)="openModal(modal)"  matTooltip="Ajouter une demande de congé">
+                            <mat-icon>add</mat-icon>
+                          </button>
+                        </td>
                       </div>
-                  </li>
+                      <div *ngIf="isLoading" class="spinner">
+                        <mat-spinner></mat-spinner>
+                      </div>
+
+                      <ng-template #modal let-modal>
+                        <div class="modal-header">
+                          <h4 class="modal-title" id="modal-basic-title">Demande de congé</h4>
+                          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="row">
+                            <mat-form-field class="example-full-width">
+                              <mat-label>Commentaire</mat-label>
+                              <input matInput [(ngModel)]="conge.commentaire" required>
+                              <mat-icon matSuffix>face</mat-icon>
+                            </mat-form-field>
+                            <mat-form-field class="example-full-width">
+                              <mat-label>Date de début</mat-label>
+                              <input matInput type="datetime-local" [(ngModel)]="conge.dateDeb" required>
+                              <mat-icon matSuffix>face</mat-icon>
+                            </mat-form-field>
+                            <mat-form-field class="example-full-width">
+                              <mat-label>Date de fin</mat-label>
+                              <input matInput type="datetime-local" [(ngModel)]="conge.dateFin" required>
+                              <mat-icon matSuffix>face</mat-icon>
+                            </mat-form-field>
+                            <div class="example-full-width">
+                              <div class="row">
+                                <select [(ngModel)]="conge.type">
+                                  <option value="paye">Congé payé</option>
+                                  <option value="maladie">Congé de maladie</option>
+                                  <option value="parental">Congé parental</option>
+                                  <option value="sans-solde">Congé sans solde</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <br>
+                          <div *ngIf="task"></div>
+                          <button mat-raised-button color="primary"
+                            (click)="addAndAssignCongeToTask(task.id);modal.dismiss()">Ajouter </button>
+                        </div>
+                      </ng-template>
+                    </li>
                   </ng-container>
+                  <!-- Basic Card - With Colored -->
+                  <div class="row clearfix" *ngIf="conges">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                      <div class="card">
+                        <div class="header bg-red">
+                          <h2>
+                            Nom : {{ conges.responsable }}
+                            <small>de {{ conges.dateDeb | date:'dd/MM/yyyy'}} jusqu'à {{ conges.dateFin |
+                              date:'dd/MM/yyyy'}}</small>
+                          </h2>
+
+                        </div>
+                        <div class="body">
+                          <strong><div *ngIf="conges.type==='maladie'">Congé de maladie</div></strong>
+                          <strong><div *ngIf="conges.type==='paye'">Congé payé</div></strong>
+                          <strong><div *ngIf="conges.type==='parental'">Congé parental</div></strong>
+                          <strong><div *ngIf="conges.type==='parental'">Congé sans solde</div></strong>
+
+                          {{conges.commentaire}}
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <!-- #END# Basic Card - With Colored -->
+                 
                 </ul>
               </div>
             </mat-tab>
@@ -81,7 +159,12 @@
                     <div class="media-title text-muted mb-0">Statut</div>
                     <div class="col-green">{{task.statut}}</div>
                   </div>
-                   
+                  <div class="set-flex">
+                    <div class="media-title text-muted mb-0">Approbation</div>
+                    <div class="media-title font-16">
+                      {{task.approbation}}
+                    </div>
+                  </div>
                 </li>
               </ul>
             </mat-tab>
