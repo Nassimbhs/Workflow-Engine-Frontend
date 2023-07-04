@@ -28,5 +28,10 @@ export class TacheAtraiterService {
   getTacheAtraiterById(id: any): Observable<TacheAtraiter> {
     return this.http.get<TacheAtraiter>(this.baseUrl + "/getTacheAtraiter/" + id);
   }
+
+  getTachesTraiteesParResponsable(responsableId: number): Observable<TacheAtraiter[]> {
+    const url = this.baseUrl + "/traitees/" + responsableId;
+    return this.http.get<TacheAtraiter[]>(url);
+  }
   
 }

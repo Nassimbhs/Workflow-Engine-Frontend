@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Conge } from "src/app/model/Conge";
-import { Tache } from "src/app/model/Tache";
 import { TacheAtraiter } from "src/app/model/TacheAtraiter";
 import { CongeService } from "src/app/service/conge.service";
 import { LienTacheService } from "src/app/service/lien-tache.service";
@@ -35,6 +34,7 @@ export class TodayAppointmentComponent implements OnInit {
     this.currentUser = this.tokenStorage.getUser();
     this.getTasksByUser();
     this.getTasksByUsertraite();
+    this.TacheTraiteParResponsable();
   }
 
   listTache: any[];
@@ -48,7 +48,6 @@ export class TodayAppointmentComponent implements OnInit {
   getTasksByUser() {
     this.tacheAtraiterService.getAlltachesAtraiter().subscribe((res) => {
       this.ListAllTasks = res;
-      console.log("ListAllTasks : ",this.ListAllTasks)
       this.lienService.getAllLinks().subscribe((res) => {
         this.links = res;
         this.targets = this.links.map((link) => link.tacheTargetName);
@@ -77,8 +76,7 @@ export class TodayAppointmentComponent implements OnInit {
             this.ListAllTasks = this.ListAllTasks.filter(
               item => item.name !== "Début" && item.name !== "Fin" && item.statut === "non traité"
             );   
-            console.log("ListAllTasks",this.ListAllTasks)
-            console.log("firstTask",this.firstTask)
+
             if (this.ListAllTasks[0].name!==this.firstTask[0].name){
               this.firstTask =[];
             }
@@ -135,13 +133,21 @@ export class TodayAppointmentComponent implements OnInit {
         this.tacheAtraiterService.getTacheAtraiterById(tacheId).subscribe((tacheAtraiter) => {
             this.tacheAtraiterService.marquerTacheCommeTraite(tacheId, tacheAtraiter)
               .subscribe((res) => {
-                console.log("res : ",res); 
                 this.getTasksByUser();
-                this.getTasksByUsertraite();
+                this.TacheTraiteParResponsable();
                 this.isLoading = false;
               });
         });
       }
     });
   }
+
+  tacheTraite = [];
+  TacheTraiteParResponsable(){
+    this.tacheAtraiterService.getTachesTraiteesParResponsable(this.currentUser.id).subscribe((res) => {
+      console.log("tacheTraite "+res);
+      this.tacheTraite = res;
+    });
+  }
+  
 }
