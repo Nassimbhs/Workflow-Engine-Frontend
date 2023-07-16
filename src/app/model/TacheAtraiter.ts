@@ -10,4 +10,5 @@ export class TacheAtraiter {
     action: string;
     approbation: string;
     responsable: number;
+    workflowId: number;
 }

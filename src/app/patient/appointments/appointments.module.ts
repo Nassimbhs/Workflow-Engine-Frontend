@@ -33,6 +33,8 @@ import { UpcomingAppointmentService } from "./upcoming-appointment/upcoming-appo
 import { PastAppointmentService } from "./past-appointment/past-appointment.service";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { NgxGraphModule } from "@swimlane/ngx-graph";
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     DeleteComponent,
   ],
   imports: [
+    NgxGraphModule,
+    MatExpansionModule,
     MatTooltipModule,
     MatTabsModule,
     CommonModule,

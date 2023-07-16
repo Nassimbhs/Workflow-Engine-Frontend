@@ -21,5 +21,10 @@ export class CongeService {
     const url = `${this.baseUrl}byTask/${tacheId}/${userId}`;
     return this.http.get<Conge>(url);
   }
-  
+
+  addCongeWithAssignment(conge: any, tacheAtraiterId: number): Observable<any> {
+    const url = `${this.baseUrl}add-with-assignment/${tacheAtraiterId}`;
+    return this.http.post(url, conge);
+  }
+
 }

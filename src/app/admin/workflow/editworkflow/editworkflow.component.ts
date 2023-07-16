@@ -208,13 +208,13 @@ export class EditworkflowComponent implements OnInit {
 
   selectedUserIds: any[] = [];
   assignUsersToTask() {
-
-    this.serTache.assignerTache(this.taches.id, this.selectedUserIds).subscribe(
+    this.serTache.assignerTache(this.taches.id, this.selectedUserIds, this.id).subscribe(
       res => {
         console.log(this.selectedUserIds);
       },
       err => {
         console.log(this.selectedUserIds, err);
+        Swal.fire("Impossible d'affecter un utilisateur à plusieurs tâches !");
       }
     );
   }

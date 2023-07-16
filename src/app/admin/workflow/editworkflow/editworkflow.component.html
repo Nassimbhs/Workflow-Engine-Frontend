@@ -91,7 +91,7 @@
                         <ng-container>
                           <option value="demande">Demande congé</option>
                           <option value="approbation">Approbation</option>
-                          <option value="email">Email</option>
+                          <option value="cv">CV</option>
                         </ng-container>
                       </select>
                     </mat-form-field>
@@ -331,13 +331,13 @@
                       <mat-option value="oracle">Oracle</mat-option>
                     </mat-select>
                   </mat-form-field>
-                  <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-form-field class="example-full-width" appearance="outline" *ngIf="listTables.length > 0">
                     <mat-label>Table à écouter</mat-label>
                     <mat-select matNativeControl [(ngModel)]="workflow.tacheAecouter">
                       <mat-option *ngFor="let table of listTables" [value]="table">{{ table }}</mat-option>
                     </mat-select>
                   </mat-form-field>
-                  <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-form-field class="example-full-width" appearance="outline" *ngIf="listTables.length > 0">
                     <mat-label>Evénement</mat-label>
                     <mat-select matNativeControl [(ngModel)]="workflow.evenement">
                       <mat-option value="Ajout">Ajout</mat-option>
@@ -486,6 +486,7 @@
             <input matInput [(ngModel)]="tache.name" required>
             <mat-icon matSuffix>face</mat-icon>
           </mat-form-field>
+      
           <mat-form-field class="example-full-width">
             <mat-label>Description</mat-label>
             <textarea matInput [(ngModel)]="tache.description" required></textarea>

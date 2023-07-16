@@ -34,8 +34,8 @@ export class TacheService {
     return this._http.delete<Tache>(url);
   }
 
-  assignerTache(tacheId: any, userIds: any[]): Observable<any> {
-    const url = `${this.baseUrl}/${tacheId}/assigner-utilisateurs`;
+  assignerTache(tacheId: any, userIds: any[],workflowId: any ): Observable<any> {
+    const url = `${this.baseUrl}/${tacheId}/${workflowId}/assigner-utilisateurs`;
     return this._http.post(url, userIds);
   }
 
