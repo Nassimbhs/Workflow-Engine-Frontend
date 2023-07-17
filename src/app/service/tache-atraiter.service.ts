@@ -21,6 +21,10 @@ export class TacheAtraiterService {
     return this.http.put(this.baseUrl + "/traite/" + id, value);
   }
 
+  rejeterTache(id: any, value: any): Observable<Object> {
+    return this.http.put(this.baseUrl + "/rejeter/" + id, value);
+  }
+
   getAlltachesAtraiter(): Observable<string[]> {
     return this.http.get<string[]>(this.baseUrl + "/allTacheAtraiter/");
   }

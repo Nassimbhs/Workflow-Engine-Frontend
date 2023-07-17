@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Cv } from '../model/Cv';
 
 @Injectable({
@@ -18,10 +18,9 @@ export class CvService {
     return this.http.post<any>(url, cv);
   }
 
-
-  assignCVToTacheAtraiter(cvId: any, tacheAtraiterId: any): Observable<any> {
-    const url = `${this.baseUrl}/${cvId}/assign-tache/${tacheAtraiterId}`;
-    return this.http.post(url, null);
+  assignCvToTacheAtraiter(cvId: number, tacheAtraiterId: number): Observable<Cv> {
+    const url = `${this.baseUrl}/${cvId}/assign/${tacheAtraiterId}`;
+    return this.http.post<Cv>(url, {}, { responseType: 'json' });
   }
 
   getCvData(): Observable<Cv[]> {

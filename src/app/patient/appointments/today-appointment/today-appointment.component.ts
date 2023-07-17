@@ -11,8 +11,6 @@ import { CvService } from "src/app/service/cv.service";
 
 import Swal from "sweetalert2";
 import { Cv } from "src/app/model/Cv";
-import { Competence } from "src/app/model/Competence";
-import { Formation } from "src/app/model/Formation";
 
 @Component({
   selector: "app-today-appointment",
@@ -53,6 +51,9 @@ export class TodayAppointmentComponent implements OnInit {
   targets: any[];
   listTaskByUser: any[];
   thisTaskList = [];
+  orderedList: any[] = [];
+  oui = [];
+  non = [];
   getTasksByUser() {
     this.tacheAtraiterService.getAlltachesAtraiter().subscribe((res) => {
       this.ListAllTasks = res;
@@ -78,25 +79,35 @@ export class TodayAppointmentComponent implements OnInit {
               return indexA - indexB;
             });
 
-            console.log(this.listLinks);
-
             this.listLinks.sort((a, b) => a.workflowId.localeCompare(b.workflowId));
 
-            console.log(this.listLinks);
-            const oui = this.listLinks.filter(
+            this.oui = this.listLinks.filter(
               item => item.type === "oui"
             );
-            console.log("oui ", oui);
+
+            this.non = this.listLinks.filter(
+              item => item.type === "non"
+            );
+
+            console.log("listTache", this.listTache)
+            this.firstTask = [];
+            for (let i = 0; i < this.listTache.length; i++) {
+              this.firstTask.push(this.listTache[i]);
+            }
+
+            const workflowIdToFind = this.firstTask[0].workflowId;
+            const matchingOuiItems = this.oui.filter((item) => item.workflowId === String(workflowIdToFind));
+            const updatedOuiList = [...matchingOuiItems, ...this.oui.filter((item) => item.workflowId !== String(workflowIdToFind))];
 
             const hierarchy = {};
 
-            const startingTask = this.listLinks.find(task => task.tacheSourceName === "Début");
+            const startingTask = updatedOuiList.find(task => task.tacheSourceName === "Début");
             if (startingTask) {
               hierarchy[startingTask.tacheSourceName] = startingTask.tacheTargetName;
 
               let currentTaskName = startingTask.tacheTargetName;
               while (currentTaskName !== "Fin") {
-                const nextTask = this.listLinks.find(task => task.tacheSourceName === currentTaskName);
+                const nextTask = updatedOuiList.find(task => task.tacheSourceName === currentTaskName);
                 if (nextTask) {
                   hierarchy[nextTask.tacheSourceName] = nextTask.tacheTargetName;
                   currentTaskName = nextTask.tacheTargetName;
@@ -106,24 +117,17 @@ export class TodayAppointmentComponent implements OnInit {
               }
             }
 
-            console.log(this.ListAllTasks);
-            const orderedList = Object.keys(hierarchy).map(key => this.ListAllTasks.find(item => item.name === hierarchy[key]));
+            this.orderedList = Object.keys(hierarchy).map(key => this.ListAllTasks.find(item => item.name === hierarchy[key]));
 
-            const filteredList = orderedList.filter(item => item && item.statut && item.statut === "non traité");
+            const filteredList = this.orderedList.filter(item => item && item.statut && item.statut === "non traité");
             console.log("filteredList ", filteredList);
-
-            this.firstTask = [];
-            for (let i = 0; i < this.listTache.length; i++) {
-              this.firstTask.push(this.listTache[i]);
-            }
             if (this.firstTask[0].statut === "traité") {
               this.firstTask = [];
             }
-            console.log("ListAllTasks ", this.ListAllTasks)
-            console.log("orderedList ", orderedList)
-            console.log("orderedList[0].name ", orderedList[0].name)
-            console.log("firstTask[0].name ", this.firstTask[0].name)
-            console.log(this.firstTask);
+            console.log("orderedList ", this.orderedList);
+
+            console.log("updatedOuiList ", updatedOuiList);
+            console.log("non ", this.non);
             this.thisTaskList = filteredList;
             if (filteredList[0].name !== this.firstTask[0].name) {
               this.firstTask = [];
@@ -164,15 +168,33 @@ export class TodayAppointmentComponent implements OnInit {
   createCV(tacheAtraiterId: any): void {
     const formations = this.cv.formations.map(formation => ({ ...formation }));
     const competences = this.cv.competences.map(competence => ({ ...competence }));
-  
+
     this.cv.formations = formations;
     this.cv.competences = competences;
-  
+
     this.cvService.createCv(this.cv, tacheAtraiterId).subscribe((cvResponse) => {
       const createdCvId = cvResponse.id;
+      for (let i = 0; i < this.orderedList.length; i++) {
+        this.cvService.assignCvToTacheAtraiter(createdCvId, this.orderedList[i].id).subscribe(
+          (response) => {
+            console.log('CV assigned to TacheAtraiter successfully:', response);
+            this.tacheAtraiterService.getTacheAtraiterById(tacheAtraiterId).subscribe((tacheAtraiter) => {
+              this.tacheAtraiterService.marquerTacheCommeTraite(tacheAtraiterId, tacheAtraiter)
+                .subscribe(() => {
+                  this.getTasksByUser();
+                  this.TacheTraiteParResponsable();
+                });
+            });
+
+          },
+          (error) => {
+            console.error('Failed to assign CV to TacheAtraiter:', error);
+          }
+        );
+      }
     });
   }
-  
+
 
   addFormation(): void {
     this.cv.formations.push({});
@@ -239,4 +261,26 @@ export class TodayAppointmentComponent implements OnInit {
       console.log(this.cvList);
     });
   }
+
+  rejeterTache(tacheId: any) : void {
+    Swal.fire({
+      title: 'Êtes-vous sûr(e) de vouloir rejeter cette tâche ?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Oui',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.tacheAtraiterService.getTacheAtraiterById(tacheId).subscribe((tacheAtraiter) => {
+          this.tacheAtraiterService.rejeterTache(tacheId, tacheAtraiter)
+            .subscribe(() => {
+              console.log(" test firstTask : ",this.firstTask);
+              this.getTasksByUser();
+              this.TacheTraiteParResponsable();
+            });
+        });
+      }
+    });
+  }
+
 }
