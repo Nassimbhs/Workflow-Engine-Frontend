@@ -54,6 +54,7 @@ export class TodayAppointmentComponent implements OnInit {
   orderedList: any[] = [];
   oui = [];
   non = [];
+
   getTasksByUser() {
     this.tacheAtraiterService.getAlltachesAtraiter().subscribe((res) => {
       this.ListAllTasks = res;
@@ -117,21 +118,66 @@ export class TodayAppointmentComponent implements OnInit {
               }
             }
 
-            this.orderedList = Object.keys(hierarchy).map(key => this.ListAllTasks.find(item => item.name === hierarchy[key]));
+            console.log("updatedOuiList ", updatedOuiList);
+            console.log("non ", this.non);
 
-            const filteredList = this.orderedList.filter(item => item && item.statut && item.statut === "non traité");
-            console.log("filteredList ", filteredList);
             if (this.firstTask[0].statut === "traité") {
               this.firstTask = [];
             }
+
+            this.orderedList = Object.keys(hierarchy).map(key => this.ListAllTasks.find(item => item.name === hierarchy[key]));
             console.log("orderedList ", this.orderedList);
 
-            console.log("updatedOuiList ", updatedOuiList);
-            console.log("non ", this.non);
-            this.thisTaskList = filteredList;
-            if (filteredList[0].name !== this.firstTask[0].name) {
+            const filteredList = this.orderedList.filter(item => item && item.statut && item.statut === "non traité");
+            console.log("filteredList ", filteredList);
+            console.log("ListAllTasks ", this.ListAllTasks);
+            console.log("listLinks ", this.listLinks);
+            /*
+                        for (let i = 1; i < this.orderedList.length; i++) {
+                          if (this.orderedList[i-1].approbation === "en attente"){
+                            this.firstTask = this.orderedList[i-1];
+                            break;
+                          }
+                        }
+                        console.log("firstTask ", this.firstTask);
+            */
+
+            for (let i = 1; i < this.orderedList.length; i++) {
+
+              if (this.orderedList[i - 1].approbation === "Rejeter") {
+                for (let j = 0; j < this.non.length; j++) {
+                  if (this.non[j].tacheSourceName === this.orderedList[i - 1].name && this.non[j].workflowId === this.orderedList[i].workflowId) {
+                    console.log(this.non[j].tacheSourceName);
+                    console.log(this.non[j].tacheTargetName);
+                    for (let k = 0; k < this.ListAllTasks.length; k++) {
+                      if (this.ListAllTasks[k].name === this.non[j].tacheTargetName) {
+                        console.log(this.non[j].tacheTargetName);
+                        this.orderedList.splice(i, 0, this.ListAllTasks[k]);
+                        filteredList.splice(0, 0, this.ListAllTasks[k]);
+
+                      }
+                      if (this.non[j].tacheTargetName === "Fin") {
+                        this.firstTask = [];
+                      }
+                      if (this.listTache[0].name !== this.non[j].tacheTargetName) {
+                        this.firstTask = [];
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            console.log("firstTask", this.firstTask);
+            if (filteredList.length === 0) {
               this.firstTask = [];
             }
+            if (filteredList.length > 0 && this.firstTask.length > 0) {
+              if (filteredList[0].name !== this.firstTask[0].name) {
+                this.firstTask = [];
+              }
+            }
+            console.log("firstTask", this.firstTask);
+
           });
         });
       });
@@ -229,6 +275,8 @@ export class TodayAppointmentComponent implements OnInit {
           this.tacheAtraiterService.marquerTacheCommeTraite(tacheId, tacheAtraiter)
             .subscribe((res) => {
               this.isLoading = false;
+              this.getTasksByUsertraite();
+              this.TacheTraiteParResponsable();
             });
         });
       }
@@ -262,7 +310,7 @@ export class TodayAppointmentComponent implements OnInit {
     });
   }
 
-  rejeterTache(tacheId: any) : void {
+  rejeterTache(tacheId: any): void {
     Swal.fire({
       title: 'Êtes-vous sûr(e) de vouloir rejeter cette tâche ?',
       icon: 'question',
@@ -274,7 +322,6 @@ export class TodayAppointmentComponent implements OnInit {
         this.tacheAtraiterService.getTacheAtraiterById(tacheId).subscribe((tacheAtraiter) => {
           this.tacheAtraiterService.rejeterTache(tacheId, tacheAtraiter)
             .subscribe(() => {
-              console.log(" test firstTask : ",this.firstTask);
               this.getTasksByUser();
               this.TacheTraiteParResponsable();
             });
