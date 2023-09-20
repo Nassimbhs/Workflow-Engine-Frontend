@@ -35,6 +35,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
+import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { NgxGraphModule } from "@swimlane/ngx-graph";
     DeleteComponent,
   ],
   imports: [
+    CKEditorModule,
     NgxGraphModule,
     MatExpansionModule,
     MatTooltipModule,

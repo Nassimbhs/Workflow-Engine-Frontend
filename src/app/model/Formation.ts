@@ -4,5 +4,4 @@ export class Formation {
     etablissement: string;
     dateDeb: string;
     dateFin: string;
-    description: string;
 }

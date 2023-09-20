@@ -20,11 +20,17 @@ export class CvService {
 
   assignCvToTacheAtraiter(cvId: number, tacheAtraiterId: number): Observable<Cv> {
     const url = `${this.baseUrl}/${cvId}/assign/${tacheAtraiterId}`;
-    return this.http.post<Cv>(url, {}, { responseType: 'json' });
+    const body = { cvId, tacheAtraiterId };
+    return this.http.post<Cv>(url, body);
   }
 
   getCvData(): Observable<Cv[]> {
     return this.http.get<Cv[]>(this.baseUrl+"/getAllCvs");
+  }
+  
+  getCv(tacheAtraiterId: number): Observable<Cv> {
+    const url = `${this.baseUrl}/${tacheAtraiterId}`;
+    return this.http.get<Cv>(url);
   }
 
 }

@@ -41,6 +41,7 @@ export class AuthenticationService {
     );
   }
   
+
   signup(user: User): Observable<any> {
     return this.http.post(`${AUTH_API}signup`, user,httpOptions);
   }

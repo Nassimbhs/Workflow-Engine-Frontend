@@ -1,5 +1,8 @@
 import { Competence } from "./Competence";
+import { Experience } from "./Experience";
 import { Formation } from "./Formation";
+import { Interet } from "./Interet";
+import { Langue } from "./Langue";
 
 export class Cv {
     id: number;
@@ -12,4 +15,8 @@ export class Cv {
     ville: string;
     formations: Formation[] = [];
     competences: Competence[] = [];
+    experiences: Experience[] = [];
+    interets: Interet[] = [];
+    langues: Langue[] = [];
+
 }

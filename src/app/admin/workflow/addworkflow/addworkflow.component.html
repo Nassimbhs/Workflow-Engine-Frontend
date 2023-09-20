@@ -43,7 +43,61 @@
                           <mat-label>Description</mat-label>
                           <textarea matInput [(ngModel)]="workflow.description" required></textarea>
                         </mat-form-field>
-                        
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Choisir le déclencheur du workflow</mat-label>
+                          <mat-select matNativeControl [(ngModel)]="workflow.declencheur">
+                            <mat-option value="BD">Base de donnée</mat-option>
+                            <mat-option value="Webhook">Webhook</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <div *ngIf="workflow.declencheur === 'Webhook'" class="row">
+                          <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>URL</mat-label>
+                            <mat-icon matSuffix>link</mat-icon>
+                            <input matInput [(ngModel)]="workflow.webhookUrl" required>
+                          </mat-form-field>
+                        </div>
+                        <div *ngIf="workflow.declencheur === 'BD'" class="row">
+                          <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>JDBC URL</mat-label>
+                            <mat-icon matSuffix>link</mat-icon>
+                            <input matInput [(ngModel)]="workflow.jdbcUrl" required placeholder="jdbc:mysql://localhost:3306/exempledb">
+                          </mat-form-field>
+                          <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>Utilisateur</mat-label>
+                            <mat-icon matSuffix>account_circle</mat-icon>
+                            <input matInput [(ngModel)]="workflow.username " required>
+                          </mat-form-field>
+                          <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>Mot de passe</mat-label>
+                            <mat-icon matSuffix (click)="hidePassword = !hidePassword">
+                              {{ hidePassword ? 'visibility_off' : 'visibility' }}
+                            </mat-icon>
+                            <input matInput [(ngModel)]="workflow.password" required [type]="hidePassword ? 'password' : 'text'">
+                          </mat-form-field>                  
+                          <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>SGBD</mat-label>
+                            <mat-select matNativeControl [(ngModel)]="workflow.sgbd">
+                              <mat-option value="mysql">MySQL</mat-option>
+                              <mat-option value="postgres">PostgreSQL</mat-option>
+                              <mat-option value="oracle">Oracle</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>Table à écouter</mat-label>
+                            <mat-select matNativeControl [(ngModel)]="workflow.tacheAecouter">
+                              <mat-option *ngFor="let table of listTables" [value]="table">{{ table }}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field class="example-full-width" appearance="outline">
+                            <mat-label>Evénement</mat-label>
+                            <mat-select matNativeControl [(ngModel)]="workflow.evenement">
+                              <mat-option value="Ajout">Ajout</mat-option>
+                              <mat-option value="Modification">Modification</mat-option>
+                              <mat-option value="Suppression">Suppression</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
                     </div>  
                     <br>
                     <button mat-raised-button color="primary" (click)="addWorkflow()">Ajouter</button>

@@ -89,9 +89,11 @@
                       <mat-label>Action </mat-label>
                       <select matNativeControl [(ngModel)]="taches.action" required>
                         <ng-container>
-                          <option value="demande">Demande congé</option>
-                          <option value="approbation">Approbation</option>
-                          <option value="cv">CV</option>
+                          <option value="approbation">Approbation (Générique)</option>
+                          <option value="email">Email (Générique)</option>
+                          <option value="approbation-cv">Approbation d'un CV (Générique)</option>
+                          <option value="demande">Demande de congé (Spécifique)</option>
+                          <option value="cv">Création de CV (Spécifique)</option>
                         </ng-container>
                       </select>
                     </mat-form-field>
@@ -151,7 +153,7 @@
                         <select matNativeControl [(ngModel)]="selectedTarget" required>
                           <ng-container *ngFor="let a of actLink">
                             <option [value]="a.id" id="inputTarget">
-                              {{a.tacheSourceName}}
+                              {{a.tacheSourceName}} --> {{a.type}}
                             </option>
                           </ng-container>
                         </select>
@@ -304,12 +306,21 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-
+                <div *ngIf="workflow.declencheur === 'Webhook'" class="row">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>URL</mat-label>
+                    <mat-select [(ngModel)]="workflow.webhookUrl" required>
+                      <mat-option> test1 </mat-option>
+                      <mat-option> test2 </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
                 <div *ngIf="workflow.declencheur === 'BD'" class="row">
                   <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>JDBC URL</mat-label>
                     <mat-icon matSuffix>link</mat-icon>
-                    <input matInput [(ngModel)]="workflow.jdbcUrl" required placeholder="jdbc:mysql://localhost:3306/exempledb">
+                    <input matInput [(ngModel)]="workflow.jdbcUrl" required
+                      placeholder="jdbc:mysql://localhost:3306/exempledb">
                   </mat-form-field>
                   <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>Utilisateur</mat-label>
@@ -321,8 +332,9 @@
                     <mat-icon matSuffix (click)="hidePassword = !hidePassword">
                       {{ hidePassword ? 'visibility_off' : 'visibility' }}
                     </mat-icon>
-                    <input matInput [(ngModel)]="workflow.password" required [type]="hidePassword ? 'password' : 'text'">
-                  </mat-form-field>                  
+                    <input matInput [(ngModel)]="workflow.password" required
+                      [type]="hidePassword ? 'password' : 'text'">
+                  </mat-form-field>
                   <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>SGBD</mat-label>
                     <mat-select matNativeControl [(ngModel)]="workflow.sgbd">
@@ -335,14 +347,6 @@
                     <mat-label>Table à écouter</mat-label>
                     <mat-select matNativeControl [(ngModel)]="workflow.tacheAecouter">
                       <mat-option *ngFor="let table of listTables" [value]="table">{{ table }}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                  <mat-form-field class="example-full-width" appearance="outline" *ngIf="listTables.length > 0">
-                    <mat-label>Evénement</mat-label>
-                    <mat-select matNativeControl [(ngModel)]="workflow.evenement">
-                      <mat-option value="Ajout">Ajout</mat-option>
-                      <mat-option value="Modification">Modification</mat-option>
-                      <mat-option value="Suppression">Suppression</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -486,7 +490,7 @@
             <input matInput [(ngModel)]="tache.name" required>
             <mat-icon matSuffix>face</mat-icon>
           </mat-form-field>
-      
+
           <mat-form-field class="example-full-width">
             <mat-label>Description</mat-label>
             <textarea matInput [(ngModel)]="tache.description" required></textarea>
