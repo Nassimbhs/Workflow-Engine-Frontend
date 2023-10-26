@@ -13,6 +13,7 @@ export class Cv {
     tel: number;
     addresse: string;
     ville: string;
+    workflow: number;
     formations: Formation[] = [];
     competences: Competence[] = [];
     experiences: Experience[] = [];

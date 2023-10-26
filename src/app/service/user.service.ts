@@ -9,7 +9,7 @@ import { Role } from '../core/models/role';
 })
 export class UserService {
 
-  baseUrl = "http://localhost:8080/api/v1/User/";
+  baseUrl = "http://localhost:8092/api/v1/User/";
 
   constructor(private _http: HttpClient) { }
 

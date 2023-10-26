@@ -8,18 +8,14 @@ import { JsonData } from '../model/JsonData';
 })
 export class JsonService {
 
-  baseUrl = "http://localhost:8080/api/v1/JsonData";
+  baseUrl = "http://localhost:8085/api/v1/JsonData";
 
   constructor(private _http: HttpClient) { }
 
   addJsonDataAndAssociateTaches(responsable: number, jsonData: string): Observable<any> {
     const url = `${this.baseUrl}/add-json-data/${responsable}`;
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
     console.log('jsonData:', jsonData);
-    console.log('headers:', headers);
-    return this._http.post(url, jsonData, { headers });
+    return this._http.post(url, jsonData);
   }
 
   getJsonDataByTacheAtraiterId(tacheAtraiterId: number): Observable<JsonData[]> {

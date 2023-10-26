@@ -8,7 +8,7 @@ import { GroupeUser } from '../model/GroupeUser';
 })
 export class GroupeUserService {
 
-  baseUrl = "http://localhost:8080/api/v1/GroupeUser/";
+  baseUrl = "http://localhost:8092/api/v1/GroupeUser/";
 
   constructor(private _http: HttpClient) { }
 

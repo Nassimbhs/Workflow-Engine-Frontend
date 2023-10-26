@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class TableService {
-  private baseUrl = 'http://localhost:8080/api/v1';
+  private baseUrl = 'http://localhost:8091/api/v1';
   workflow: any;
 
   constructor(private http: HttpClient) { }

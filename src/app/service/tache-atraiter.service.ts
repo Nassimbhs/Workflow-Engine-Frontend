@@ -10,7 +10,7 @@ export class TacheAtraiterService {
 
   constructor(private http: HttpClient) { }
 
-  baseUrl = "http://localhost:8080/api/v1/TacheAtraiter";
+  baseUrl = "http://localhost:8091/api/v1/TacheAtraiter";
   
   getTacheAtraiterByResponsable(responsableId: number): Observable<TacheAtraiter[]> {
     const url = `${this.baseUrl}/responsable/${responsableId}`;
@@ -35,6 +35,11 @@ export class TacheAtraiterService {
 
   getTachesTraiteesParResponsable(responsableId: number): Observable<TacheAtraiter[]> {
     const url = this.baseUrl + "/traitees/" + responsableId;
+    return this.http.get<TacheAtraiter[]>(url);
+  }
+
+  findByWorkflowId(workflowId: number){
+    const url = this.baseUrl + "/findByWorkflowId/" + workflowId;
     return this.http.get<TacheAtraiter[]>(url);
   }
   

@@ -38,16 +38,16 @@ export class TodayAppointmentComponent implements OnInit {
     private congeService: CongeService,
     private tacheAtraiterService: TacheAtraiterService,
     private cvService: CvService,
-    private jsonService : JsonService,
+    private jsonService: JsonService,
     private formBuilder: FormBuilder,
-    private http: HttpClient
+    private http: HttpClient,
   ) {
     this.emailForm = this.formBuilder.group({
       to: ['', [Validators.required, Validators.email]],
       subject: ['', Validators.required],
       text: ['', Validators.required]
     });
-   }
+  }
 
 
   ngOnInit(): void {
@@ -58,7 +58,6 @@ export class TodayAppointmentComponent implements OnInit {
     this.fetchCvData();
     this.addFormation();
     this.addCompetence();
-    //this.getCvData();
   }
 
   to: string;
@@ -72,16 +71,16 @@ export class TodayAppointmentComponent implements OnInit {
         subject: this.emailForm.value.subject,
         text: this.emailForm.value.text
       };
-  
+
       this.http.post('http://localhost:8080/api/email/send-email', emailData).subscribe(
-        () => alert('Email sent successfully!'),
+        () => alert('E-mail envoyé avec succès !'),
         error => alert('Error sending email: ' + error.message)
       );
     } else {
-      alert('Please fill out all required fields.');
+      alert("S''il-vous-plaît remplissez tous les champs requis !");
     }
   }
-  
+
 
   listTache: any[];
   listLinks: any[];
@@ -96,7 +95,10 @@ export class TodayAppointmentComponent implements OnInit {
   oui = [];
   non = [];
   filteredList = [];
+  tacheByWorkflow = [];
+  cvByIdList: any[];
   getTasksByUser() {
+    this.firstTask = [];
     this.tacheAtraiterService.getAlltachesAtraiter().subscribe((res) => {
       this.ListAllTasks = res;
 
@@ -133,14 +135,17 @@ export class TodayAppointmentComponent implements OnInit {
 
             console.log("listTache", this.listTache)
             this.firstTask = [];
-            for (let i = 0; i < this.listTache.length; i++) {
+            for (let i = 0; i <= this.listTache.length; i++) {
               this.firstTask.push(this.listTache[i]);
             }
 
-            const workflowIdToFind = this.firstTask[0].workflowId;
-            const matchingOuiItems = this.oui.filter((item) => item.workflowId === String(workflowIdToFind));
-            const updatedOuiList = [...matchingOuiItems, ...this.oui.filter((item) => item.workflowId !== String(workflowIdToFind))];
+            const workflowIdToFind = this.firstTask[0]?.workflowId;
+            console.log("workflowIdToFind : ", workflowIdToFind);
 
+            const matchingOuiItems = this.oui.filter((item) => item.workflowId === String(workflowIdToFind));
+            console.log("matchingOuiItems : ", matchingOuiItems);
+            const updatedOuiList = [...matchingOuiItems, ...this.oui.filter((item) => item.workflowId !== String(workflowIdToFind))];
+            console.log("updatedOuiList : ", updatedOuiList);
             const hierarchy = {};
 
             const startingTask = updatedOuiList.find(task => task.tacheSourceName === "Début");
@@ -162,10 +167,7 @@ export class TodayAppointmentComponent implements OnInit {
             console.log("updatedOuiList ", updatedOuiList);
             console.log("non ", this.non);
 
-            if (this.firstTask[0].statut === "traité") {
-              this.firstTask = [];
-            }
-
+            console.log("orderedList 1 ", this.orderedList);
             this.orderedList = Object.keys(hierarchy).map(key => this.ListAllTasks.find(item => item.name === hierarchy[key]));
             console.log("orderedList ", this.orderedList);
 
@@ -174,10 +176,12 @@ export class TodayAppointmentComponent implements OnInit {
             console.log("ListAllTasks ", this.ListAllTasks);
             console.log("listLinks ", this.listLinks);
 
-
+            const filteredord = this.orderedList.filter((value) => value !== undefined);
+            this.orderedList = filteredord;
+            console.log("orderedList with filter : ", this.orderedList)
             for (let i = 1; i < this.orderedList.length; i++) {
 
-              if (this.orderedList[i - 1].approbation === "Rejeter") {
+              if (this.orderedList[i - 1]?.approbation === "Rejeter") {
                 for (let j = 0; j < this.non.length; j++) {
                   if (this.non[j].tacheSourceName === this.orderedList[i - 1].name && this.non[j].workflowId.toString() === this.orderedList[i].workflowId.toString()) {
                     console.log(this.non[j].tacheSourceName);
@@ -202,37 +206,48 @@ export class TodayAppointmentComponent implements OnInit {
                 }
               }
             }
-            console.log("firstTask", this.firstTask);
-            console.log("filteredList1 ", this.filteredList);
 
-            if (this.filteredList.length === 0) {
-              this.firstTask = [];
-            }
-            if (this.filteredList.length > 0 && this.firstTask.length > 0) {
-              if (this.filteredList[0].name !== this.firstTask[0].name && this.filteredList[0].workflowId.toString() === this.firstTask[0].workflowId.toString()) {
-                this.firstTask = [];
-              }
-            }
-            console.log("filteredList2 ", this.filteredList);
-
+            const filteredArray = this.firstTask.filter((value) => value !== undefined);
+            console.log("filteredArray", filteredArray);
+            this.firstTask = filteredArray;
+            const notreated = this.firstTask.filter(
+              item => item.statut === 'non traité'
+            );
+            this.firstTask = notreated;
             console.log("firstTask", this.firstTask);
-            if (this.orderedList[0].action === 'cv') {
-              this.cvService.getCv(this.orderedList[0].id)
-                .subscribe(
-                  (cv: Cv) => {
-                    this.cv = cv;
-                    this.cvByIdList.push(cv);
-                    console.log('CV data:', this.cvByIdList);
-                    console.log('CV :', cv);
-                  },
-                  (error) => {
-                    console.error('Error fetching CV data:', error);
+            console.log("filteredList ", this.filteredList);
+
+            if (this.firstTask[0]) {
+              this.tacheAtraiterService.findByWorkflowId(this.firstTask[0]?.workflowId).subscribe(
+                (res) => {
+                  this.tacheByWorkflow = res;
+                  const tacheW = this.tacheByWorkflow.filter(
+                    item => item.statut === 'non traité'
+                  )
+                  this.tacheByWorkflow = tacheW;
+                  console.log("tacheByWorkflow : ", this.tacheByWorkflow);
+                  if (this.firstTask[0]?.id === this.tacheByWorkflow[0]?.id) {
+                    console.log("kifkif");
                   }
-                );
+                  else {
+                    console.log("moch kifkif");
+                    this.firstTask = [];
+                  }
+                }
+              );
             }
+            
+            this.cvService.findCvByWorkflow(this.firstTask[0]?.workflowId).subscribe(
+              (res) => {
+                this.cvByIdList = res;
+                console.log("cvByIdList", this.cvByIdList);
+              }
+            );
+
           });
         });
       });
+
     });
   }
 
@@ -281,6 +296,7 @@ export class TodayAppointmentComponent implements OnInit {
     this.cv.experiences = experiences;
     this.cv.langues = langues;
     this.cv.interets = interets;
+    this.cv.workflow = this.firstTask[0].workflowId;
     Swal.fire({
       title: 'Confirmation',
       text: 'Êtes-vous sûr(e) de vouloir créer ce CV ?',
@@ -355,7 +371,7 @@ export class TodayAppointmentComponent implements OnInit {
   openModal(content) {
     this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
   }
-  
+
   openModalInfo(content) {
     this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
   }
@@ -406,7 +422,7 @@ export class TodayAppointmentComponent implements OnInit {
                 const emailData = {
                   to: this.orderedList[0].emailResponsable,
                   subject: "Acceptation de candidature",
-                  text: "Bonjour,\n\n"+
+                  text: "Bonjour,\n\n" +
                     "Félicitations ! Nous avons le plaisir de vous informer que votre candidature a été retenue.Nous sommes ravis de vous accueillir au sein de notre entreprise \n\n"
                     + "Nous avons été impressionnés par votre profil, votre expérience et vos compétences, qui correspondent parfaitement à ce que nous recherchons pour ce poste.\n\n"
                     + "Nous sommes impatients de travailler avec vous et sommes convaincus que votre contribution sera précieuse pour notre équipe.\n\n"
@@ -466,8 +482,8 @@ export class TodayAppointmentComponent implements OnInit {
             .subscribe(() => {
               this.getTasksByUser();
               this.TacheTraiteParResponsable();
-              console.log("this.orderedList.length", this.orderedList[this.orderedList.length - 2]);
-              if (this.orderedList[this.orderedList.length - 2].action === "approbation" && this.orderedList[this.orderedList.length - 2].statut === "non traité") {
+              console.log("this.orderedList.length", this.orderedList[this.orderedList.length]);
+              if (this.orderedList[this.orderedList.length]?.action === "approbation" && this.orderedList[this.orderedList.length]?.statut === "non traité") {
                 const emailData = {
                   to: this.orderedList[0].emailResponsable,
                   subject: "Candidature - Refus",
@@ -523,29 +539,8 @@ export class TodayAppointmentComponent implements OnInit {
     });
   }
 
-
-  cvByIdList = [];
-  /*getCvData() {
-    this.cvService.getCv(this.firstTask[0].id)
-      .subscribe(
-        (cv: Cv) => {
-          this.cv = cv;
-          this.cvByIdList.push(cv);
-          console.log('CV data:', this.cvByIdList);
-          console.log('CV :', cv);
-        },
-        (error) => {
-          console.error('Error fetching CV data:', error);
-        }
-      );
-  }
-*/
-
-
   generatePDF() {
     const content = this.pdfContent.nativeElement;
-
-    // Use html2pdf to create the PDF
     const opt = {
       margin: 10,
       filename: 'your_cv.pdf',
@@ -577,20 +572,18 @@ export class TodayAppointmentComponent implements OnInit {
       }
     );
   }
-  
-  updateStateToTreated(jsonDataId:any): void {
-      this.jsonService.updateStateToTreated(jsonDataId)
-        .subscribe(
-          response => {
-            console.log('JsonData state updated to "traité"');
-          },
-          error => {
-            console.error('Error updating JsonData state:', error);
-          }
-        );
-      console.warn('jsonDataId is not set');
-  }
 
-  
+  updateStateToTreated(jsonDataId: any): void {
+    this.jsonService.updateStateToTreated(jsonDataId)
+      .subscribe(
+        response => {
+          console.log('JsonData state updated to "traité"');
+        },
+        error => {
+          console.error('Error updating JsonData state:', error);
+        }
+      );
+    console.warn('jsonDataId is not set');
+  }
 
 }

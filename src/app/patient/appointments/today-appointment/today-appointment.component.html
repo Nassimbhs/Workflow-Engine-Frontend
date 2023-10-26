@@ -31,7 +31,7 @@
               </ng-template>
               <div class="body">
                 <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder"
-                  *ngIf="firstTask && firstTask.length > 0 && firstTask[0].action === 'approbation'">
+                  *ngIf="firstTask && firstTask.length > 0 && firstTask[0] && firstTask[0].action === 'approbation'">
                   <ng-container *ngIf="firstTask && firstTask.length > 0">
                     <li class="app-list" *ngFor="let task of firstTask">
                       <img alt="image" class="msr-3 rounded-circle" width="40" src="assets/images/user/usrbig1.jpg">
@@ -66,25 +66,6 @@
                             <mat-icon>close</mat-icon>
                           </button>
                         </td>
-                        <td>
-                          <button mat-icon-button class="btn btn-info" matTooltip="Voir Json"
-                            (click)="fetchJsonData(task.id)" (click)="openModalInfo(openModalInfoTemplate)">
-                            <mat-icon>info</mat-icon>
-                          </button>
-
-                        </td>
-                        <ng-template #openModalInfoTemplate let-modal>
-                          <div class="modal-header">
-                            <h4 class="modal-title" id="modal-basic-title">JSON Data</h4>
-                          </div>
-                          <div class="modal-body">
-                            <p>test</p>
-                            <pre>{{ jsonDataList | json }}</pre>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
-                          </div>
-                        </ng-template>
 
                         <td *ngIf="task.action ==='demande'">
                           <button mat-icon-button class="btn btn-danger" (click)="openModal(modal)"
@@ -140,381 +121,9 @@
                       </ng-template>
                     </li>
                     <hr>
-                    <div *ngIf="firstTask[0].action === 'approbation-cv'">
-                      <div class="d-flex justify-content-between align-items-center" *ngFor="let task of firstTask">
-                        <h2 class="mb-0">CURRICULUM VITAE</h2>
-                        <button mat-raised-button color="primary" (click)="generatePDF()">
-                          <i class="fas fa-print msr-2"></i>Imprimer PDF
-                        </button>
-                      </div>
+                    <div class="container" *ngIf="firstTask[0].action ==='email'">
+                      <h2>Envoyer un e-mail</h2>
                     </div>
-                    <hr>
-                    <div *ngIf="firstTask[0].action === 'approbation-cv'">
-                      <div *ngFor="let task of firstTask" #pdfContent>
-                        <div class="container" *ngIf="task.action ==='approbation-cv'">
-                          <div *ngFor="let cv of cvByIdList">
-                            <div class="row">
-                              <div class="col-md-6">
-                                <h1><mat-icon>person</mat-icon> {{cv.prenom}} <strong>{{cv.nomFamille}}</strong> </h1>
-                                <p>{{cv.titreProfil}}</p>
-                              </div>
-                              <div class="col-md-6 text-right">
-                                <p>
-                                  <mat-icon>location_on</mat-icon> {{cv.addresse}}
-                                </p>
-                                <p>
-                                  <mat-icon>phone</mat-icon> {{cv.tel}}
-                                </p>
-                                <p>
-                                  <mat-icon>email</mat-icon> {{cv.email}}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          <hr>
-
-                          <div class="row">
-                            <h2> <mat-icon>school</mat-icon> FORMATIONS</h2>
-                            <div class="col-md-6" *ngFor="let formation of cv.formationDtos">
-                              <h4>{{ formation.nomFormation }}</h4>
-                              <p>{{ formation.etablissement }}</p>
-                              <p>De : {{ formation.dateDeb | date:'MM/yyyy' }} -- {{ formation.dateFin |
-                                date:'MM/yyyy' }} </p>
-                            </div>
-                            <hr>
-                            <div class="row">
-                              <h2><mat-icon>work</mat-icon> EXPERIENCES</h2>
-                              <div class="col-md-6" *ngFor="let experience of cv.experienceDtos">
-                                <h4>{{experience.employeur}}</h4>
-                                <p>{{experience.poste}}</p>
-                                <p>{{experience.description}}</p>
-                                <p>De : {{experience.dateDeb | date:'MM/yyyy' }} -- {{experience.dateFin |
-                                  date:'MM/yyyy'
-                                  }}</p>
-                              </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                              <h2><mat-icon>build</mat-icon> COMPETENCES</h2>
-                              <div class="col-md-2" *ngFor="let competence of cv.competenceDtos">
-                                &bull; {{ competence.nomCompetence }}
-                              </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                              <h2><mat-icon>language</mat-icon> LANGUAGES</h2>
-                              <div class="col-md-2" *ngFor="let langue of cv.langueDtos">
-                                <h4>{{langue.nom}}</h4>
-                                <p>{{langue.niveau}}</p>
-                              </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                              <h2><mat-icon>favorite</mat-icon> INTERETS</h2>
-                              <div class="col-md-2" *ngFor="let interet of cv.interetDtos">
-                                <p>&bull; {{interet.interet}}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row" *ngFor="let task of firstTask">
-                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="task.action ==='cv'">
-                        <div class="card">
-                          <div class="header">
-                            <h2>Curriculum vitae</h2>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Informations personnelles
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Taper vos informations professionnelles
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-
-                                <div class="row">
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Prénom</mat-label>
-                                      <input matInput [(ngModel)]="cv.prenom" name="prenom">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Nom de famille</mat-label>
-                                      <input matInput [(ngModel)]="cv.nomFamille" name="nomFamille">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Adresse e-mail</mat-label>
-                                      <input matInput [(ngModel)]="cv.email" name="email">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Titre du profil</mat-label>
-                                      <input matInput [(ngModel)]="cv.titreProfil" name="titreProfil">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Numéro de téléphone</mat-label>
-                                      <input matInput [(ngModel)]="cv.tel" name="tel">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Adresse</mat-label>
-                                      <input matInput [(ngModel)]="cv.addresse" name="addresse">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Ville</mat-label>
-                                      <input matInput [(ngModel)]="cv.ville" name="ville">
-                                    </mat-form-field>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Formations
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Ajouter vos formations
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="row">
-                                  <div class="row" *ngFor="let formation of cv.formations; let i = index">
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Formation</mat-label>
-                                        <input matInput type="text" [(ngModel)]="formation.nomFormation"
-                                          name="nomFormation{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Établissement</mat-label>
-                                        <input matInput type="text" [(ngModel)]="formation.etablissement"
-                                          name="etablissement{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Date de début</mat-label>
-                                        <input matInput type="date" [(ngModel)]="formation.dateDeb" name="dateDeb{{i}}">
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Date de fin</mat-label>
-                                        <input matInput type="date" [(ngModel)]="formation.dateFin" name="dateFin{{i}}">
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-12 mb-2">
-                                    <button mat-button (click)="addFormation()">Ajouter une formation</button>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Expériences
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Ajouter vos expériences
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="row">
-                                  <div class="row" *ngFor="let experience of cv.experiences; let i = index">
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Poste</mat-label>
-                                        <input matInput type="text" [(ngModel)]="experience.poste" name="poste{{i}}"
-                                          required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Employeur</mat-label>
-                                        <input matInput type="text" [(ngModel)]="experience.employeur"
-                                          name="employeur{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>De : </mat-label>
-                                        <input matInput type="date" [(ngModel)]="experience.dateDeb" name="poste{{i}}"
-                                          required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>à : </mat-label>
-                                        <input matInput type="date" [(ngModel)]="experience.dateFin" name="dateFin{{i}}"
-                                          required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Description</mat-label>
-                                        <input matInput type="text" [(ngModel)]="experience.description"
-                                          name="description{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-12 mb-2">
-                                    <button mat-button (click)="addExperience()">Ajouter une expérience</button>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Langues
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Ajouter vos langues
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="row">
-                                  <div class="row" *ngFor="let langue of cv.langues; let i = index">
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Formation</mat-label>
-                                        <input matInput type="text" [(ngModel)]="langue.nom" name="nom{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Niveau</mat-label>
-                                        <mat-select [(ngModel)]="langue.niveau">
-                                          <mat-option value="Débutant(e)">
-                                            Débutant(e)
-                                          </mat-option>
-                                          <mat-option value="Intermédiaire">
-                                            Intermédiaire
-                                          </mat-option>
-                                          <mat-option value="Bien">Bien</mat-option>
-                                          <mat-option value="Très bien">
-                                            Très bien
-                                          </mat-option>
-                                          <mat-option value="Courant(e)">
-                                            Courant(e)
-                                          </mat-option>
-
-                                        </mat-select>
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-12 mb-2">
-                                    <button mat-button (click)="addLangue()">Ajouter une langue</button>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Intérêts
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Centres d'intérêt
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="row">
-                                  <div class="row" *ngFor="let inter of cv.interets; let i = index">
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Interet</mat-label>
-                                        <input matInput type="text" [(ngModel)]="inter.interet" name="interet{{i}}"
-                                          required>
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-12 mb-2">
-                                    <button mat-button (click)="addInteret()">Ajouter vos interêts</button>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Compétences
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Ajouter vos compétences
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="row">
-                                  <div class="row" *ngFor="let competence of cv.competences; let i = index">
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Compétence</mat-label>
-                                        <input matInput type="text" [(ngModel)]="competence.nomCompetence"
-                                          name="nomCompetence{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-12 mb-2">
-                                    <button mat-button (click)="addCompetence()">Ajouter une compétence</button>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                            <br>
-                            <div class="row">
-                              <div class="col-12 mb-2" *ngFor="let task of firstTask">
-                                <button mat-raised-button color="primary" (click)="createCV(task.id)">
-                                  Ajouter CV
-                                  <mat-icon>done</mat-icon>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>             
                   </ng-container>
                   <div class="row clearfix" *ngIf="conges">
                     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -547,10 +156,131 @@
                     </div>
 
                   </div>
-
                 </ul>
+                <hr>
                 <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder"
-                  *ngIf="firstTask && firstTask.length > 0 && firstTask[0].action === 'email'">
+                  *ngIf="firstTask && firstTask.length > 0 && firstTask[0] && firstTask[0].action === 'approbation-cv'">
+                  <ng-container *ngIf="firstTask && firstTask.length > 0">
+                    <li class="app-list">
+                      <img alt="image" class="msr-3 rounded-circle" width="40" src="assets/images/user/usrbig1.jpg">
+                      <div class="set-flex" *ngIf="firstTask[0].name !== null">
+                        <div class="media-title text-muted mb-0">Tâche</div>
+                        <div class="media-title font-16">{{firstTask[0].name}}</div>
+                      </div>
+                      <div class="set-flex" *ngIf="firstTask[0].endDate !== null">
+                        <div class="media-title text-muted mb-0">Date limite</div>
+                        <div class="media-title font-16">{{firstTask[0].endDate | date: 'dd/MM/yyyy'}}</div>
+                        <div class="text-job text-muted mb-0">{{firstTask[0].endDate | date: 'HH:mm:ss'}}</div>
+                      </div>
+                      <div class="set-flex" *ngIf="firstTask[0].endDate === null">
+                        <div class="media-title text-muted mb-0">Date limite</div>
+                        <div class="media-title font-16">Pas de date limite</div>
+                      </div>
+                      <div class="set-flex">
+                        <div class="media-title text-muted mb-0" *ngIf="firstTask[0].statut !== null">Statut</div>
+                        <div class="col-red">{{firstTask[0].statut}}</div>
+                      </div>
+
+                      <div class="media-cta">
+                        <td *ngIf="firstTask[0].action ==='approbation-cv'">
+                          <button mat-icon-button class="btn btn-primary"
+                            (click)="marquerTacheCommeTraite(firstTask[0].id)" matTooltip="Accepter">
+                            <mat-icon>done</mat-icon>
+                          </button>
+                        </td>
+                        <td>
+                          <button mat-icon-button class="btn btn-warning" matTooltip="Rejeter"
+                            (click)="rejeterTache(firstTask[0].id)">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        </td>
+
+                      </div>
+
+                    </li>
+                    <hr>
+                  </ng-container>
+                  <hr>
+                  <div>
+                    <div *ngIf="firstTask[0].action === 'approbation-cv'">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0">CURRICULUM VITAE</h2>
+                        <button mat-raised-button color="primary" (click)="generatePDF()">
+                          <i class="fas fa-print msr-2"></i>Imprimer PDF
+                        </button>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="container" *ngIf="cvByIdList" #pdfContent>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h1><mat-icon>person</mat-icon> {{cvByIdList.prenom}}
+                            <strong>{{cvByIdList.nomFamille}}</strong> </h1>
+                          <p>{{cvByIdList.titreProfil}}</p>
+                        </div>
+                        <div class="col-md-6 text-right">
+                          <p>
+                            <mat-icon>location_on</mat-icon> {{cvByIdList.addresse}}
+                          </p>
+                          <p>
+                            <mat-icon>phone</mat-icon> {{cvByIdList.tel}}
+                          </p>
+                          <p>
+                            <mat-icon>email</mat-icon> {{cvByIdList.email}}
+                          </p>
+                        </div>
+                      </div>
+                      <hr>
+
+                      <div class="row">
+                        <h2> <mat-icon>school</mat-icon> FORMATIONS</h2>
+                        <div class="col-md-6" *ngFor="let formation of cvByIdList.formationDtos">
+                          <h4>{{ formation.nomFormation }}</h4>
+                          <p>{{ formation.etablissement }}</p>
+                          <p>De : {{ formation.dateDeb | date:'MM/yyyy' }} -- {{ formation.dateFin |
+                            date:'MM/yyyy' }} </p>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <h2><mat-icon>work</mat-icon> EXPERIENCES</h2>
+                          <div class="col-md-6" *ngFor="let experience of cv.experienceDtos">
+                            <h4>{{experience.employeur}}</h4>
+                            <p>{{experience.poste}}</p>
+                            <p>{{experience.description}}</p>
+                            <p>De : {{experience.dateDeb | date:'MM/yyyy' }} -- {{experience.dateFin |
+                              date:'MM/yyyy'
+                              }}</p>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <h2><mat-icon>build</mat-icon> COMPETENCES</h2>
+                          <div class="col-md-2" *ngFor="let competence of cvByIdList.competenceDtos">
+                            &bull; {{ competence.nomCompetence }}
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <h2><mat-icon>language</mat-icon> LANGUAGES</h2>
+                          <div class="col-md-2" *ngFor="let langue of cvByIdList.langueDtos">
+                            <h4>{{langue.nom}}</h4>
+                            <p>{{langue.niveau}}</p>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <h2><mat-icon>favorite</mat-icon> INTERETS</h2>
+                          <div class="col-md-2" *ngFor="let interet of cvByIdList.interetDtos">
+                            <p>&bull; {{interet.interet}}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ul>
+
+                <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder"
+                  *ngIf="firstTask && firstTask.length > 0 && firstTask[0]?.action === 'email'">
                   <ng-container *ngIf="firstTask && firstTask.length > 0">
                     <li class="app-list" *ngFor="let task of firstTask">
                       <img alt="image" class="msr-3 rounded-circle" width="40" src="assets/images/user/usrbig1.jpg">
@@ -578,7 +308,337 @@
                     <hr>
                   </ng-container>
                 </ul>
-                <div class="body"  *ngIf="firstTask && firstTask.length > 0 && firstTask[0].action === 'email'">
+
+                <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder"
+                  *ngIf="firstTask && firstTask.length > 0 && firstTask[0]?.action === 'cv'">
+                  <ng-container *ngIf="firstTask && firstTask.length > 0">
+                    <li class="app-list">
+                      <img alt="image" class="msr-3 rounded-circle" width="40" src="assets/images/user/usrbig1.jpg">
+                      <div class="set-flex" *ngIf="firstTask[0] && firstTask[0].name !== null">
+                        <div class="media-title text-muted mb-0">Tâche</div>
+                        <div class="media-title font-16">{{firstTask[0].name}}</div>
+                      </div>
+                      <div class="set-flex" *ngIf="firstTask[0] && firstTask[0].endDate !== null">
+                        <div class="media-title text-muted mb-0">Date limite</div>
+                        <div class="media-title font-16">{{firstTask[0].endDate | date: 'dd/MM/yyyy'}}</div>
+                        <div class="text-job text-muted mb-0">{{firstTask[0].endDate | date: 'HH:mm:ss'}}</div>
+                      </div>
+                      <div class="set-flex" *ngIf="firstTask[0] && firstTask[0].endDate === null">
+                        <div class="media-title text-muted mb-0">Date limite</div>
+                        <div class="media-title font-16">Pas de date limite</div>
+                      </div>
+                      <div class="set-flex" *ngIf="firstTask[0] && firstTask[0].endDate === null">
+                        <div class="media-title text-muted mb-0">Statut</div>
+                        <div class="col-red">{{firstTask[0].statut}}</div>
+                      </div>
+                      <div *ngIf="isLoading" class="spinner">
+                        <mat-spinner></mat-spinner>
+                      </div>
+                    </li>
+                    <hr>
+                    <div *ngIf="firstTask[0].action ==='cv'">
+                      <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <div class="card">
+                            <div class="header">
+                              <h2>Curriculum vitae</h2>
+                            </div>
+                            <div class="body">
+                              <mat-accordion>
+                                <mat-expansion-panel>
+                                  <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                      Informations personnelles
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                      Taper vos informations professionnelles
+                                    </mat-panel-description>
+                                  </mat-expansion-panel-header>
+
+                                  <div class="row">
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                      <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Prénom</mat-label>
+                                        <input matInput [(ngModel)]="cv.prenom" name="prenom">
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                      <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Nom de famille</mat-label>
+                                        <input matInput [(ngModel)]="cv.nomFamille" name="nomFamille">
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                      <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Adresse e-mail</mat-label>
+                                        <input matInput [(ngModel)]="cv.email" name="email">
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                      <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Titre du profil</mat-label>
+                                        <input matInput [(ngModel)]="cv.titreProfil" name="titreProfil">
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                      <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Numéro de téléphone</mat-label>
+                                        <input matInput [(ngModel)]="cv.tel" name="tel">
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                      <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Adresse</mat-label>
+                                        <input matInput [(ngModel)]="cv.addresse" name="addresse">
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                      <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Ville</mat-label>
+                                        <input matInput [(ngModel)]="cv.ville" name="ville">
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                                </mat-expansion-panel>
+                              </mat-accordion>
+                            </div>
+                            <div class="body">
+                              <mat-accordion>
+                                <mat-expansion-panel>
+                                  <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                      Formations
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                      Ajouter vos formations
+                                    </mat-panel-description>
+                                  </mat-expansion-panel-header>
+                                  <div class="row">
+                                    <div class="row" *ngFor="let formation of cv.formations; let i = index">
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>Formation</mat-label>
+                                          <input matInput type="text" [(ngModel)]="formation.nomFormation"
+                                            name="nomFormation{{i}}" required>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>Établissement</mat-label>
+                                          <input matInput type="text" [(ngModel)]="formation.etablissement"
+                                            name="etablissement{{i}}" required>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>Date de début</mat-label>
+                                          <input matInput type="date" [(ngModel)]="formation.dateDeb"
+                                            name="dateDeb{{i}}">
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>Date de fin</mat-label>
+                                          <input matInput type="date" [(ngModel)]="formation.dateFin"
+                                            name="dateFin{{i}}">
+                                        </mat-form-field>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-12 mb-2">
+                                      <button mat-button (click)="addFormation()">Ajouter une formation</button>
+                                    </div>
+                                  </div>
+                                </mat-expansion-panel>
+                              </mat-accordion>
+                            </div>
+                            <div class="body">
+                              <mat-accordion>
+                                <mat-expansion-panel>
+                                  <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                      Expériences
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                      Ajouter vos expériences
+                                    </mat-panel-description>
+                                  </mat-expansion-panel-header>
+                                  <div class="row">
+                                    <div class="row" *ngFor="let experience of cv.experiences; let i = index">
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>Poste</mat-label>
+                                          <input matInput type="text" [(ngModel)]="experience.poste" name="poste{{i}}"
+                                            required>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>Employeur</mat-label>
+                                          <input matInput type="text" [(ngModel)]="experience.employeur"
+                                            name="employeur{{i}}" required>
+                                        </mat-form-field>
+                                      </div>
+
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>De : </mat-label>
+                                          <input matInput type="date" [(ngModel)]="experience.dateDeb" name="poste{{i}}"
+                                            required>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>à : </mat-label>
+                                          <input matInput type="date" [(ngModel)]="experience.dateFin"
+                                            name="dateFin{{i}}" required>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>Description</mat-label>
+                                          <input matInput type="text" [(ngModel)]="experience.description"
+                                            name="description{{i}}" required>
+                                        </mat-form-field>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-12 mb-2">
+                                      <button mat-button (click)="addExperience()">Ajouter une expérience</button>
+                                    </div>
+                                  </div>
+                                </mat-expansion-panel>
+                              </mat-accordion>
+                            </div>
+                            <div class="body">
+                              <mat-accordion>
+                                <mat-expansion-panel>
+                                  <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                      Langues
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                      Ajouter vos langues
+                                    </mat-panel-description>
+                                  </mat-expansion-panel-header>
+                                  <div class="row">
+                                    <div class="row" *ngFor="let langue of cv.langues; let i = index">
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>Formation</mat-label>
+                                          <input matInput type="text" [(ngModel)]="langue.nom" name="nom{{i}}" required>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>Niveau</mat-label>
+                                          <mat-select [(ngModel)]="langue.niveau">
+                                            <mat-option value="Débutant(e)">
+                                              Débutant(e)
+                                            </mat-option>
+                                            <mat-option value="Intermédiaire">
+                                              Intermédiaire
+                                            </mat-option>
+                                            <mat-option value="Bien">Bien</mat-option>
+                                            <mat-option value="Très bien">
+                                              Très bien
+                                            </mat-option>
+                                            <mat-option value="Courant(e)">
+                                              Courant(e)
+                                            </mat-option>
+
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-12 mb-2">
+                                      <button mat-button (click)="addLangue()">Ajouter une langue</button>
+                                    </div>
+                                  </div>
+                                </mat-expansion-panel>
+                              </mat-accordion>
+                            </div>
+                            <div class="body">
+                              <mat-accordion>
+                                <mat-expansion-panel>
+                                  <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                      Intérêts
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                      Centres d'intérêt
+                                    </mat-panel-description>
+                                  </mat-expansion-panel-header>
+                                  <div class="row">
+                                    <div class="row" *ngFor="let inter of cv.interets; let i = index">
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>Interet</mat-label>
+                                          <input matInput type="text" [(ngModel)]="inter.interet" name="interet{{i}}"
+                                            required>
+                                        </mat-form-field>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-12 mb-2">
+                                      <button mat-button (click)="addInteret()">Ajouter vos interêts</button>
+                                    </div>
+                                  </div>
+                                </mat-expansion-panel>
+                              </mat-accordion>
+                            </div>
+                            <div class="body">
+                              <mat-accordion>
+                                <mat-expansion-panel>
+                                  <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                      Compétences
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                      Ajouter vos compétences
+                                    </mat-panel-description>
+                                  </mat-expansion-panel-header>
+                                  <div class="row">
+                                    <div class="row" *ngFor="let competence of cv.competences; let i = index">
+                                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                        <mat-form-field class="example-full-width" appearance="fill">
+                                          <mat-label>Compétence</mat-label>
+                                          <input matInput type="text" [(ngModel)]="competence.nomCompetence"
+                                            name="nomCompetence{{i}}" required>
+                                        </mat-form-field>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-12 mb-2">
+                                      <button mat-button (click)="addCompetence()">Ajouter une compétence</button>
+                                    </div>
+                                  </div>
+                                </mat-expansion-panel>
+                              </mat-accordion>
+                              <br>
+                              <div class="row">
+                                <div class="col-12 mb-2">
+                                  <button mat-raised-button color="primary" (click)="createCV(firstTask[0].id)">
+                                    Ajouter CV
+                                    <mat-icon>done</mat-icon>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ul>
+                <div class="body" *ngIf="firstTask && firstTask.length > 0 && firstTask[0]?.action === 'email'">
                   <div class="example-container" *ngFor="let task of firstTask">
                     <form [formGroup]="emailForm" (ngSubmit)="marquerTacheCommeTraiteEmail(task.id)">
                       <mat-form-field class="example-full-width" appearance="outline">
@@ -613,481 +673,7 @@
                     </form>
                   </div>
                 </div>
-                <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder">
-                  <ng-container *ngIf="jsonDataList && jsonDataList.length > 0">
-                    <li class="app-list" *ngFor="let task of jsonDataList">
-                      <img alt="image" class="msr-3 rounded-circle" width="40" src="assets/images/user/usrbig1.jpg">
-                      <div class="set-flex" *ngIf="task.name !== null">
-                        <div class="media-title text-muted mb-0">Tâche</div>
-                        <div class="media-title font-16">{{task.data}}</div>
-                      </div>
 
-                      <div class="media-cta">
-                        <td>
-                          <button mat-icon-button class="btn btn-primary" (click)="updateStateToTreated(task.id)"
-                            matTooltip="Accepter">
-                            <mat-icon>done</mat-icon>
-                          </button>
-                        </td>
-                        <td>
-                          <button mat-icon-button class="btn btn-warning" matTooltip="Rejeter"
-                            (click)="rejeterTache(task.id)">
-                            <mat-icon>close</mat-icon>
-                          </button>
-                        </td>
-                        <td>
-                          <button mat-icon-button class="btn btn-info" matTooltip="Voir Json"
-                            (click)="fetchJsonData(task.id)" (click)="openModalInfo(openModalInfoTemplate)">
-                            <mat-icon>info</mat-icon>
-                          </button>
-
-                        </td>
-                        <ng-template #openModalInfoTemplate let-modal>
-                          <div class="modal-header">
-                            <h4 class="modal-title" id="modal-basic-title">JSON Data</h4>
-                          </div>
-                          <div class="modal-body">
-                            <p>test</p>
-                            <pre>{{ jsonDataList | json }}</pre>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
-                          </div>
-                        </ng-template>
-
-                        <td *ngIf="task.action ==='demande'">
-                          <button mat-icon-button class="btn btn-danger" (click)="openModal(modal)"
-                            matTooltip="Ajouter une demande de congé">
-                            <mat-icon>add</mat-icon>
-                          </button>
-                        </td>
-                      </div>
-                      <div *ngIf="isLoading" class="spinner">
-                        <mat-spinner></mat-spinner>
-                      </div>
-
-                      <ng-template #modal let-modal>
-                        <div class="modal-header">
-                          <h4 class="modal-title" id="modal-basic-title">Demande de congé</h4>
-                          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <div class="row">
-                            <mat-form-field class="example-full-width">
-                              <mat-label>Commentaire</mat-label>
-                              <input matInput [(ngModel)]="conge.commentaire" required>
-                              <mat-icon matSuffix>face</mat-icon>
-                            </mat-form-field>
-                            <mat-form-field class="example-full-width">
-                              <mat-label>Date de début</mat-label>
-                              <input matInput type="datetime-local" [(ngModel)]="conge.dateDeb" required>
-                              <mat-icon matSuffix>face</mat-icon>
-                            </mat-form-field>
-                            <mat-form-field class="example-full-width">
-                              <mat-label>Date de fin</mat-label>
-                              <input matInput type="datetime-local" [(ngModel)]="conge.dateFin" required>
-                              <mat-icon matSuffix>face</mat-icon>
-                            </mat-form-field>
-                            <div class="example-full-width">
-                              <div class="row">
-                                <select [(ngModel)]="conge.type">
-                                  <option value="paye">Congé payé</option>
-                                  <option value="maladie">Congé de maladie</option>
-                                  <option value="parental">Congé parental</option>
-                                  <option value="sans-solde">Congé sans solde</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                          <br>
-                          <div *ngIf="task"></div>
-                          <button mat-raised-button color="primary" (click)="addConge(task.id);modal.dismiss()">Ajouter
-                          </button>
-                        </div>
-                      </ng-template>
-                    </li>
-                    <hr>
-                    <!-- 
-                    <div *ngIf="firstTask[0].action === 'approbation'">
-                      <div class="d-flex justify-content-between align-items-center" *ngFor="let task of firstTask">
-                        <h2 class="mb-0">CURRICULUM VITAE</h2>
-                        <button mat-raised-button color="primary" (click)="generatePDF()">
-                          <i class="fas fa-print msr-2"></i>Imprimer PDF
-                        </button>
-                      </div>
-                    </div>
-                    <hr>
-                    <div *ngIf="firstTask[0].action === 'approbation'">
-                      <div *ngFor="let task of firstTask" #pdfContent>
-                        <div class="container" *ngIf="task.action ==='approbation'">
-                          <div *ngFor="let cv of cvByIdList">
-                            <div class="row">
-                              <div class="col-md-6">
-                                <h1><mat-icon>person</mat-icon> {{cv.prenom}} <strong>{{cv.nomFamille}}</strong> </h1>
-                                <p>{{cv.titreProfil}}</p>
-                              </div>
-                              <div class="col-md-6 text-right">
-                                <p>
-                                  <mat-icon>location_on</mat-icon> {{cv.addresse}}
-                                </p>
-                                <p>
-                                  <mat-icon>phone</mat-icon> {{cv.tel}}
-                                </p>
-                                <p>
-                                  <mat-icon>email</mat-icon> {{cv.email}}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          <hr>
-
-                          <div class="row">
-                            <h2> <mat-icon>school</mat-icon> FORMATIONS</h2>
-                            <div class="col-md-6" *ngFor="let formation of cv.formationDtos">
-                              <h4>{{ formation.nomFormation }}</h4>
-                              <p>{{ formation.etablissement }}</p>
-                              <p>De : {{ formation.dateDeb | date:'MM/yyyy' }} -- {{ formation.dateFin |
-                                date:'MM/yyyy' }} </p>
-                            </div>
-                            <hr>
-                            <div class="row">
-                              <h2><mat-icon>work</mat-icon> EXPERIENCES</h2>
-                              <div class="col-md-6" *ngFor="let experience of cv.experienceDtos">
-                                <h4>{{experience.employeur}}</h4>
-                                <p>{{experience.poste}}</p>
-                                <p>{{experience.description}}</p>
-                                <p>De : {{experience.dateDeb | date:'MM/yyyy' }} -- {{experience.dateFin |
-                                  date:'MM/yyyy'
-                                  }}</p>
-                              </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                              <h2><mat-icon>build</mat-icon> COMPETENCES</h2>
-                              <div class="col-md-2" *ngFor="let competence of cv.competenceDtos">
-                                &bull; {{ competence.nomCompetence }}
-                              </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                              <h2><mat-icon>language</mat-icon> LANGUAGES</h2>
-                              <div class="col-md-2" *ngFor="let langue of cv.langueDtos">
-                                <h4>{{langue.nom}}</h4>
-                                <p>{{langue.niveau}}</p>
-                              </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                              <h2><mat-icon>favorite</mat-icon> INTERETS</h2>
-                              <div class="col-md-2" *ngFor="let interet of cv.interetDtos">
-                                <p>&bull; {{interet.interet}}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row" *ngFor="let task of firstTask">
-                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="task.action ==='cv'">
-                        <div class="card">
-                          <div class="header">
-                            <h2>Curriculum vitae</h2>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Informations personnelles
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Taper vos informations professionnelles
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-
-                                <div class="row">
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Prénom</mat-label>
-                                      <input matInput [(ngModel)]="cv.prenom" name="prenom">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Nom de famille</mat-label>
-                                      <input matInput [(ngModel)]="cv.nomFamille" name="nomFamille">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Adresse e-mail</mat-label>
-                                      <input matInput [(ngModel)]="cv.email" name="email">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Titre du profil</mat-label>
-                                      <input matInput [(ngModel)]="cv.titreProfil" name="titreProfil">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Numéro de téléphone</mat-label>
-                                      <input matInput [(ngModel)]="cv.tel" name="tel">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Adresse</mat-label>
-                                      <input matInput [(ngModel)]="cv.addresse" name="addresse">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="fill">
-                                      <mat-label>Ville</mat-label>
-                                      <input matInput [(ngModel)]="cv.ville" name="ville">
-                                    </mat-form-field>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Formations
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Ajouter vos formations
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="row">
-                                  <div class="row" *ngFor="let formation of cv.formations; let i = index">
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Formation</mat-label>
-                                        <input matInput type="text" [(ngModel)]="formation.nomFormation"
-                                          name="nomFormation{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Établissement</mat-label>
-                                        <input matInput type="text" [(ngModel)]="formation.etablissement"
-                                          name="etablissement{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Date de début</mat-label>
-                                        <input matInput type="date" [(ngModel)]="formation.dateDeb" name="dateDeb{{i}}">
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Date de fin</mat-label>
-                                        <input matInput type="date" [(ngModel)]="formation.dateFin" name="dateFin{{i}}">
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-12 mb-2">
-                                    <button mat-button (click)="addFormation()">Ajouter une formation</button>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Expériences
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Ajouter vos expériences
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="row">
-                                  <div class="row" *ngFor="let experience of cv.experiences; let i = index">
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Poste</mat-label>
-                                        <input matInput type="text" [(ngModel)]="experience.poste" name="poste{{i}}"
-                                          required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Employeur</mat-label>
-                                        <input matInput type="text" [(ngModel)]="experience.employeur"
-                                          name="employeur{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>De : </mat-label>
-                                        <input matInput type="date" [(ngModel)]="experience.dateDeb" name="poste{{i}}"
-                                          required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>à : </mat-label>
-                                        <input matInput type="date" [(ngModel)]="experience.dateFin" name="dateFin{{i}}"
-                                          required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Description</mat-label>
-                                        <input matInput type="text" [(ngModel)]="experience.description"
-                                          name="description{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-12 mb-2">
-                                    <button mat-button (click)="addExperience()">Ajouter une expérience</button>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Langues
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Ajouter vos langues
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="row">
-                                  <div class="row" *ngFor="let langue of cv.langues; let i = index">
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Formation</mat-label>
-                                        <input matInput type="text" [(ngModel)]="langue.nom" name="nom{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Niveau</mat-label>
-                                        <mat-select [(ngModel)]="langue.niveau">
-                                          <mat-option value="Débutant(e)">
-                                            Débutant(e)
-                                          </mat-option>
-                                          <mat-option value="Intermédiaire">
-                                            Intermédiaire
-                                          </mat-option>
-                                          <mat-option value="Bien">Bien</mat-option>
-                                          <mat-option value="Très bien">
-                                            Très bien
-                                          </mat-option>
-                                          <mat-option value="Courant(e)">
-                                            Courant(e)
-                                          </mat-option>
-
-                                        </mat-select>
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-12 mb-2">
-                                    <button mat-button (click)="addLangue()">Ajouter une langue</button>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Intérêts
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Centres d'intérêt
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="row">
-                                  <div class="row" *ngFor="let inter of cv.interets; let i = index">
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Interet</mat-label>
-                                        <input matInput type="text" [(ngModel)]="inter.interet" name="interet{{i}}"
-                                          required>
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-12 mb-2">
-                                    <button mat-button (click)="addInteret()">Ajouter vos interêts</button>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                          </div>
-                          <div class="body">
-                            <mat-accordion>
-                              <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                  <mat-panel-title>
-                                    Compétences
-                                  </mat-panel-title>
-                                  <mat-panel-description>
-                                    Ajouter vos compétences
-                                  </mat-panel-description>
-                                </mat-expansion-panel-header>
-                                <div class="row">
-                                  <div class="row" *ngFor="let competence of cv.competences; let i = index">
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                      <mat-form-field class="example-full-width" appearance="fill">
-                                        <mat-label>Compétence</mat-label>
-                                        <input matInput type="text" [(ngModel)]="competence.nomCompetence"
-                                          name="nomCompetence{{i}}" required>
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-12 mb-2">
-                                    <button mat-button (click)="addCompetence()">Ajouter une compétence</button>
-                                  </div>
-                                </div>
-                              </mat-expansion-panel>
-                            </mat-accordion>
-                            <br>
-                            <div class="row">
-                              <div class="col-12 mb-2" *ngFor="let task of firstTask">
-                                <button mat-raised-button color="primary" (click)="createCV(task.id)">
-                                  Ajouter CV
-                                  <mat-icon>done</mat-icon>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>             
-                     -->
-                  </ng-container>
-                </ul>
               </div>
             </mat-tab>
             <mat-tab label="Historique">
@@ -1178,8 +764,8 @@
                     </ng-template>
                   </li>
                   <hr>
-                  <!-- 
-                  <div *ngIf="firstTask[0].action === 'approbation'">
+
+                  <div>
                     <div class="d-flex justify-content-between align-items-center" *ngFor="let task of firstTask">
                       <h2 class="mb-0">CURRICULUM VITAE</h2>
                       <button mat-raised-button color="primary" (click)="generatePDF()">
@@ -1188,9 +774,9 @@
                     </div>
                   </div>
                   <hr>
-                  <div *ngIf="firstTask[0].action === 'approbation'">
+                  <div>
                     <div *ngFor="let task of firstTask" #pdfContent>
-                      <div class="container" *ngIf="task.action ==='approbation'">
+                      <div class="container">
                         <div *ngFor="let cv of cvByIdList">
                           <div class="row">
                             <div class="col-md-6">
@@ -1259,7 +845,7 @@
                     </div>
                   </div>
                   <div class="row" *ngFor="let task of firstTask">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="task.action ==='cv'">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                       <div class="card">
                         <div class="header">
                           <h2>Curriculum vitae</h2>
@@ -1553,14 +1139,20 @@
 
                       </div>
                     </div>
-                  </div>             
-                   -->
+                  </div>
+
                 </ng-container>
+
               </ul>
             </mat-tab>
           </mat-tab-group>
         </div>
       </div>
     </div>
+
+    <div class="alert alert-danger" *ngIf="firstTask && firstTask.length === 0">
+      <strong>Aucune tâche en attente pour le moment !</strong>
+    </div>
+
   </div>
 </section>

@@ -9,7 +9,7 @@ import { Cv } from '../model/Cv';
 export class CvService {
 
 
-  baseUrl = "http://localhost:8080/api/v1/Cv";
+  baseUrl = "http://localhost:8093/api/v1/Cv";
 
   constructor(private http: HttpClient) { }
 
@@ -31,6 +31,11 @@ export class CvService {
   getCv(tacheAtraiterId: number): Observable<Cv> {
     const url = `${this.baseUrl}/${tacheAtraiterId}`;
     return this.http.get<Cv>(url);
+  }
+
+  findCvByWorkflow(workflowId: number): Observable<any> {
+    const url = `${this.baseUrl}/findCvByWorkflow/${workflowId}`;
+    return this.http.get(url);
   }
 
 }

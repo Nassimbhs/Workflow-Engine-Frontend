@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EmailServiceService {
 
-  baseUrl = "http://localhost:8080/api/email";
+  baseUrl = "http://localhost:8091/api/email";
 
   constructor(private http: HttpClient) {}
 

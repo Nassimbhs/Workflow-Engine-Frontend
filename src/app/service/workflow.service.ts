@@ -8,7 +8,7 @@ import { Workflow } from '../model/Workflow';
 })
 export class WorkflowService {
 
-  baseUrl = "http://localhost:8080/api/v1/Workflow";
+  baseUrl = "http://localhost:8091/api/v1/Workflow";
 
   constructor(private _http: HttpClient) { }
 

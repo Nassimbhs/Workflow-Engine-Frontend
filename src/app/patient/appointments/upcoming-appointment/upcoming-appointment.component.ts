@@ -28,18 +28,16 @@ export class UpcomingAppointmentComponent implements OnInit {
   jsonData: JsonData = new JsonData();
   addJsonData() {
     const responsable = this.currentUser.id;
-    const jsonData = this.jsonDataForm.get('jsonData').value; // Get the value from the form
+    const jsonData = this.jsonDataForm.get('jsonData').value;
     this.jsonDataService.addJsonDataAndAssociateTaches(responsable, jsonData).subscribe(
-      response => {
-        console.log('JSON data added:', response);
-        location.reload();
+      (response) => {
+        console.log('Data added successfully', response);
       },
-      error => {
+      (error) => {
         console.error('Error adding JSON data:', error);
-        location.reload();
       }
     );
   }
-  
-  
+
+
 }
